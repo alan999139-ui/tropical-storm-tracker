@@ -384,17 +384,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       list-style: none;
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.75rem;
+    }
+
+    .toc li {
+      display: inline-flex;
     }
 
     .toc a {
       color: var(--color-primary);
       text-decoration: none;
       font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      font-size: 0.88rem;
+      transition: all 0.15s ease;
     }
 
     .toc a:hover {
-      text-decoration: underline;
+      text-decoration: none;
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
     }
 
     .content-section {
