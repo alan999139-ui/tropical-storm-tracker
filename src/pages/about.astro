@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Learn about Tropical Storm Tracker — our mission, data sources, and commitment to providing accurate storm information."
+>
+  <div class="page-header">
+    <h1>About Tropical Storm Tracker</h1>
+    <p>Your trusted source for real-time tropical storm tracking and information.</p>
+  </div>
+
+  <div class="content">
+    <section class="section">
+      <h2>Our Mission</h2>
+      <p>We believe everyone in storm-prone areas deserves access to clear, accurate, and timely tropical storm information. Our platform aggregates data from official sources and presents it in an easy-to-understand format.</p>
+    </section>
+
+    <section class="section">
+      <h2>Data Sources</h2>
+      <ul class="source-list">
+        <li><strong>NOAA / NHC</strong> — National Hurricane Center provides our real-time storm data, advisories, and GIS products.</li>
+        <li><strong>HURDAT2</strong> — The Atlantic hurricane database for historical storm records dating back to 1851.</li>
+        <li><strong>Joint Typhoon Warning Center (JTWC)</strong> — For Pacific storm tracking data.</li>
+        <li><strong>National Weather Service (NWS)</strong> — For weather alerts and warnings.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Disclaimer</h2>
+      <div class="disclaimer">
+        <p>⚠️ <strong>Important:</strong> This website is for informational purposes only. Always follow guidance from your local emergency management officials for life-safety decisions. Do not rely solely on this website for storm warnings or evacuation orders.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Technology</h2>
+      <p>Built with Astro, deployed on Cloudflare Pages' global edge network. Powered by NOAA open data APIs.</p>
+    </section>
+
+    <section class="section">
+      <h2>Contact</h2>
+      <p>Questions or feedback? Reach us at: <a href="mailto:info@tropicalstormtracker.example.com">info@tropicalstormtracker.example.com</a></p>
+    </section>
+  </div>
+
+  <style>
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .content {
+      max-width: 720px;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .section p {
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+    }
+
+    .source-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .source-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .source-list li:last-child {
+      border-bottom: none;
+    }
+
+    .disclaimer {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      color: #92400e;
+    }
+  </style>
+</BaseLayout>

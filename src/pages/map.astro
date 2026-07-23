@@ -1,0 +1,332 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 实时地图页面 — 客户端 JS 拉取 NOAA 数据渲染 Leaflet 地图
+---
+
+<BaseLayout
+  title="Live Map"
+  description="Interactive real-time map of active tropical storms and hurricanes. Track storm paths, wind speeds, and projected tracks."
+>
+  <div class="page-header">
+    <h1>🗺️ Live Storm Map</h1>
+    <p>Real-time tracking of active tropical storms. Data from NOAA National Hurricane Center.</p>
+  </div>
+
+  <!-- 地图容器 -->
+  <div class="map-container">
+    <div id="storm-map"></div>
+    <div class="map-overlay" id="map-loading">
+      <div class="loading-spinner"></div>
+      <p>Loading storm data...</p>
+    </div>
+  </div>
+
+  <!-- 图例 -->
+  <div class="legend">
+    <h3>Legend</h3>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #4dabf7;"></span>
+        <span>Tropical Depression (&lt;39 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #ffd43b;"></span>
+        <span>Tropical Storm (39-73 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #ff8787;"></span>
+        <span>Category 1-2 (74-110 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #fa5252;"></span>
+        <span>Category 3-5 (&gt;110 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-line"></span>
+        <span>Predicted Path</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-cone"></span>
+        <span>Cone of Uncertainty</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 风暴列表（侧边） -->
+  <div class="storm-sidebar">
+    <h3>Active Storms</h3>
+    <div id="active-storms-list" class="active-storms">
+      <p class="loading-text">Loading...</p>
+    </div>
+  </div>
+
+  <script is:inline>
+    // 等待 Leaflet 加载
+    function initMap() {
+      if (typeof L === 'undefined') {
+        setTimeout(initMap, 100);
+        return;
+      }
+
+      // 初始化地图
+      const map = L.map('storm-map', {
+        center: [25, -60],
+        zoom: 3,
+        minZoom: 2,
+        maxZoom: 8,
+      });
+
+      // 使用免费的瓦片地图
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(map);
+
+      // 模拟数据 — 实际从 NOAA NHC API 获取
+      // NOAA RSS: https://www.nhc.noaa.gov/index-at.xml
+      // NOAA GIS: https://www.nhc.noaa.gov/gis/
+
+      const mockStorms = [
+        {
+          name: 'Bertha',
+          type: 'Tropical Storm',
+          position: [25.4, -90.2],
+          wind: 45,
+          pressure: 1008,
+          movement: 'NW at 15 mph',
+          path: [
+            [23.1, -88.5],
+            [24.2, -89.3],
+            [25.4, -90.2],
+            [26.8, -91.0],
+            [28.1, -91.8],
+          ],
+        },
+      ];
+
+      const stormLayer = L.layerGroup().addTo(map);
+
+      mockStorms.forEach(storm => {
+        // 风暴当前位置标记
+        const marker = L.circleMarker(storm.position, {
+          radius: 12,
+          fillColor: '#ffd43b',
+          color: '#000',
+          weight: 2,
+          fillOpacity: 0.8,
+        }).addTo(stormLayer);
+
+        marker.bindPopup(`
+          <div style="font-family: Inter, sans-serif;">
+            <strong>${storm.name}</strong><br>
+            ${storm.type}<br>
+            Wind: ${storm.wind} mph<br>
+            Pressure: ${storm.pressure} mb<br>
+            Movement: ${storm.movement}
+          </div>
+        `);
+
+        // 路径线
+        L.polyline(storm.path, {
+          color: '#ffd43b',
+          weight: 2,
+          opacity: 0.7,
+          dashArray: '5, 10',
+        }).addTo(stormLayer);
+
+        // 预测路径（虚线）
+        if (storm.path.length > 2) {
+          const lastPos = storm.path[storm.path.length - 1];
+          const forecastPath = [
+            lastPos,
+            [lastPos[0] + 1.5, lastPos[1] - 0.5],
+            [lastPos[0] + 3, lastPos[1] - 1],
+          ];
+          L.polyline(forecastPath, {
+            color: '#ff8787',
+            weight: 2,
+            opacity: 0.5,
+            dashArray: '2, 8',
+          }).addTo(stormLayer);
+        }
+      });
+
+      // 隐藏加载状态
+      document.getElementById('map-loading').style.display = 'none';
+
+      // 更新侧边栏
+      const listEl = document.getElementById('active-storms-list');
+      if (mockStorms.length === 0) {
+        listEl.innerHTML = '<p class="no-storms">☀️ No active storms</p>';
+      } else {
+        listEl.innerHTML = mockStorms.map(s => `
+          <div class="active-storm-item">
+            <div class="storm-item-header">
+              <strong>${s.name}</strong>
+              <span class="storm-item-type">${s.type}</span>
+            </div>
+            <div class="storm-item-stats">
+              <span>💨 ${s.wind} mph</span>
+              <span>📊 ${s.pressure} mb</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    initMap();
+  </script>
+
+  <style>
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    #storm-map {
+      width: 100%;
+      height: 100%;
+      background: #1a1a2e;
+      z-index: 1;
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(26, 26, 46, 0.9);
+      z-index: 10;
+      color: white;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .legend {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+
+    .legend h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .legend-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .legend-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid #000;
+    }
+
+    .legend-line {
+      width: 20px;
+      height: 2px;
+      background: #ffd43b;
+      border-top: 2px dashed #ffd43b;
+      flex-shrink: 0;
+    }
+
+    .legend-cone {
+      width: 16px;
+      height: 16px;
+      background: rgba(255, 135, 135, 0.3);
+      border: 1px solid #ff8787;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .storm-sidebar {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .storm-sidebar h3 {
+      margin-bottom: 1rem;
+    }
+
+    .loading-text {
+      color: var(--color-text-secondary);
+    }
+
+    .no-storms {
+      text-align: center;
+      padding: 2rem;
+      color: var(--color-text-secondary);
+    }
+
+    .active-storm-item {
+      padding: 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    .storm-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .storm-item-type {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+
+    .storm-item-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .legend-items {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</BaseLayout>

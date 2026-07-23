@@ -1,0 +1,602 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 防灾指南页面 — 高质量原创内容，SEO 权重页
+---
+
+<BaseLayout
+  title="Preparedness"
+  description="Complete tropical storm and hurricane preparedness guide. Emergency kits, evacuation plans, home protection, and safety tips."
+>
+  <div class="page-header">
+    <h1>🛡️ Tropical Storm Preparedness Guide</h1>
+    <p>Everything you need to know to stay safe before, during, and after a tropical storm.</p>
+  </div>
+
+  <!-- Table of Contents -->
+  <nav class="toc">
+    <h3>Quick Navigation</h3>
+    <ul>
+      <li><a href="#before">Before the Storm</a></li>
+      <li><a href="#during">During the Storm</a></li>
+      <li><a href="#after">After the Storm</a></li>
+      <li><a href="#kit">Emergency Kit Checklist</a></li>
+      <li><a href="#evacuation">Evacuation Guide</a></li>
+      <li><a href="#categories">Storm Categories Explained</a></li>
+    </ul>
+  </nav>
+
+  <!-- Storm Categories -->
+  <section id="categories" class="content-section">
+    <h2>Storm Categories Explained</h2>
+    <div class="category-table">
+      <div class="category-row">
+        <span class="cat-badge" style="background: #4dabf733; color: #1971c2;">TD</span>
+        <div class="cat-info">
+          <strong>Tropical Depression</strong>
+          <p>Winds: 38 mph or less. Can cause heavy rain and flooding but minimal wind damage.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #ffd43b33; color: #f08c00;">TS</span>
+        <div class="cat-info">
+          <strong>Tropical Storm</strong>
+          <p>Winds: 39-73 mph. Can cause significant flooding, power outages, and minor structural damage.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #ff878733; color: #c92a2a;">Cat 1</span>
+        <div class="cat-info">
+          <strong>Category 1 Hurricane</strong>
+          <p>Winds: 74-95 mph. Damage to roofs, trees, and power lines. Coastal flooding likely.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #fa525233; color: #c92a2a;">Cat 2</span>
+        <div class="cat-info">
+          <strong>Category 2 Hurricane</strong>
+          <p>Winds: 96-110 mph. Major roof and siding damage. Near-total power loss expected.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #e6498033; color: #a61e4d;">Cat 3</span>
+        <div class="cat-info">
+          <strong>Category 3 Hurricane (Major)</strong>
+          <p>Winds: 111-129 mph. Devastating damage. Electricity and water unavailable for days to weeks.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #cc5de833; color: #862e9c;">Cat 4</span>
+        <div class="cat-info">
+          <strong>Category 4 Hurricane (Major)</strong>
+          <p>Winds: 130-156 mph. Catastrophic damage. Most of area uninhabitable for weeks or months.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #845ef733; color: #5f3dc4;">Cat 5</span>
+        <div class="cat-info">
+          <strong>Category 5 Hurricane (Major)</strong>
+          <p>Winds: 157+ mph. Total roof failure and wall collapse. Area uninhabitable for months.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Before the Storm -->
+  <section id="before" class="content-section">
+    <h2>Before the Storm</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Build an Emergency Kit</strong>
+          <p>Prepare a 3-day supply of essentials: water (1 gallon per person per day), non-perishable food, flashlight, batteries, first aid kit, medications, and important documents in a waterproof container.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Make a Family Plan</strong>
+          <p>Discuss with your family where to go, how to communicate, and what to do if separated. Designate an out-of-state contact person.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Secure Your Property</strong>
+          <p>Install storm shutters or board up windows. Clear yard of loose items. Reinforce garage doors. Check roof for loose shingles.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Review Insurance Coverage</strong>
+          <p>Standard homeowners insurance doesn't cover flooding. Consider flood insurance through the National Flood Insurance Program (NFIP).</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Know Your Evacuation Zone</strong>
+          <p>Find your local evacuation zone and routes. Plan where you'll stay. Keep your gas tank full during storm season.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- During the Storm -->
+  <section id="during" class="content-section">
+    <h2>During the Storm</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Stay Indoors</strong>
+          <p>Remain inside until officials declare it safe. The eye of the storm can bring temporary calm — don't go outside.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Monitor Updates</strong>
+          <p>Keep a battery-powered or hand-crank radio tuned to NOAA Weather Radio or local news.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Avoid Windows</strong>
+          <p>Stay in an interior room on the lowest level not prone to flooding. Close all interior doors.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Turn Off Utilities if Advised</strong>
+          <p>Shut off gas, electricity, and water if instructed by authorities or if you suspect damage.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Never Use a Generator Indoors</strong>
+          <p>Carbon monoxide from generators is deadly. Keep generators outside and at least 20 feet from windows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- After the Storm -->
+  <section id="after" class="content-section">
+    <h2>After the Storm</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Wait for Official All-Clear</strong>
+          <p>Don't return home until authorities say it's safe. Beware of downed power lines and flooded roads.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Document Damage</strong>
+          <p>Take photos and videos of all damage before cleanup. Contact your insurance company immediately.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Avoid Flood Water</strong>
+          <p>Floodwater can be contaminated, electrically charged, or hide dangerous debris. Do not walk or drive through it.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Check on Neighbors</strong>
+          <p>Especially elderly or disabled individuals who may need assistance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Emergency Kit -->
+  <section id="kit" class="content-section">
+    <h2>Emergency Kit Checklist</h2>
+    <div class="kit-grid">
+      <div class="kit-card">
+        <h4>💧 Water & Food</h4>
+        <ul>
+          <li>1 gallon water per person per day (3-day minimum)</li>
+          <li>Non-perishable food (canned goods, energy bars)</li>
+          <li>Manual can opener</li>
+          <li>Pet food if applicable</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🔦 Light & Power</h4>
+        <ul>
+          <li>Flashlights (avoid candles)</li>
+          <li>Extra batteries (AA, AAA, C, D)</li>
+          <li>Battery-powered or hand-crank radio</li>
+          <li>Portable power bank for phones</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🏥 Health & First Aid</h4>
+        <ul>
+          <li>First aid kit</li>
+          <li>Prescription medications (7-day supply)</li>
+          <li>Over-the-counter medicines</li>
+          <li>Glasses or contact lenses</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>📋 Documents</h4>
+        <ul>
+          <li>ID and insurance cards</li>
+          <li>Bank account numbers</li>
+          <li>Emergency contact list</li>
+          <li>Copies in waterproof bag</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🧰 Tools</h4>
+        <ul>
+          <li>Multi-tool or Swiss army knife</li>
+          <li>Duct tape</li>
+          <li>Plastic sheeting</li>
+          <li>Whistle to signal for help</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🧹 Sanitation</h4>
+        <ul>
+          <li>Hand sanitizer</li>
+          <li>Wet wipes</li>
+          <li>Garbage bags</li>
+          <li>Toilet paper</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evacuation -->
+  <section id="evacuation" class="content-section">
+    <h2>Evacuation Guide</h2>
+    <div class="evac-steps">
+      <div class="evac-step">
+        <span class="step-number">1</span>
+        <div>
+          <strong>Know Your Zone</strong>
+          <p>Find your evacuation zone at ready.gov or your local emergency management website. Zones A are typically evacuated first.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">2</span>
+        <div>
+          <strong>Plan Your Route</strong>
+          <p>Identify multiple routes in case roads are blocked. Local authorities will designate evacuation routes — follow them.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">3</span>
+        <div>
+          <strong>Prepare Your Vehicle</strong>
+          <p>Keep gas tank at least half full during storm season. Check tires, oil, and battery. Have a car emergency kit.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">4</span>
+        <div>
+          <strong>What to Take</strong>
+          <p>Emergency kit, important documents, medications, clothing for 3 days, cash, phone chargers, and valuables.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">5</span>
+        <div>
+          <strong>Where to Go</strong>
+          <p>Stay with family/friends first. Public shelters are available but should be last resort. Hotels outside the evacuation zone are another option.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ (Schema.org) -->
+  <section class="content-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>What is a tropical storm?</summary>
+        <p>A tropical storm is a tropical cyclone with sustained winds between 39-73 mph (63-118 km/h). It is stronger than a tropical depression but weaker than a hurricane.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What's the difference between a tropical storm and a hurricane?</summary>
+        <p>The main difference is wind speed. A tropical storm has winds of 39-73 mph, while a hurricane has winds of 74 mph or greater. Both can cause significant damage through flooding and wind.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How long do tropical storms last?</summary>
+        <p>Tropical storms typically last 2-7 days, but some can persist for weeks. Their duration depends on sea surface temperatures, wind shear, and other atmospheric conditions.</p>
+      </details>
+      <details class="faq-item">
+        <summary>When is tropical storm season?</summary>
+        <p>Atlantic tropical storm season runs from June 1 to November 30, peaking in September. Pacific season runs from May 15 to November 30.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What should I do if a tropical storm is approaching?</summary>
+        <p>Monitor local weather updates, secure your property, review your evacuation plan, and prepare your emergency kit. Follow all instructions from local authorities.</p>
+      </details>
+    </div>
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a tropical storm?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A tropical storm is a tropical cyclone with sustained winds between 39-73 mph (63-118 km/h). It is stronger than a tropical depression but weaker than a hurricane."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's the difference between a tropical storm and a hurricane?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main difference is wind speed. A tropical storm has winds of 39-73 mph, while a hurricane has winds of 74 mph or greater."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When is tropical storm season?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Atlantic tropical storm season runs from June 1 to November 30, peaking in September. Pacific season runs from May 15 to November 30."
+          }
+        }
+      ]
+    })} />
+  </section>
+
+  <style>
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .toc {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 {
+      margin-bottom: 0.75rem;
+    }
+
+    .toc ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .toc a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    .content-section {
+      margin-bottom: 3rem;
+    }
+
+    .content-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    /* Category Table */
+    .category-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .category-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--color-surface);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cat-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 32px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .cat-info strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .cat-info p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Checklist */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--color-surface);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #d1fae5;
+      color: #065f46;
+      border-radius: 50%;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .checklist-item strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .checklist-item p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Kit Grid */
+    .kit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .kit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kit-card {
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kit-card h4 {
+      margin-bottom: 0.75rem;
+    }
+
+    .kit-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .kit-card li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .kit-card li:last-child {
+      border-bottom: none;
+    }
+
+    .kit-card li::before {
+      content: '•';
+      color: var(--color-primary);
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+
+    /* Evacuation Steps */
+    .evac-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .evac-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--color-surface);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .evac-step strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .evac-step p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .faq-item {
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+
+    .faq-item summary {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .faq-item p {
+      margin-top: 0.75rem;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+  </style>
+</BaseLayout>
