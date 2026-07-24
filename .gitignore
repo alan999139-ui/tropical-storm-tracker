@@ -7,3 +7,10 @@ dist/
 .env.production
 .DS_Store
 *.log
+
+# Screenshots
+*.png
+node_modules/
+dist/
+.astro/
+

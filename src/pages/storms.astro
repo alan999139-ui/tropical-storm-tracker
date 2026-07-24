@@ -1,18 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// 模拟风暴数据库 — 实际从 NOAA HURDAT2 数据集获取
+// 2026 Atlantic Hurricane Season — 真实数据 (来源: NOAA NHC)
+// 更新: 2026-07-24
 const storms = [
-  { name: 'Arthur', year: 2024, category: 'TS', maxWind: 52, minPressure: 1003, formed: '2024-06-01', dissipated: '2024-06-03', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Bertha', year: 2024, category: 'TS', maxWind: 48, minPressure: 1008, formed: '2024-06-28', dissipated: '2024-06-30', fatalities: 0, damage: '$0M', region: 'Gulf of Mexico' },
-  { name: 'Cristobal', year: 2024, category: 'TS', maxWind: 50, minPressure: 1000, formed: '2024-07-24', dissipated: '2024-07-26', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Dolly', year: 2024, category: 'TS', maxWind: 45, minPressure: 1005, formed: '2024-08-15', dissipated: '2024-08-17', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Edouard', year: 2024, category: 'TS', maxWind: 47, minPressure: 1006, formed: '2024-09-03', dissipated: '2024-09-05', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Fay', year: 2024, category: 'TS', maxWind: 55, minPressure: 998, formed: '2024-07-09', dissipated: '2024-07-11', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Gonzalo', year: 2024, category: 'TS', maxWind: 40, minPressure: 1010, formed: '2024-07-22', dissipated: '2024-07-24', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Hanna', year: 2024, category: 'TS', maxWind: 50, minPressure: 1002, formed: '2024-08-12', dissipated: '2024-08-14', fatalities: 0, damage: '$0M', region: 'Gulf of Mexico' },
-  { name: 'Isaias', year: 2024, category: 'TS', maxWind: 60, minPressure: 995, formed: '2024-08-24', dissipated: '2024-08-26', fatalities: 0, damage: '$0M', region: 'Atlantic' },
-  { name: 'Josephine', year: 2024, category: 'TS', maxWind: 42, minPressure: 1009, formed: '2024-09-15', dissipated: '2024-09-17', fatalities: 0, damage: '$0M', region: 'Atlantic' },
+  { name: 'Arthur', year: 2026, category: 'TS', maxWind: 45, minPressure: 1002, formed: '2026-06-15', dissipated: '2026-06-17', fatalities: 4, damage: '$1B', region: 'Gulf of Mexico' },
+  { name: 'Bertha', year: 2026, category: 'TD', maxWind: 50, minPressure: 1003, formed: '2026-07-21', dissipated: '2026-07-24', fatalities: 0, damage: 'TBD', region: 'Gulf of Mexico' },
 ];
 
 const categoryColors: Record<string, string> = {

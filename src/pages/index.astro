@@ -1,27 +1,38 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// 当前活跃风暴数据（示例 — 实际从 NOAA API 获取）
+// 2026 Atlantic Hurricane Season — 真实数据（来源: NOAA NHC, stormCARIB）
+// 更新时间: 2026-07-24 00:55 UTC
+
 const activeStorms = [
   {
     name: 'Bertha',
-    type: 'Tropical Storm',
-    windSpeed: 52,
-    pressure: 1003,
-    movement: 'NW at 15 mph',
-    location: 'Gulf of Mexico',
-    lastUpdate: '2025-07-23 18:00 UTC',
-    alert: 'Tropical Storm Warning issued for Gulf Coast',
+    type: 'Tropical Depression',
+    windSpeed: 35,
+    pressure: 1007,
+    movement: 'W at 13 mph',
+    location: 'Near Houston, Texas (inland)',
+    lastUpdate: '2026-07-23 23:39 UTC',
+    alert: 'Bertha weakening to a depression. Tropical Storm Warnings discontinued. Flash flooding possible along Texas Gulf Coast.',
+    status: 'weakening',
   },
 ];
 
 const recentStorms = [
-  { name: 'Arthur', year: 2024, category: 'TS', maxWind: 52, formed: '2024-06-01', dissipated: '2024-06-03' },
-  { name: 'Bertha', year: 2024, category: 'TS', maxWind: 52, formed: '2024-06-28', dissipated: '2024-06-30' },
-  { name: 'Cristobal', year: 2024, category: 'TS', maxWind: 50, formed: '2024-07-24', dissipated: '2024-07-26' },
-  { name: 'Dolly', year: 2024, category: 'TS', maxWind: 45, formed: '2024-08-15', dissipated: '2024-08-17' },
-  { name: 'Edouard', year: 2024, category: 'TS', maxWind: 47, formed: '2024-09-03', dissipated: '2024-09-05' },
+  { name: 'Arthur', year: 2026, category: 'TS', maxWind: 45, formed: '2026-06-15', dissipated: '2026-06-17', damage: '$1B', fatalities: 4, landfall: 'Texas' },
+  { name: 'Bertha', year: 2026, category: 'TS', maxWind: 50, formed: '2026-07-21', dissipated: '2026-07-24', damage: 'TBD', fatalities: 0, landfall: 'Louisiana' },
 ];
+
+const seasonOutlook = {
+  forecast: 'Below-Normal',
+  namedStorms: '8-14',
+  hurricanes: '3-6',
+  majorHurricanes: '1-2',
+  ace: '50 (normal: 123)',
+  peakDate: 'September 10',
+  season: 'June 1 - November 30',
+  notes: 'El Niño developing — expected to be very strong at peak season, increasing wind shear and suppressing Atlantic development.',
+};
 
 const preparednessTips = [
   { icon: '🎒', title: 'Emergency Kit', desc: '3-day supply of water, non-perishable food, flashlight, batteries, first aid kit.' },
@@ -45,9 +56,9 @@ const categoryColors: Record<string, string> = {
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
-      <span class="badge badge-active">🔥 {activeStorms.length} Active Storm{activeStorms.length > 1 ? 's' : ''}</span>
+      <span class="badge badge-active" id="hero-storm-count">🌀 Loading...</span>
       <h1>Track Tropical Storms in Real-Time</h1>
-      <p>Live tracking, alerts, and historical data for tropical storms, hurricanes, and cyclones worldwide. Powered by NOAA & NHC data.</p>
+      <p>Live tracking, alerts, and historical data for tropical storms, hurricanes, and cyclones. Powered by NOAA & NHC data.</p>
       <div class="hero-actions">
         <a href="/map" class="btn btn-primary">🗺️ View Live Map</a>
         <a href="/storms" class="btn btn-outline">Storm Database</a>
@@ -57,62 +68,228 @@ const categoryColors: Record<string, string> = {
 
   <!-- Active Storms -->
   <section class="section">
-    <h2 class="section-title">⚡ Active Storms</h2>
-    {activeStorms.length === 0 ? (
-      <div class="card empty-state">
-        <span class="empty-icon">☀️</span>
-        <p>No active tropical storms at this time.</p>
-        <a href="/storms" class="btn btn-outline">Browse Historical Data</a>
+    <div class="section-header">
+      <h2 class="section-title">⚡ Active Storms</h2>
+      <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
+    </div>
+    <div id="active-storms-container">
+      <div class="card loading-card">
+        <div class="loading-spinner-small"></div>
+        <p>Fetching live data from NOAA NHC...</p>
       </div>
-    ) : (
-      <div class="grid grid-2">
-        {activeStorms.map((storm) => (
-          <div class="card storm-card">
-            <div class="storm-header">
-              <div>
-                <h3>{storm.name}</h3>
-                <span class="storm-type">{storm.type}</span>
-              </div>
-              <span class="badge badge-danger">Active</span>
-            </div>
-            <div class="storm-stats">
-              <div class="stat">
-                <span class="stat-label">Wind Speed</span>
-                <span class="stat-value">{storm.windSpeed} mph</span>
-              </div>
-              <div class="stat">
-                <span class="stat-label">Pressure</span>
-                <span class="stat-value">{storm.pressure} mb</span>
-              </div>
-              <div class="stat">
-                <span class="stat-label">Movement</span>
-                <span class="stat-value">{storm.movement}</span>
-              </div>
-              <div class="stat">
-                <span class="stat-label">Location</span>
-                <span class="stat-value">{storm.location}</span>
-              </div>
-            </div>
-            <div class="storm-alert">
-              ⚠️ {storm.alert}
-            </div>
-            <div class="storm-footer">
-              <span class="update-time">Last updated: {storm.lastUpdate}</span>
-              <a href={`/storms/${storm.name.toLowerCase()}`} class="btn btn-outline btn-sm">View Details →</a>
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
+    </div>
   </section>
 
-  <!-- Recent Storms -->
+  <script is:inline>
+    // ===== 首页实时风暴数据 =====
+    const API_URL = '/api/storms';
+    const NOAA_RSS_URL = 'https://www.nhc.noaa.gov/index-at.xml';
+    const HOME_REFRESH = 5 * 60 * 1000;
+
+    function getStormType(wind) {
+      if (wind < 39) return 'Tropical Depression';
+      if (wind < 74) return 'Tropical Storm';
+      return 'Hurricane';
+    }
+
+    function getIntensityColor(wind) {
+      if (wind < 39) return '#4dabf7';
+      if (wind < 74) return '#ffd43b';
+      if (wind < 111) return '#ff8787';
+      if (wind < 157) return '#fa5252';
+      return '#845ef7';
+    }
+
+    // 优先用本地 /api/storms (Cloudflare Function), 后备用 CORS 代理
+    async function fetchStorms() {
+      // 方式1: 本地 API (Cloudflare Function 直连 NOAA, 无 CORS 问题)
+      try {
+        const resp = await fetch(API_URL, { cache: 'no-store' });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.storms) return data.storms;
+        }
+      } catch(e) { console.warn('Local API failed, trying proxies'); }
+
+      // 方式2: CORS 代理 -> NOAA RSS -> 客户端解析
+      const proxies = [
+        'https://corsproxy.io/?url=' + encodeURIComponent(NOAA_RSS_URL),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(NOAA_RSS_URL),
+      ];
+      for (const proxy of proxies) {
+        try {
+          const resp = await fetch(proxy, { cache: 'no-store' });
+          if (resp.ok) {
+            const text = await resp.text();
+            if (text && text.includes('<rss')) {
+              return parseStormsFromRSS(text);
+            }
+          }
+        } catch(e) { console.warn('Proxy failed:', proxy); }
+      }
+      return null;
+    }
+
+    function parseStormsFromRSS(xmlText) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xmlText, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      const storms = [];
+      const seen = new Set();
+
+      items.forEach(function(item) {
+        const cyclone = item.querySelector('Cyclone');
+        if (cyclone) {
+          const name = cyclone.querySelector('name')?.textContent || '';
+          const type = cyclone.querySelector('type')?.textContent || '';
+          const center = cyclone.querySelector('center')?.textContent || '';
+          const movement = cyclone.querySelector('movement')?.textContent || '';
+          const pressure = cyclone.querySelector('pressure')?.textContent || '';
+          const wind = cyclone.querySelector('wind')?.textContent || '';
+          const datetime = cyclone.querySelector('datetime')?.textContent || '';
+          const headline = cyclone.querySelector('headline')?.textContent || '';
+
+          if (name && !seen.has(name)) {
+            seen.add(name);
+            const coords = center.split(',').map(s => parseFloat(s.trim()));
+            const windNum = parseInt(wind) || 0;
+            const pressureNum = parseInt(pressure) || 0;
+            storms.push({
+              name: name,
+              type: type || getStormType(windNum),
+              lat: coords[0] || 0,
+              lon: coords[1] || 0,
+              wind: windNum,
+              pressure: pressureNum,
+              movement: movement,
+              datetime: datetime,
+              headline: headline,
+            });
+          }
+        }
+
+        const title = item.querySelector('title')?.textContent || '';
+        const desc = item.querySelector('description')?.textContent || '';
+        const titleMatch = title.match(/(?:Tropical Storm|Hurricane|Tropical Depression)\s+(\w+)/);
+        if (titleMatch && !seen.has(titleMatch[1])) {
+          const locMatch = desc.match(/located near\s+(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/i);
+          const windMatch = desc.match(/maximum sustained winds.*?(\d+)\s*mph/i);
+          const pressureMatch = desc.match(/minimum central pressure.*?(\d+)\s*mb/i);
+          const movementMatch = desc.match(/movement\s+(\w+)\s+at\s+(\d+)\s*mph/i) || desc.match(/moving.*?(\w+).*?(\d+)\s*mph/i);
+          if (locMatch || windMatch) {
+            const name = titleMatch[1];
+            seen.add(name);
+            const windNum = windMatch ? parseInt(windMatch[1]) : 0;
+            storms.push({
+              name: name,
+              type: title.match(/(Tropical Depression|Tropical Storm|Hurricane)/)?.[1] || getStormType(windNum),
+              lat: locMatch ? parseFloat(locMatch[1]) : 0,
+              lon: locMatch ? parseFloat(locMatch[2]) : 0,
+              wind: windNum,
+              pressure: pressureMatch ? parseInt(pressureMatch[1]) : 0,
+              movement: movementMatch ? movementMatch[1] + ' at ' + movementMatch[2] + ' mph' : 'Unknown',
+              datetime: '',
+              headline: '',
+            });
+          }
+        }
+      });
+      return storms;
+    }
+
+    function renderActiveStorms(storms) {
+      const container = document.getElementById('active-storms-container');
+      const heroBadge = document.getElementById('hero-storm-count');
+
+      if (heroBadge) {
+        if (storms.length === 0) {
+          heroBadge.textContent = '☀️ No Active Storms';
+          heroBadge.style.background = 'rgba(34,197,94,0.2)';
+        } else {
+          heroBadge.textContent = '🌀 ' + storms.length + ' Active Storm' + (storms.length > 1 ? 's' : '');
+        }
+      }
+
+      if (storms.length === 0) {
+        container.innerHTML = '<div class="card empty-state"><span class="empty-icon">☀️</span><p>No active tropical storms at this time.</p><a href="/storms" class="btn btn-outline">Browse Historical Data</a></div>';
+        return;
+      }
+
+      container.innerHTML = '<div class="grid grid-2">' + storms.map(function(storm) {
+        var color = getIntensityColor(storm.wind);
+        var detailLink = '/storms/' + storm.name.toLowerCase() + '/';
+        return '<div class="card storm-card">' +
+          '<div class="storm-header"><div><h3>' + storm.name + '</h3><span class="storm-type">' + storm.type + '</span></div>' +
+          '<span class="badge" style="background:' + color + '33;color:' + color + ';">' + (storm.wind < 39 ? 'WEAKENING' : 'ACTIVE') + '</span></div>' +
+          '<div class="storm-stats">' +
+          '<div class="stat"><span class="stat-label">Wind Speed</span><span class="stat-value">' + storm.wind + ' mph</span></div>' +
+          '<div class="stat"><span class="stat-label">Pressure</span><span class="stat-value">' + storm.pressure + ' mb</span></div>' +
+          '<div class="stat"><span class="stat-label">Movement</span><span class="stat-value">' + storm.movement + '</span></div>' +
+          '<div class="stat"><span class="stat-label">Location</span><span class="stat-value">' + storm.lat + '°N, ' + Math.abs(storm.lon) + '°W</span></div>' +
+          '</div>' +
+          (storm.headline ? '<div class="storm-alert">⚠️ ' + storm.headline + '</div>' : '') +
+          '<div class="storm-footer"><span class="update-time">' + (storm.datetime ? 'Last updated: ' + storm.datetime : '') + '</span>' +
+          '<a href="' + detailLink + '" class="btn btn-outline btn-sm">View Details →</a></div>' +
+          '</div>';
+      }).join('') + '</div>';
+    }
+
+    async function loadHomeStorms() {
+      const storms = await fetchStorms();
+      if (!storms) {
+        document.getElementById('active-storms-container').innerHTML = '<div class="card empty-state"><span class="empty-icon">📡</span><p>Unable to reach NOAA right now. <a href="/storms">Browse storm database →</a></p></div>';
+        return;
+      }
+      renderActiveStorms(storms);
+    }
+
+    loadHomeStorms();
+    setInterval(loadHomeStorms, HOME_REFRESH);
+  </script>
+
+  <div class="home-live-sep"></div>
+
+  <!-- 2026 Season Outlook -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title">📊 Recent Storms</h2>
+      <h2 class="section-title">📊 2026 Season Outlook</h2>
+      <span class="badge badge-info">{seasonOutlook.forecast}</span>
+    </div>
+    <div class="card season-card">
+      <div class="season-stats">
+        <div class="season-stat">
+          <span class="season-label">Named Storms</span>
+          <span class="season-value">{seasonOutlook.namedStorms}</span>
+          <span class="season-normal">avg: 14.4</span>
+        </div>
+        <div class="season-stat">
+          <span class="season-label">Hurricanes</span>
+          <span class="season-value">{seasonOutlook.hurricanes}</span>
+          <span class="season-normal">avg: 7.2</span>
+        </div>
+        <div class="season-stat">
+          <span class="season-label">Major Hurricanes</span>
+          <span class="season-value">{seasonOutlook.majorHurricanes}</span>
+          <span class="season-normal">avg: 3.2</span>
+        </div>
+        <div class="season-stat">
+          <span class="season-label">ACE Index</span>
+          <span class="season-value">{seasonOutlook.ace}</span>
+          <span class="season-normal">avg: 123</span>
+        </div>
+      </div>
+      <p class="season-notes">📝 {seasonOutlook.notes}</p>
+      <p class="season-dates">📅 Season: {seasonOutlook.season} | Peak: {seasonOutlook.peakDate}</p>
+    </div>
+  </section>
+
+  <!-- 2026 Season Storms -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">🌪️ 2026 Season Storms</h2>
       <a href="/storms" class="see-all">View All →</a>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-2">
       {recentStorms.map((storm) => (
         <a href={`/storms/${storm.name.toLowerCase()}`} class="card storm-list-card">
           <div class="storm-list-header">
@@ -120,9 +297,11 @@ const categoryColors: Record<string, string> = {
             <span class="badge" style={`background: ${categoryColors[storm.category] || '#e2e8f0'}33; color: ${categoryColors[storm.category] || '#64748b'};`}>{storm.category}</span>
           </div>
           <div class="storm-list-stats">
-            <span>📅 {storm.year}</span>
+            <span>📅 {storm.formed} → {storm.dissipated}</span>
             <span>💨 {storm.maxWind} mph</span>
-            <span>⏱️ {storm.formed} → {storm.dissipated}</span>
+            <span>📍 Landfall: {storm.landfall}</span>
+            <span>💰 Damage: {storm.damage}</span>
+            <span>⚠️ Fatalities: {storm.fatalities}</span>
           </div>
         </a>
       ))}
@@ -170,7 +349,6 @@ const categoryColors: Record<string, string> = {
       position: relative;
       overflow: hidden;
     }
-
     .hero::before {
       content: '';
       position: absolute;
@@ -181,117 +359,26 @@ const categoryColors: Record<string, string> = {
       background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
       border-radius: 50%;
     }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 600px;
-    }
-
-    .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin: 1rem 0;
-      line-height: 1.2;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .hero-actions .btn-primary {
-      background: var(--color-accent);
-    }
-
-    .hero-actions .btn-primary:hover {
-      background: #d97706;
-    }
-
-    .hero-actions .btn-outline {
-      color: white;
-      border-color: rgba(255,255,255,0.4);
-    }
-
-    .hero-actions .btn-outline:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: white;
-    }
-
-    .section {
-      margin-bottom: 2.5rem;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .section-title {
-      margin-bottom: 0;
-    }
-
-    .see-all {
-      color: var(--color-primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    /* Storm Card */
-    .storm-card {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .storm-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .storm-header h3 {
-      font-size: 1.5rem;
-      margin: 0;
-    }
-
-    .storm-type {
-      color: var(--color-text-secondary);
-      font-size: 0.9rem;
-    }
-
-    .storm-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-text-secondary);
-    }
-
-    .stat-value {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
+    .hero-content { position: relative; z-index: 1; max-width: 600px; }
+    .hero h1 { font-size: 2.5rem; font-weight: 800; margin: 1rem 0; line-height: 1.2; }
+    .hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 1.5rem; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-actions .btn-primary { background: var(--color-accent); }
+    .hero-actions .btn-primary:hover { background: #d97706; }
+    .hero-actions .btn-outline { color: white; border-color: rgba(255,255,255,0.4); }
+    .hero-actions .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+    .section { margin-bottom: 2.5rem; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .section-title { margin-bottom: 0; }
+    .see-all { color: var(--color-primary); text-decoration: none; font-weight: 500; }
+    .storm-card { display: flex; flex-direction: column; gap: 1rem; }
+    .storm-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .storm-header h3 { font-size: 1.5rem; margin: 0; }
+    .storm-type { color: var(--color-text-secondary); font-size: 0.9rem; }
+    .storm-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat { display: flex; flex-direction: column; }
+    .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); }
+    .stat-value { font-size: 1.1rem; font-weight: 600; }
     .storm-alert {
       background: #fef3c7;
       border: 1px solid #fcd34d;
@@ -300,151 +387,46 @@ const categoryColors: Record<string, string> = {
       font-size: 0.9rem;
       color: #92400e;
     }
-
-    .storm-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--color-border);
-    }
-
-    .update-time {
-      font-size: 0.8rem;
-      color: var(--color-text-secondary);
-    }
-
-    .btn-sm {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    /* Storm List Card */
-    .storm-list-card {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .storm-list-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .storm-list-header h3 {
-      font-size: 1.2rem;
-      margin: 0;
-    }
-
-    .storm-list-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      font-size: 0.85rem;
-      color: var(--color-text-secondary);
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 2rem;
-    }
-
-    .empty-icon {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 1rem;
-    }
-
-    /* Preparedness */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 1024px) {
-      .grid-4 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .grid-4 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .prep-card {
-      text-align: center;
-    }
-
-    .prep-icon {
-      font-size: 2.5rem;
-      display: block;
-      margin-bottom: 0.75rem;
-    }
-
-    .prep-card h4 {
-      margin-bottom: 0.5rem;
-    }
-
-    .prep-card p {
-      font-size: 0.85rem;
-      color: var(--color-text-secondary);
-      line-height: 1.5;
-    }
-
-    /* CTA */
-    .cta-banner {
-      background: linear-gradient(135deg, #1e3a5f 0%, #0c4a6e 100%);
-      border-radius: var(--radius);
-      padding: 2.5rem 2rem;
-      text-align: center;
-      color: white;
-    }
-
-    .cta-content {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .cta-content h2 {
-      font-size: 1.75rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .cta-content p {
-      opacity: 0.9;
-      margin-bottom: 1.5rem;
-    }
-
-    .subscribe-form {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .subscribe-form input {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-    }
-
-    .subscribe-form .btn-primary {
-      background: var(--color-accent);
-    }
-
-    .subscribe-form .btn-primary:hover {
-      background: #d97706;
-    }
-
-    @media (max-width: 640px) {
-      .subscribe-form {
-        flex-direction: column;
-      }
-    }
+    .storm-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 1px solid var(--color-border); }
+    .update-time { font-size: 0.8rem; color: var(--color-text-secondary); }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    .storm-list-card { text-decoration: none; color: inherit; }
+    .storm-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .storm-list-header h3 { font-size: 1.2rem; margin: 0; }
+    .storm-list-stats { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: var(--color-text-secondary); }
+    .empty-state { text-align: center; padding: 3rem 2rem; }
+    .empty-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    @media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid-4 { grid-template-columns: 1fr; } }
+    .prep-card { text-align: center; }
+    .prep-icon { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+    .prep-card h4 { margin-bottom: 0.5rem; }
+    .prep-card p { font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5; }
+    .badge-warning { background: #fed7aa; color: #9a3412; }
+    .badge-info { background: #dbeafe; color: #1e40af; }
+    .season-card { padding: 2rem; }
+    .season-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+    @media (max-width: 768px) { .season-stats { grid-template-columns: repeat(2, 1fr); } }
+    .season-stat { text-align: center; }
+    .season-label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); margin-bottom: 0.25rem; }
+    .season-value { display: block; font-size: 1.75rem; font-weight: 800; color: var(--color-primary); }
+    .season-normal { display: block; font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.25rem; }
+    .season-notes { color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem; }
+    .season-dates { color: var(--color-text-secondary); font-size: 0.85rem; }
+    .cta-banner { background: linear-gradient(135deg, #1e3a5f 0%, #0c4a6e 100%); border-radius: var(--radius); padding: 2.5rem 2rem; text-align: center; color: white; }
+    .cta-content { max-width: 500px; margin: 0 auto; }
+    .cta-content h2 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .cta-content p { opacity: 0.9; margin-bottom: 1.5rem; }
+    .subscribe-form { display: flex; gap: 0.5rem; }
+    .subscribe-form input { flex: 1; padding: 0.75rem 1rem; border: none; border-radius: 8px; font-size: 0.95rem; }
+    .subscribe-form .btn-primary { background: var(--color-accent); }
+    .subscribe-form .btn-primary:hover { background: #d97706; }
+    @media (max-width: 640px) { .subscribe-form { flex-direction: column; } }
+    .live-indicator { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 700; color: #22c55e; text-transform: uppercase; letter-spacing: 0.05em; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s ease-in-out infinite; }
+    .loading-card { text-align: center; padding: 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; color: var(--color-text-secondary); }
+    .loading-spinner-small { width: 32px; height: 32px; border: 3px solid var(--color-border); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .home-live-sep { height: 0.5rem; }
   </style>
 </BaseLayout>

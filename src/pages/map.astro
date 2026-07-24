@@ -1,16 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// 实时地图页面 — 客户端 JS 拉取 NOAA 数据渲染 Leaflet 地图
+// 实时地图页面 — 客户端实时 fetch NOAA NHC RSS 数据
 ---
 
 <BaseLayout
-  title="Live Map"
-  description="Interactive real-time map of active tropical storms and hurricanes. Track storm paths, wind speeds, and projected tracks."
+  title="Live Storm Map"
+  description="Interactive real-time map of active tropical storms and hurricanes. Track storm paths, wind speeds, and projected tracks. Data live from NOAA NHC."
 >
   <div class="page-header">
     <h1>🗺️ Live Storm Map</h1>
-    <p>Real-time tracking of active tropical storms. Data from NOAA National Hurricane Center.</p>
+    <p>Real-time tracking of active tropical storms. Data streamed live from NOAA National Hurricane Center.</p>
+  </div>
+
+  <!-- 状态栏 -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot"></span>
+    <span id="status-text">Connecting to NOAA NHC...</span>
+    <span class="status-time" id="status-time"></span>
   </div>
 
   <!-- 地图容器 -->
@@ -18,7 +25,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div id="storm-map"></div>
     <div class="map-overlay" id="map-loading">
       <div class="loading-spinner"></div>
-      <p>Loading storm data...</p>
+      <p>Fetching live storm data...</p>
     </div>
   </div>
 
@@ -44,16 +51,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
       <div class="legend-item">
         <span class="legend-line"></span>
-        <span>Predicted Path</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-cone"></span>
-        <span>Cone of Uncertainty</span>
+        <span>Storm Path</span>
       </div>
     </div>
   </div>
 
-  <!-- 风暴列表（侧边） -->
+  <!-- 风暴列表 -->
   <div class="storm-sidebar">
     <h3>Active Storms</h3>
     <div id="active-storms-list" class="active-storms">
@@ -61,125 +64,320 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
+  <!-- 数据源说明 -->
+  <div class="data-source">
+    <p>📡 Data source: <a href="https://www.nhc.noaa.gov/index-at.xml" target="_blank" rel="noopener">NOAA NHC Atlantic RSS Feed</a></p>
+    <p>🔄 Auto-refresh every 5 minutes. Last fetch: <span id="last-fetch">—</span></p>
+  </div>
+
   <script is:inline>
-    // 等待 Leaflet 加载
-    function initMap() {
-      if (typeof L === 'undefined') {
-        setTimeout(initMap, 100);
+    // ===== NOAA NHC RSS 数据获取与解析 =====
+    const API_URL = '/api/storms';
+    const NOAA_RSS_URL = 'https://www.nhc.noaa.gov/index-at.xml';
+    const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+    let mapInstance = null;
+    let stormLayer = null;
+    let autoRefreshTimer = null;
+
+    function getIntensityColor(wind) {
+      if (wind < 39) return '#4dabf7';
+      if (wind < 74) return '#ffd43b';
+      if (wind < 111) return '#ff8787';
+      if (wind < 157) return '#fa5252';
+      return '#845ef7';
+    }
+
+    function getStormType(wind) {
+      if (wind < 39) return 'Tropical Depression';
+      if (wind < 74) return 'Tropical Storm';
+      return 'Hurricane';
+    }
+
+    // 解析 NOAA RSS 中的风暴数据
+    function parseStormsFromRSS(xmlText) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xmlText, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      const storms = [];
+      const seenCyclones = new Set();
+
+      items.forEach(function(item) {
+        // NOAA NHC RSS 包含 nhc:Cyclone 元素，包含结构化数据
+        const cyclone = item.querySelector('Cyclone');
+        if (cyclone) {
+          const name = cyclone.getAttribute('name') || cyclone.querySelector('name')?.textContent || '';
+          const type = cyclone.querySelector('type')?.textContent || '';
+          const center = cyclone.querySelector('center')?.textContent || '';
+          const movement = cyclone.querySelector('movement')?.textContent || '';
+          const pressure = cyclone.querySelector('pressure')?.textContent || '';
+          const wind = cyclone.querySelector('wind')?.textContent || '';
+          const datetime = cyclone.querySelector('datetime')?.textContent || '';
+          const headline = cyclone.querySelector('headline')?.textContent || '';
+
+          if (name && !seenCyclones.has(name)) {
+            seenCyclones.add(name);
+            const coords = center.split(',').map(s => parseFloat(s.trim()));
+            const windNum = parseInt(wind) || 0;
+            const pressureNum = parseInt(pressure) || 0;
+
+            storms.push({
+              name: name,
+              type: type || getStormType(windNum),
+              lat: coords[0] || 0,
+              lon: coords[1] || 0,
+              wind: windNum,
+              pressure: pressureNum,
+              movement: movement,
+              datetime: datetime,
+              headline: headline,
+            });
+          }
+        }
+
+        // 也解析 description 中的文本信息作为后备
+        const title = item.querySelector('title')?.textContent || '';
+        const desc = item.querySelector('description')?.textContent || '';
+        const titleMatch = title.match(/(?:Tropical Storm|Hurricane|Tropical Depression)\s+(\w+)/);
+        if (titleMatch && !seenCyclones.has(titleMatch[1])) {
+          // 从 description 提取数据
+          // 格式: "As of 7:00 PM CDT ... center of Bertha was located near 29.9, -95.3 ... maximum sustained winds of about 35 mph ... minimum central pressure was 1007 mb"
+          const locMatch = desc.match(/located near\s+(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/i);
+          const windMatch = desc.match(/maximum sustained winds.*?(\d+)\s*mph/i);
+          const pressureMatch = desc.match(/minimum central pressure.*?(\d+)\s*mb/i);
+          const movementMatch = desc.match(/movement\s+(\w+)\s+at\s+(\d+)\s*mph/i) || desc.match(/moving.*?(\w+).*?(\d+)\s*mph/i);
+
+          if (locMatch || windMatch) {
+            const name = titleMatch[1];
+            seenCyclones.add(name);
+            const windNum = windMatch ? parseInt(windMatch[1]) : 0;
+            storms.push({
+              name: name,
+              type: title.match(/(Tropical Depression|Tropical Storm|Hurricane)/)?.[1] || getStormType(windNum),
+              lat: locMatch ? parseFloat(locMatch[1]) : 0,
+              lon: locMatch ? parseFloat(locMatch[2]) : 0,
+              wind: windNum,
+              pressure: pressureMatch ? parseInt(pressureMatch[1]) : 0,
+              movement: movementMatch ? movementMatch[1] + ' at ' + movementMatch[2] + ' mph' : 'Unknown',
+              datetime: '',
+              headline: '',
+            });
+          }
+        }
+      });
+
+      return storms;
+    }
+
+    // 优先用本地 /api/storms (Cloudflare Function), 后备用 CORS 代理
+    async function fetchNOAAData() {
+      // 方式1: 本地 API
+      try {
+        const resp = await fetch(API_URL, { cache: 'no-store' });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.storms) return data.storms;
+        }
+      } catch(e) { console.warn('Local API failed, trying proxies'); }
+
+      // 方式2: CORS 代理
+      const proxies = [
+        'https://corsproxy.io/?url=' + encodeURIComponent(NOAA_RSS_URL),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(NOAA_RSS_URL),
+      ];
+      for (const proxy of proxies) {
+        try {
+          const resp = await fetch(proxy, { cache: 'no-store' });
+          if (resp.ok) {
+            const text = await resp.text();
+            if (text && text.includes('<rss')) {
+              return parseStormsFromRSS(text);
+            }
+          }
+        } catch(e) { console.warn('Proxy failed:', proxy); }
+      }
+      return null;
+    }
+
+    async function loadStorms() {
+      const statusText = document.getElementById('status-text');
+      const statusTime = document.getElementById('status-time');
+      const lastFetch = document.getElementById('last-fetch');
+
+      statusText.textContent = 'Fetching from NOAA NHC...';
+
+      const result = await fetchNOAAData();
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false }) + ' UTC';
+
+      if (!result) {
+        statusText.textContent = '⚠️ Unable to reach NOAA';
+        statusTime.textContent = '';
+        lastFetch.textContent = timeStr;
+        return null;
+      }
+
+      // /api/storms 返回数组, CORS 代理返回 XML 解析后的数组
+      const storms = Array.isArray(result) ? result : [];
+
+      if (storms.length === 0) {
+        statusText.textContent = '☀️ No active storms';
+      } else {
+        statusText.textContent = '🟢 Live — ' + storms.length + ' active storm' + (storms.length > 1 ? 's' : '');
+      }
+      statusTime.textContent = 'Updated: ' + timeStr;
+      lastFetch.textContent = timeStr;
+
+      return storms;
+    }
+
+    function renderStormsOnMap(storms) {
+      if (!mapInstance || !stormLayer) return;
+
+      stormLayer.clearLayers();
+
+      if (!storms || storms.length === 0) {
+        document.getElementById('map-loading').style.display = 'none';
+        const listEl = document.getElementById('active-storms-list');
+        listEl.innerHTML = '<p class="no-storms">☀️ No active tropical storms</p>';
         return;
       }
 
-      // 初始化地图
-      const map = L.map('storm-map', {
-        center: [28, -70],
-        zoom: 4,
-        minZoom: 2,
-        maxZoom: 10,
-      });
+      const allLatLngs = [];
 
-      // 使用免费的瓦片地图
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19,
-      }).addTo(map);
+      storms.forEach(function(storm) {
+        if (!storm.lat || !storm.lon) return;
 
-      // 模拟数据 — 实际从 NOAA NHC API 获取
-      // NOAA RSS: https://www.nhc.noaa.gov/index-at.xml
-      // NOAA GIS: https://www.nhc.noaa.gov/gis/
+        const color = getIntensityColor(storm.wind);
+        const latlng = [storm.lat, storm.lon];
+        allLatLngs.push(latlng);
 
-      const mockStorms = [
-        {
-          name: 'Bertha',
-          type: 'Tropical Storm',
-          position: [25.4, -90.2],
-          wind: 45,
-          pressure: 1008,
-          movement: 'NW at 15 mph',
-          path: [
-            [23.1, -88.5],
-            [24.2, -89.3],
-            [25.4, -90.2],
-            [26.8, -91.0],
-            [28.1, -91.8],
-          ],
-        },
-      ];
-
-      const stormLayer = L.layerGroup().addTo(map);
-
-      mockStorms.forEach(storm => {
-        // 风暴当前位置标记
-        const marker = L.circleMarker(storm.position, {
+        // 当前位置标记
+        const marker = L.circleMarker(latlng, {
           radius: 12,
-          fillColor: '#ffd43b',
+          fillColor: color,
           color: '#000',
           weight: 2,
-          fillOpacity: 0.8,
+          fillOpacity: 0.85,
         }).addTo(stormLayer);
 
-        marker.bindPopup(`
-          <div style="font-family: Inter, sans-serif;">
-            <strong>${storm.name}</strong><br>
-            ${storm.type}<br>
-            Wind: ${storm.wind} mph<br>
-            Pressure: ${storm.pressure} mb<br>
-            Movement: ${storm.movement}
-          </div>
-        `);
+        marker.bindPopup(
+          '<div style="font-family: Inter, sans-serif; min-width: 180px;">' +
+          '<strong style="font-size: 1.1rem;">' + storm.name + '</strong><br>' +
+          '<span style="color: #64748b;">' + storm.type + '</span><br>' +
+          '<hr style="margin: 6px 0; border: none; border-top: 1px solid #e2e8f0;">' +
+          '💨 Wind: <strong>' + storm.wind + ' mph</strong><br>' +
+          '📊 Pressure: <strong>' + storm.pressure + ' mb</strong><br>' +
+          '🧭 Movement: ' + storm.movement + '<br>' +
+          (storm.datetime ? '🕐 ' + storm.datetime : '') +
+          '</div>'
+        );
 
-        // 路径线
-        L.polyline(storm.path, {
-          color: '#ffd43b',
-          weight: 2,
-          opacity: 0.7,
-          dashArray: '5, 10',
-        }).addTo(stormLayer);
-
-        // 预测路径（虚线）
-        if (storm.path.length > 2) {
-          const lastPos = storm.path[storm.path.length - 1];
-          const forecastPath = [
-            lastPos,
-            [lastPos[0] + 1.5, lastPos[1] - 0.5],
-            [lastPos[0] + 3, lastPos[1] - 1],
-          ];
-          L.polyline(forecastPath, {
-            color: '#ff8787',
-            weight: 2,
-            opacity: 0.5,
-            dashArray: '2, 8',
-          }).addTo(stormLayer);
+        // 如果有 headline，添加为标记 tooltip
+        if (storm.headline) {
+          marker.bindTooltip(storm.headline, { direction: 'top', offset: [0, -10] });
         }
       });
+
+      // 自适应缩放到所有风暴
+      if (allLatLngs.length > 0) {
+        if (allLatLngs.length === 1) {
+          mapInstance.setView(allLatLngs[0], 5);
+        } else {
+          mapInstance.fitBounds(allLatLngs, { padding: [50, 50] });
+        }
+      }
 
       // 隐藏加载状态
       document.getElementById('map-loading').style.display = 'none';
 
       // 更新侧边栏
       const listEl = document.getElementById('active-storms-list');
-      if (mockStorms.length === 0) {
-        listEl.innerHTML = '<p class="no-storms">☀️ No active storms</p>';
-      } else {
-        listEl.innerHTML = mockStorms.map(s => `
-          <div class="active-storm-item">
-            <div class="storm-item-header">
-              <strong>${s.name}</strong>
-              <span class="storm-item-type">${s.type}</span>
-            </div>
-            <div class="storm-item-stats">
-              <span>💨 ${s.wind} mph</span>
-              <span>📊 ${s.pressure} mb</span>
-            </div>
-          </div>
-        `).join('');
-      }
+      listEl.innerHTML = storms.map(function(s) {
+        const color = getIntensityColor(s.wind);
+        return '<div class="active-storm-item">' +
+          '<div class="storm-item-header">' +
+            '<strong>' + s.name + '</strong>' +
+            '<span class="storm-item-type" style="color: ' + color + ';">' + s.type + '</span>' +
+          '</div>' +
+          '<div class="storm-item-stats">' +
+            '<span>💨 ' + s.wind + ' mph</span>' +
+            '<span>📊 ' + s.pressure + ' mb</span>' +
+            '<span>🧭 ' + s.movement + '</span>' +
+          '</div>' +
+          (s.headline ? '<div class="storm-item-headline">' + s.headline + '</div>' : '') +
+        '</div>';
+      }).join('');
     }
 
-    initMap();
+    // 初始化地图
+    function initMap() {
+      if (typeof L === 'undefined') {
+        setTimeout(initMap, 100);
+        return;
+      }
+
+      mapInstance = L.map('storm-map', {
+        center: [28, -85],
+        zoom: 4,
+        minZoom: 2,
+        maxZoom: 10,
+        scrollWheelZoom: false,
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(mapInstance);
+
+      stormLayer = L.layerGroup().addTo(mapInstance);
+
+      // 首次加载
+      loadStorms().then(function(storms) {
+        renderStormsOnMap(storms);
+      });
+
+      // 自动刷新
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(function() {
+        loadStorms().then(function(storms) {
+          renderStormsOnMap(storms);
+        });
+      }, REFRESH_INTERVAL);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMap);
+    } else {
+      initMap();
+    }
   </script>
 
   <style>
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-time { margin-left: auto; color: var(--color-text-secondary); font-size: 0.85rem; }
     .map-container {
       position: relative;
       width: 100%;
@@ -189,43 +387,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: var(--shadow-md);
       margin-bottom: 1.5rem;
     }
-
-    #storm-map {
-      width: 100%;
-      height: 100%;
-      background: #1a1a2e;
-      z-index: 1;
-    }
-
+    #storm-map { width: 100%; height: 100%; background: #1a1a2e; z-index: 1; }
     .map-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       background: rgba(26, 26, 46, 0.9);
       z-index: 10;
       color: white;
     }
-
     .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.2);
+      width: 40px; height: 40px;
+      border: 4px solid rgba(255,255,255,0.2);
       border-top-color: var(--color-primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin-bottom: 1rem;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
+    @keyframes spin { to { transform: rotate(360deg); } }
     .legend {
       background: var(--color-surface);
       border-radius: var(--radius);
@@ -233,100 +413,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: var(--shadow-sm);
       margin-bottom: 1.5rem;
     }
-
-    .legend h3 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    .legend-items {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    .legend-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      border: 2px solid #000;
-    }
-
-    .legend-line {
-      width: 20px;
-      height: 2px;
-      background: #ffd43b;
-      border-top: 2px dashed #ffd43b;
-      flex-shrink: 0;
-    }
-
-    .legend-cone {
-      width: 16px;
-      height: 16px;
-      background: rgba(255, 135, 135, 0.3);
-      border: 1px solid #ff8787;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
-
+    .legend h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+    .legend-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+    .legend-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; border: 2px solid #000; }
+    .legend-line { width: 20px; height: 2px; background: #ffd43b; border-top: 2px dashed #ffd43b; flex-shrink: 0; }
     .storm-sidebar {
       background: var(--color-surface);
       border-radius: var(--radius);
       padding: 1.5rem;
       box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
     }
-
-    .storm-sidebar h3 {
-      margin-bottom: 1rem;
-    }
-
-    .loading-text {
-      color: var(--color-text-secondary);
-    }
-
-    .no-storms {
-      text-align: center;
-      padding: 2rem;
-      color: var(--color-text-secondary);
-    }
-
+    .storm-sidebar h3 { margin-bottom: 1rem; }
+    .loading-text { color: var(--color-text-secondary); }
+    .no-storms { text-align: center; padding: 2rem; color: var(--color-text-secondary); }
     .active-storm-item {
       padding: 1rem;
       border: 1px solid var(--color-border);
       border-radius: 8px;
       margin-bottom: 0.75rem;
     }
-
-    .storm-item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .storm-item-type {
-      font-size: 0.8rem;
+    .storm-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .storm-item-type { font-size: 0.8rem; }
+    .storm-item-stats { display: flex; gap: 1rem; font-size: 0.85rem; flex-wrap: wrap; }
+    .storm-item-headline { margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.4; }
+    .data-source {
+      text-align: center;
       color: var(--color-text-secondary);
-    }
-
-    .storm-item-stats {
-      display: flex;
-      gap: 1rem;
       font-size: 0.85rem;
+      padding: 1rem;
     }
-
-    @media (max-width: 768px) {
-      .legend-items {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
+    .data-source a { color: var(--color-primary); }
+    @media (max-width: 768px) { .legend-items { grid-template-columns: 1fr 1fr; } }
   </style>
 </BaseLayout>
