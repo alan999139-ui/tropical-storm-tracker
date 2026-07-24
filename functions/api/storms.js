@@ -5,6 +5,13 @@
 export async function onRequestGet(context) {
   const NOAA_RSS_URL = 'https://www.nhc.noaa.gov/index-at.xml';
 
+  // 1. 优先使用构建时数据（静态构建，服务器端已有最新数据）
+  const buildtimeData = getBuildtimeStorms();
+  if (buildtimeData && !buildtimeData._fallback) {
+    return jsonResponse(context, buildtimeData);
+  }
+
+  // 2. 运行时从 NOAA 实时获取
   try {
     const response = await fetch(NOAA_RSS_URL, {
       headers: {
@@ -32,10 +39,18 @@ export async function onRequestGet(context) {
       storms: storms,
     });
   } catch (err) {
+    // 3. 降级：使用构建时缓存数据（即使标记为 fallback）
+    if (buildtimeData) {
+      buildtimeData._runtimeFallback = true;
+      buildtimeData._runtimeError = err.message;
+      return jsonResponse(context, buildtimeData);
+    }
     return jsonResponse(context, {
       error: 'Internal error fetching NOAA data',
       message: err.message,
       storms: [],
+      source: 'NOAA NHC (unavailable)',
+      fetchedAt: new Date().toISOString(),
     }, 500);
   }
 }
@@ -50,6 +65,20 @@ function jsonResponse(context, data, status = 200) {
       'Cache-Control': 'public, max-age=120',
     },
   });
+}
+
+// 构建时 active.json 路径（Cloudflare Pages Functions 在 dist 同级目录运行）
+function getBuildtimeStorms() {
+  try {
+    // 尝试从 dist 同级读取（构建时 prebuild 生成）
+    const { readFileSync } = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'active.json');
+    const raw = readFileSync(filePath, 'utf8');
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
 
 function parseStormsFromRSS(xmlText) {

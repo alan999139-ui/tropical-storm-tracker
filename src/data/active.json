@@ -1,0 +1,8 @@
+{
+  "source": "NOAA NHC",
+  "feedUrl": "https://www.nhc.noaa.gov/index-at.xml",
+  "fetchedAt": "Fri, 24 Jul 2026 14:16:23 GMT",
+  "activeStorms": 0,
+  "storms": [],
+  "_buildTime": "2026-07-24T14:16:23.176Z"
+}

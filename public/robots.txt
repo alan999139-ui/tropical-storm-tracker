@@ -1,6 +1,11 @@
-# robots.txt — 允许所有爬虫
+# robots.txt — Tropical Storm Tracker
+# Allow all crawlers for SEO
+
 User-agent: *
 Allow: /
 
+# Block API routes (not needed by crawlers)
+Disallow: /api/
+
 # Sitemap
-Sitemap: https://tropicalstormtracker.example.com/sitemap-index.xml
+Sitemap: https://tropical-storm-tracker.pages.dev/sitemap-index.xml

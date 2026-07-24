@@ -1,24 +1,37 @@
 ---
-// 全局布局模板
+import { languages, t, localizedPath } from '../i18n/dict';
+
 interface Props {
   title: string;
   description?: string;
   canonical?: string;
+  lang?: string;
 }
 
 const {
   title,
   description = "Real-time tropical storm tracking, alerts, and historical data. Stay informed about tropical storms, hurricanes, and cyclones worldwide.",
   canonical,
+  lang = 'en',
 } = Astro.props;
 
-const siteName = "Tropical Storm Tracker";
-const fullTitle = title === "Home" ? `${siteName} — Real-Time Storm Tracking & Alerts` : `${title} | ${siteName}`;
+const siteName = t('brand.name', lang);
+const fullTitle = title === "Home" ? `${siteName} — ${lang === 'zh' ? '实时风暴追踪与预警' : 'Real-Time Storm Tracking & Alerts'}` : `${title} | ${siteName}`;
 const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toString();
+const currentPath = Astro.url.pathname;
+
+// 语言切换链接
+const langSwitchLinks = Object.values(languages).map(l => ({
+  code: l.code,
+  name: l.name,
+  flag: l.flag,
+  url: localizedPath(currentPath.replace(/^\/zh/, ''), l.code),
+  active: l.code === lang,
+}));
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,6 +43,12 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
   <link rel="canonical" href={canonicalURL} />
   <meta name="robots" content="index, follow" />
 
+  <!-- hreflang for SEO -->
+  {langSwitchLinks.map(l => (
+    <link rel="alternate" hreflang={l.code} href={new URL(l.url, Astro.site).toString()} />
+  ))}
+  <link rel="alternate" hreflang="x-default" href={new URL(currentPath.replace(/^\/zh/, ''), Astro.site).toString()} />
+
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content={fullTitle} />
@@ -37,6 +56,7 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:site_name" content={siteName} />
   <meta property="og:image" content="/og-image.png" />
+  <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -60,32 +80,37 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": siteName,
-    "url": Astro.site?.toString() || "https://tropicalstormtracker.example.com",
+    "url": Astro.site?.toString() || "https://tropical-storm-tracker.pages.dev",
     "description": description,
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": `${Astro.site?.toString() || ""}/search?q={search_term_string}`
-      },
-      "query-input": "required name=search_term_string"
-    }
+    "inLanguage": lang === 'zh' ? 'zh-CN' : 'en',
   })} />
 </head>
 <body>
   <header class="site-header">
     <nav class="nav">
-      <a href="/" class="nav-logo">
+      <a href={localizedPath('/', lang)} class="nav-logo">
         <span class="logo-icon">🌪️</span>
-        <span class="logo-text">Tropical Storm Tracker</span>
+        <span class="logo-text">{siteName}</span>
       </a>
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/storms">Storms</a></li>
-        <li><a href="/map">Live Map</a></li>
-        <li><a href="/preparedness">Preparedness</a></li>
-        <li><a href="/about">About</a></li>
+        <li><a href={localizedPath('/', lang)}>{t('nav.home', lang)}</a></li>
+        <li><a href={localizedPath('/storms', lang)}>{t('nav.storms', lang)}</a></li>
+        <li><a href={localizedPath('/map', lang)}>{t('nav.map', lang)}</a></li>
+        <li><a href={localizedPath('/preparedness', lang)}>{t('nav.preparedness', lang)}</a></li>
+        <li><a href={localizedPath('/about', lang)}>{t('nav.about', lang)}</a></li>
       </ul>
+      <!-- Language Switcher -->
+      <div class="lang-switcher">
+        {langSwitchLinks.map((l, i) => (
+          <>
+            {i > 0 && <span class="lang-sep">|</span>}
+            <a href={l.url} class:list={["lang-link", { active: l.active }]} title={l.name}>
+              <span class="lang-flag">{l.flag}</span>
+              <span class="lang-code">{l.code.toUpperCase()}</span>
+            </a>
+          </>
+        ))}
+      </div>
     </nav>
   </header>
 
@@ -96,28 +121,28 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>Tropical Storm Tracker</h3>
-        <p>Real-time tropical storm tracking and information platform.</p>
+        <h3>{siteName}</h3>
+        <p>{t('footer.desc', lang)}</p>
       </div>
       <div class="footer-section">
-        <h4>Resources</h4>
+        <h4>{t('footer.resources', lang)}</h4>
         <ul>
           <li><a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NHC Official</a></li>
           <li><a href="https://www.noaa.gov" target="_blank" rel="noopener">NOAA</a></li>
-          <li><a href="/preparedness">Preparedness Guide</a></li>
+          <li><a href={localizedPath('/preparedness', lang)}>{t('nav.preparedness', lang)}</a></li>
         </ul>
       </div>
       <div class="footer-section">
-        <h4>Quick Links</h4>
+        <h4>{t('footer.quickLinks', lang)}</h4>
         <ul>
-          <li><a href="/map">Live Storm Map</a></li>
-          <li><a href="/storms">Storm Database</a></li>
+          <li><a href={localizedPath('/map', lang)}>{t('nav.map', lang)}</a></li>
+          <li><a href={localizedPath('/storms', lang)}>{t('nav.storms', lang)}</a></li>
           <li><a href="/feed.xml">RSS Feed</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; {new Date().getFullYear()} Tropical Storm Tracker. Data sourced from NOAA/NHC. Not for life-safety decisions.</p>
+      <p>&copy; {new Date().getFullYear()} {t('footer.copyright', lang)}</p>
     </div>
   </footer>
 
@@ -142,16 +167,8 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       --max-width: 1200px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background: var(--color-bg);
@@ -200,9 +217,7 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       font-size: 1.25rem;
     }
 
-    .logo-icon {
-      font-size: 1.5rem;
-    }
+    .logo-icon { font-size: 1.5rem; }
 
     .nav-links {
       display: flex;
@@ -217,9 +232,29 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       transition: color 0.2s;
     }
 
-    .nav-links a:hover {
-      color: var(--color-primary);
+    .nav-links a:hover { color: var(--color-primary); }
+
+    /* Language Switcher */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
     }
+    .lang-sep { color: var(--color-border); }
+    .lang-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-decoration: none;
+      color: var(--color-text-secondary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .lang-link:hover { background: var(--color-bg); color: var(--color-text); }
+    .lang-link.active { background: var(--color-primary); color: white; }
+    .lang-flag { font-size: 1rem; }
 
     /* Footer */
     .site-footer {
@@ -237,36 +272,12 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       gap: 2rem;
     }
 
-    .footer-section h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-section h4 {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-text-secondary);
-      margin-bottom: 0.75rem;
-    }
-
-    .footer-section ul {
-      list-style: none;
-    }
-
-    .footer-section li {
-      margin-bottom: 0.4rem;
-    }
-
-    .footer-section a {
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-section a:hover {
-      color: var(--color-primary);
-    }
+    .footer-section h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .footer-section h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); margin-bottom: 0.75rem; }
+    .footer-section ul { list-style: none; }
+    .footer-section li { margin-bottom: 0.4rem; }
+    .footer-section a { color: var(--color-text-secondary); text-decoration: none; transition: color 0.2s; }
+    .footer-section a:hover { color: var(--color-primary); }
 
     .footer-bottom {
       border-top: 1px solid var(--color-border);
@@ -278,22 +289,13 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
 
     /* 响应式 */
     @media (max-width: 768px) {
-      .nav-links {
-        gap: 1rem;
-        font-size: 0.9rem;
-      }
-
-      .nav-logo .logo-text {
-        display: none;
-      }
-
-      .footer-content {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
+      .nav-links { gap: 1rem; font-size: 0.9rem; }
+      .nav-logo .logo-text { display: none; }
+      .lang-link .lang-code { display: none; }
+      .footer-content { grid-template-columns: 1fr; gap: 1.5rem; }
     }
 
-    /* 卡片通用样式 */
+    /* 卡片 */
     .card {
       background: var(--color-surface);
       border-radius: var(--radius);
@@ -301,13 +303,9 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       padding: 1.5rem;
       transition: transform 0.2s, box-shadow 0.2s;
     }
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    /* 按钮通用样式 */
+    /* 按钮 */
     .btn {
       display: inline-block;
       padding: 0.75rem 1.5rem;
@@ -318,26 +316,10 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       transition: all 0.2s;
       border: none;
     }
-
-    .btn-primary {
-      background: var(--color-primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--color-primary-dark);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--color-primary);
-      border: 2px solid var(--color-primary);
-    }
-
-    .btn-outline:hover {
-      background: var(--color-primary);
-      color: white;
-    }
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-primary:hover { background: var(--color-primary-dark); }
+    .btn-outline { background: transparent; color: var(--color-primary); border: 2px solid var(--color-primary); }
+    .btn-outline:hover { background: var(--color-primary); color: white; }
 
     /* 标签 */
     .badge {
@@ -350,48 +332,16 @@ const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toStri
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+    .badge-active { background: #fef3c7; color: #92400e; }
+    .badge-danger { background: #fee2e2; color: #991b1b; }
+    .badge-safe { background: #d1fae5; color: #065f46; }
 
-    .badge-active {
-      background: #fef3c7;
-      color: #92400e;
-    }
+    .section-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; }
 
-    .badge-danger {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .badge-safe {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    /* 段落标题 */
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-    }
-
-    /* 网格布局 */
-    .grid {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .grid-2 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .grid-3 {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (max-width: 768px) {
-      .grid-2, .grid-3 {
-        grid-template-columns: 1fr;
-      }
-    }
+    .grid { display: grid; gap: 1.5rem; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
   </style>
 </body>
 </html>

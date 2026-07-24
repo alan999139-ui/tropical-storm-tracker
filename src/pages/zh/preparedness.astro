@@ -1,333 +1,334 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
 
-// 防灾指南页面 — 高质量原创内容，SEO 权重页
+// 防灾指南页面 — 高质量原创内容，SEO 权重页（中文版）
 ---
 
 <BaseLayout
-  title="Preparedness"
-  description="Complete tropical storm and hurricane preparedness guide. Emergency kits, evacuation plans, home protection, and safety tips."
-  lang="en"
+  title={t('prepPage.title', 'zh')}
+  description={t('prepPage.desc', 'zh')}
+  lang="zh"
 >
   <div class="page-header">
-    <h1>🛡️ Tropical Storm Preparedness Guide</h1>
-    <p>Everything you need to know to stay safe before, during, and after a tropical storm.</p>
+    <h1>{t('prepPage.title', 'zh')}</h1>
+    <p>{t('prepPage.desc', 'zh')}</p>
   </div>
 
-  <!-- Table of Contents -->
+  <!-- 快速导航 -->
   <nav class="toc">
-    <h3>Quick Navigation</h3>
+    <h3>{t('prepPage.quickNav', 'zh')}</h3>
     <ul>
-      <li><a href="#before">Before the Storm</a></li>
-      <li><a href="#during">During the Storm</a></li>
-      <li><a href="#after">After the Storm</a></li>
-      <li><a href="#kit">Emergency Kit Checklist</a></li>
-      <li><a href="#evacuation">Evacuation Guide</a></li>
-      <li><a href="#categories">Storm Categories Explained</a></li>
+      <li><a href="#before">风暴来临前</a></li>
+      <li><a href="#during">风暴期间</a></li>
+      <li><a href="#after">风暴过后</a></li>
+      <li><a href="#kit">应急包清单</a></li>
+      <li><a href="#evacuation">撤离指南</a></li>
+      <li><a href="#categories">风暴等级说明</a></li>
     </ul>
   </nav>
 
-  <!-- Storm Categories -->
+  <!-- 风暴等级 -->
   <section id="categories" class="content-section">
-    <h2>Storm Categories Explained</h2>
+    <h2>{t('prepPage.categories', 'zh')}</h2>
     <div class="category-table">
       <div class="category-row">
         <span class="cat-badge" style="background: #4dabf733; color: #1971c2;">TD</span>
         <div class="cat-info">
-          <strong>Tropical Depression</strong>
-          <p>Winds: 38 mph or less. Can cause heavy rain and flooding but minimal wind damage.</p>
+          <strong>热带低压</strong>
+          <p>风速：38 mph 以下。可能带来暴雨和洪水，但风害较小。</p>
         </div>
       </div>
       <div class="category-row">
         <span class="cat-badge" style="background: #ffd43b33; color: #f08c00;">TS</span>
         <div class="cat-info">
-          <strong>Tropical Storm</strong>
-          <p>Winds: 39-73 mph. Can cause significant flooding, power outages, and minor structural damage.</p>
+          <strong>热带风暴</strong>
+          <p>风速：39-73 mph。可能造成严重洪水、停电和轻微结构损坏。</p>
         </div>
       </div>
       <div class="category-row">
-        <span class="cat-badge" style="background: #ff878733; color: #c92a2a;">Cat 1</span>
+        <span class="cat-badge" style="background: #ff878733; color: #c92a2a;">1级</span>
         <div class="cat-info">
-          <strong>Category 1 Hurricane</strong>
-          <p>Winds: 74-95 mph. Damage to roofs, trees, and power lines. Coastal flooding likely.</p>
+          <strong>1级飓风</strong>
+          <p>风速：74-95 mph。屋顶、树木和电线受损。沿海地区可能洪水泛滥。</p>
         </div>
       </div>
       <div class="category-row">
-        <span class="cat-badge" style="background: #fa525233; color: #c92a2a;">Cat 2</span>
+        <span class="cat-badge" style="background: #fa525233; color: #c92a2a;">2级</span>
         <div class="cat-info">
-          <strong>Category 2 Hurricane</strong>
-          <p>Winds: 96-110 mph. Major roof and siding damage. Near-total power loss expected.</p>
+          <strong>2级飓风</strong>
+          <p>风速：96-110 mph。屋顶和外墙严重受损。预计几乎全面停电。</p>
         </div>
       </div>
       <div class="category-row">
-        <span class="cat-badge" style="background: #e6498033; color: #a61e4d;">Cat 3</span>
+        <span class="cat-badge" style="background: #e6498033; color: #a61e4d;">3级</span>
         <div class="cat-info">
-          <strong>Category 3 Hurricane (Major)</strong>
-          <p>Winds: 111-129 mph. Devastating damage. Electricity and water unavailable for days to weeks.</p>
+          <strong>3级飓风（强飓风）</strong>
+          <p>风速：111-129 mph。破坏性极强。停水停电可能持续数天至数周。</p>
         </div>
       </div>
       <div class="category-row">
-        <span class="cat-badge" style="background: #cc5de833; color: #862e9c;">Cat 4</span>
+        <span class="cat-badge" style="background: #cc5de833; color: #862e9c;">4级</span>
         <div class="cat-info">
-          <strong>Category 4 Hurricane (Major)</strong>
-          <p>Winds: 130-156 mph. Catastrophic damage. Most of area uninhabitable for weeks or months.</p>
+          <strong>4级飓风（强飓风）</strong>
+          <p>风速：130-156 mph。灾难性破坏。大部分地区数周或数月内无法居住。</p>
         </div>
       </div>
       <div class="category-row">
-        <span class="cat-badge" style="background: #845ef733; color: #5f3dc4;">Cat 5</span>
+        <span class="cat-badge" style="background: #845ef733; color: #5f3dc4;">5级</span>
         <div class="cat-info">
-          <strong>Category 5 Hurricane (Major)</strong>
-          <p>Winds: 157+ mph. Total roof failure and wall collapse. Area uninhabitable for months.</p>
+          <strong>5级飓风（强飓风）</strong>
+          <p>风速：157 mph 以上。屋顶完全塌陷、墙壁倒塌。该地区数月内无法居住。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Before the Storm -->
+  <!-- 风暴来临前 -->
   <section id="before" class="content-section">
-    <h2>Before the Storm</h2>
+    <h2>风暴来临前</h2>
     <div class="checklist">
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Build an Emergency Kit</strong>
-          <p>Prepare a 3-day supply of essentials: water (1 gallon per person per day), non-perishable food, flashlight, batteries, first aid kit, medications, and important documents in a waterproof container.</p>
+          <strong>准备应急包</strong>
+          <p>准备3天的必需品：饮用水（每人每天1加仑）、不易腐食品、手电筒、电池、急救包、药物，以及防水容器中的重要文件。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Make a Family Plan</strong>
-          <p>Discuss with your family where to go, how to communicate, and what to do if separated. Designate an out-of-state contact person.</p>
+          <strong>制定家庭计划</strong>
+          <p>与家人讨论去哪里、如何联络、走散后怎么办。指定一个外州的联系人。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Secure Your Property</strong>
-          <p>Install storm shutters or board up windows. Clear yard of loose items. Reinforce garage doors. Check roof for loose shingles.</p>
+          <strong>加固房屋</strong>
+          <p>安装防风百叶窗或用木板封住窗户。清理院中松散物品。加固车库门。检查屋顶瓦片是否松动。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Review Insurance Coverage</strong>
-          <p>Standard homeowners insurance doesn't cover flooding. Consider flood insurance through the National Flood Insurance Program (NFIP).</p>
+          <strong>检查保险覆盖范围</strong>
+          <p>标准房屋保险不覆盖洪水损失。考虑通过国家洪水保险计划（NFIP）购买洪水保险。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Know Your Evacuation Zone</strong>
-          <p>Find your local evacuation zone and routes. Plan where you'll stay. Keep your gas tank full during storm season.</p>
+          <strong>了解你的撤离区域</strong>
+          <p>查询当地撤离区域和路线。规划好住宿地点。风暴季期间保持油箱满油。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- During the Storm -->
+  <!-- 风暴期间 -->
   <section id="during" class="content-section">
-    <h2>During the Storm</h2>
+    <h2>风暴期间</h2>
     <div class="checklist">
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Stay Indoors</strong>
-          <p>Remain inside until officials declare it safe. The eye of the storm can bring temporary calm — don't go outside.</p>
+          <strong>留在室内</strong>
+          <p>在官方宣布安全之前不要外出。风暴眼会带来短暂的平静——切勿出门。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Monitor Updates</strong>
-          <p>Keep a battery-powered or hand-crank radio tuned to NOAA Weather Radio or local news.</p>
+          <strong>持续关注最新消息</strong>
+          <p>使用电池供电或手摇式收音机收听 NOAA 气象广播或当地新闻。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Avoid Windows</strong>
-          <p>Stay in an interior room on the lowest level not prone to flooding. Close all interior doors.</p>
+          <strong>远离窗户</strong>
+          <p>待在不易洪水泛滥的最低层内部房间。关闭所有内门。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Turn Off Utilities if Advised</strong>
-          <p>Shut off gas, electricity, and water if instructed by authorities or if you suspect damage.</p>
+          <strong>必要时关闭公用设施</strong>
+          <p>如当局指示或怀疑有损坏，关闭燃气、电力和水源。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Never Use a Generator Indoors</strong>
-          <p>Carbon monoxide from generators is deadly. Keep generators outside and at least 20 feet from windows.</p>
+          <strong>切勿在室内使用发电机</strong>
+          <p>发电机产生的一氧化碳可致命。将发电机放在室外，距离窗户至少20英尺。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- After the Storm -->
+  <!-- 风暴过后 -->
   <section id="after" class="content-section">
-    <h2>After the Storm</h2>
+    <h2>风暴过后</h2>
     <div class="checklist">
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Wait for Official All-Clear</strong>
-          <p>Don't return home until authorities say it's safe. Beware of downed power lines and flooded roads.</p>
+          <strong>等待官方解除警报</strong>
+          <p>在当局宣布安全之前不要返回家中。注意倒伏的电线和积水道路。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Document Damage</strong>
-          <p>Take photos and videos of all damage before cleanup. Contact your insurance company immediately.</p>
+          <strong>记录损失</strong>
+          <p>在清理之前拍摄所有损坏的照片和视频。立即联系保险公司。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Avoid Flood Water</strong>
-          <p>Floodwater can be contaminated, electrically charged, or hide dangerous debris. Do not walk or drive through it.</p>
+          <strong>远离洪水</strong>
+          <p>积水可能受到污染、带电或藏有危险碎片。切勿步行或驾车穿越。</p>
         </div>
       </div>
       <div class="checklist-item">
         <span class="check">✓</span>
         <div>
-          <strong>Check on Neighbors</strong>
-          <p>Especially elderly or disabled individuals who may need assistance.</p>
+          <strong>关心邻居</strong>
+          <p>特别是可能需要帮助的老人或残障人士。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Emergency Kit -->
+  <!-- 应急包清单 -->
   <section id="kit" class="content-section">
-    <h2>Emergency Kit Checklist</h2>
+    <h2>应急包清单</h2>
     <div class="kit-grid">
       <div class="kit-card">
-        <h4>💧 Water & Food</h4>
+        <h4>💧 水和食物</h4>
         <ul>
-          <li>1 gallon water per person per day (3-day minimum)</li>
-          <li>Non-perishable food (canned goods, energy bars)</li>
-          <li>Manual can opener</li>
-          <li>Pet food if applicable</li>
+          <li>每人每天1加仑水（至少3天用量）</li>
+          <li>不易腐食品（罐头、能量棒）</li>
+          <li>手动开罐器</li>
+          <li>宠物食品（如有宠物）</li>
         </ul>
       </div>
       <div class="kit-card">
-        <h4>🔦 Light & Power</h4>
+        <h4>🔦 照明和电源</h4>
         <ul>
-          <li>Flashlights (avoid candles)</li>
-          <li>Extra batteries (AA, AAA, C, D)</li>
-          <li>Battery-powered or hand-crank radio</li>
-          <li>Portable power bank for phones</li>
+          <li>手电筒（避免使用蜡烛）</li>
+          <li>备用电池（AA、AAA、C、D）</li>
+          <li>电池供电或手摇式收音机</li>
+          <li>手机充电宝</li>
         </ul>
       </div>
       <div class="kit-card">
-        <h4>🏥 Health & First Aid</h4>
+        <h4>🏥 健康和急救</h4>
         <ul>
-          <li>First aid kit</li>
-          <li>Prescription medications (7-day supply)</li>
-          <li>Over-the-counter medicines</li>
-          <li>Glasses or contact lenses</li>
+          <li>急救包</li>
+          <li>处方药（7天用量）</li>
+          <li>非处方药</li>
+          <li>眼镜或隐形眼镜</li>
         </ul>
       </div>
       <div class="kit-card">
-        <h4>📋 Documents</h4>
+        <h4>📋 文件</h4>
         <ul>
-          <li>ID and insurance cards</li>
-          <li>Bank account numbers</li>
-          <li>Emergency contact list</li>
-          <li>Copies in waterproof bag</li>
+          <li>身份证和保险卡</li>
+          <li>银行账号信息</li>
+          <li>紧急联系人列表</li>
+          <li>防水袋中的复印件</li>
         </ul>
       </div>
       <div class="kit-card">
-        <h4>🧰 Tools</h4>
+        <h4>🧰 工具</h4>
         <ul>
-          <li>Multi-tool or Swiss army knife</li>
-          <li>Duct tape</li>
-          <li>Plastic sheeting</li>
-          <li>Whistle to signal for help</li>
+          <li>多功能刀或瑞士军刀</li>
+          <li>防水胶带</li>
+          <li>塑料布</li>
+          <li>求救哨子</li>
         </ul>
       </div>
       <div class="kit-card">
-        <h4>🧹 Sanitation</h4>
+        <h4>🧹 卫生用品</h4>
         <ul>
-          <li>Hand sanitizer</li>
-          <li>Wet wipes</li>
-          <li>Garbage bags</li>
-          <li>Toilet paper</li>
+          <li>洗手液</li>
+          <li>湿巾</li>
+          <li>垃圾袋</li>
+          <li>卫生纸</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- Evacuation -->
+  <!-- 撤离指南 -->
   <section id="evacuation" class="content-section">
-    <h2>Evacuation Guide</h2>
+    <h2>撤离指南</h2>
     <div class="evac-steps">
       <div class="evac-step">
         <span class="step-number">1</span>
         <div>
-          <strong>Know Your Zone</strong>
-          <p>Find your evacuation zone at ready.gov or your local emergency management website. Zones A are typically evacuated first.</p>
+          <strong>了解你的撤离区域</strong>
+          <p>在 ready.gov 或当地应急管理网站查询你的撤离区域。A区通常最先撤离。</p>
         </div>
       </div>
       <div class="evac-step">
         <span class="step-number">2</span>
         <div>
-          <strong>Plan Your Route</strong>
-          <p>Identify multiple routes in case roads are blocked. Local authorities will designate evacuation routes — follow them.</p>
+          <strong>规划路线</strong>
+          <p>提前确认多条路线以防道路封闭。当地当局会指定撤离路线——请遵循指引。</p>
         </div>
       </div>
       <div class="evac-step">
         <span class="step-number">3</span>
         <div>
-          <strong>Prepare Your Vehicle</strong>
-          <p>Keep gas tank at least half full during storm season. Check tires, oil, and battery. Have a car emergency kit.</p>
+          <strong>准备车辆</strong>
+          <p>风暴季期间保持油箱至少半满。检查轮胎、机油和电池。准备车载应急包。</p>
         </div>
       </div>
       <div class="evac-step">
         <span class="step-number">4</span>
         <div>
-          <strong>What to Take</strong>
-          <p>Emergency kit, important documents, medications, clothing for 3 days, cash, phone chargers, and valuables.</p>
+          <strong>携带物品</strong>
+          <p>应急包、重要文件、药物、3天衣物、现金、手机充电器和贵重物品。</p>
         </div>
       </div>
       <div class="evac-step">
         <span class="step-number">5</span>
         <div>
-          <strong>Where to Go</strong>
-          <p>Stay with family/friends first. Public shelters are available but should be last resort. Hotels outside the evacuation zone are another option.</p>
+          <strong>去哪里</strong>
+          <p>首选投亲靠友。公共避难所可用但应作为最后选择。撤离区域外的酒店也是一个选项。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ (Schema.org) -->
+  <!-- 常见问题 -->
   <section class="content-section">
-    <h2>Frequently Asked Questions</h2>
+    <h2>常见问题</h2>
     <div class="faq-list">
       <details class="faq-item">
-        <summary>What is a tropical storm?</summary>
-        <p>A tropical storm is a tropical cyclone with sustained winds between 39-73 mph (63-118 km/h). It is stronger than a tropical depression but weaker than a hurricane.</p>
+        <summary>什么是热带风暴？</summary>
+        <p>热带风暴是持续风速在39-73 mph（63-118 km/h）之间的热带气旋。它比热带低压强，但比飓风弱。</p>
       </details>
       <details class="faq-item">
-        <summary>What's the difference between a tropical storm and a hurricane?</summary>
-        <p>The main difference is wind speed. A tropical storm has winds of 39-73 mph, while a hurricane has winds of 74 mph or greater. Both can cause significant damage through flooding and wind.</p>
+        <summary>热带风暴和飓风有什么区别？</summary>
+        <p>主要区别在于风速。热带风暴风速为39-73 mph，而飓风风速为74 mph 以上。两者都可能通过洪水和风造成严重破坏。</p>
       </details>
       <details class="faq-item">
-        <summary>How long do tropical storms last?</summary>
-        <p>Tropical storms typically last 2-7 days, but some can persist for weeks. Their duration depends on sea surface temperatures, wind shear, and other atmospheric conditions.</p>
+        <summary>热带风暴通常持续多久？</summary>
+        <p>热带风暴通常持续2-7天，但有些可以持续数周。其持续时间取决于海面温度、风切变和其他大气条件。</p>
       </details>
       <details class="faq-item">
-        <summary>When is tropical storm season?</summary>
-        <p>Atlantic tropical storm season runs from June 1 to November 30, peaking in September. Pacific season runs from May 15 to November 30.</p>
+        <summary>热带风暴季是什么时候？</summary>
+        <p>大西洋热带风暴季为6月1日至11月30日，9月为高峰期。太平洋风暴季为5月15日至11月30日。</p>
       </details>
       <details class="faq-item">
-        <summary>What should I do if a tropical storm is approaching?</summary>
-        <p>Monitor local weather updates, secure your property, review your evacuation plan, and prepare your emergency kit. Follow all instructions from local authorities.</p>
+        <summary>热带风暴来临时我应该怎么做？</summary>
+        <p>关注当地天气更新，加固房屋，查看撤离计划，准备应急包。遵循当地当局的所有指示。</p>
       </details>
     </div>
 
@@ -338,26 +339,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is a tropical storm?",
+          "name": "什么是热带风暴？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A tropical storm is a tropical cyclone with sustained winds between 39-73 mph (63-118 km/h). It is stronger than a tropical depression but weaker than a hurricane."
+            "text": "热带风暴是持续风速在39-73 mph（63-118 km/h）之间的热带气旋。它比热带低压强，但比飓风弱。"
           }
         },
         {
           "@type": "Question",
-          "name": "What's the difference between a tropical storm and a hurricane?",
+          "name": "热带风暴和飓风有什么区别？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The main difference is wind speed. A tropical storm has winds of 39-73 mph, while a hurricane has winds of 74 mph or greater."
+            "text": "主要区别在于风速。热带风暴风速为39-73 mph，而飓风风速为74 mph 以上。"
           }
         },
         {
           "@type": "Question",
-          "name": "When is tropical storm season?",
+          "name": "热带风暴季是什么时候？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Atlantic tropical storm season runs from June 1 to November 30, peaking in September. Pacific season runs from May 15 to November 30."
+            "text": "大西洋热带风暴季为6月1日至11月30日，9月为高峰期。太平洋风暴季为5月15日至11月30日。"
           }
         }
       ]

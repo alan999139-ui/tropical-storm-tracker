@@ -1,0 +1,450 @@
+﻿---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
+
+// 实时地图页面 — 客户端实时 fetch NOAA NHC RSS 数据（中文版）
+---
+
+<BaseLayout
+  title={t('map.title', 'zh')}
+  description={t('map.desc', 'zh')}
+  lang="zh"
+>
+  <div class="page-header">
+    <h1>{t('map.title', 'zh')}</h1>
+    <p>{t('map.desc', 'zh')}</p>
+  </div>
+
+  <!-- 状态栏 -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot"></span>
+    <span id="status-text">正在连接 NOAA NHC...</span>
+    <span class="status-time" id="status-time"></span>
+  </div>
+
+  <!-- 地图容器 -->
+  <div class="map-container">
+    <div id="storm-map"></div>
+    <div class="map-overlay" id="map-loading">
+      <div class="loading-spinner"></div>
+      <p>正在获取实时风暴数据...</p>
+    </div>
+  </div>
+
+  <!-- 图例 -->
+  <div class="legend">
+    <h3>图例</h3>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #4dabf7;"></span>
+        <span>热带低压 (&lt;39 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #ffd43b;"></span>
+        <span>热带风暴 (39-73 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #ff8787;"></span>
+        <span>1-2级飓风 (74-110 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background: #fa5252;"></span>
+        <span>3-5级飓风 (&gt;110 mph)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-line"></span>
+        <span>风暴路径</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 风暴列表 -->
+  <div class="storm-sidebar">
+    <h3>活跃风暴</h3>
+    <div id="active-storms-list" class="active-storms">
+      <p class="loading-text">加载中...</p>
+    </div>
+  </div>
+
+  <!-- 数据源说明 -->
+  <div class="data-source">
+    <p>📡 数据来源：<a href="https://www.nhc.noaa.gov/index-at.xml" target="_blank" rel="noopener">NOAA NHC 大西洋 RSS 订阅</a></p>
+    <p>🔄 每5分钟自动刷新。上次获取：<span id="last-fetch">—</span></p>
+  </div>
+
+  <script is:inline>
+    // ===== NOAA NHC RSS 数据获取与解析 =====
+    const API_URL = '/api/storms';
+    const NOAA_RSS_URL = 'https://www.nhc.noaa.gov/index-at.xml';
+    const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+    let mapInstance = null;
+    let stormLayer = null;
+    let autoRefreshTimer = null;
+
+    function getIntensityColor(wind) {
+      if (wind < 39) return '#4dabf7';
+      if (wind < 74) return '#ffd43b';
+      if (wind < 111) return '#ff8787';
+      if (wind < 157) return '#fa5252';
+      return '#845ef7';
+    }
+
+    function getStormType(wind) {
+      if (wind < 39) return '热带低压';
+      if (wind < 74) return '热带风暴';
+      return '飓风';
+    }
+
+    // 解析 NOAA RSS 中的风暴数据
+    function parseStormsFromRSS(xmlText) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xmlText, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      const storms = [];
+      const seenCyclones = new Set();
+
+      items.forEach(function(item) {
+        // NOAA NHC RSS 包含 nhc:Cyclone 元素，包含结构化数据
+        const cyclone = item.querySelector('Cyclone');
+        if (cyclone) {
+          const name = cyclone.getAttribute('name') || cyclone.querySelector('name')?.textContent || '';
+          const type = cyclone.querySelector('type')?.textContent || '';
+          const center = cyclone.querySelector('center')?.textContent || '';
+          const movement = cyclone.querySelector('movement')?.textContent || '';
+          const pressure = cyclone.querySelector('pressure')?.textContent || '';
+          const wind = cyclone.querySelector('wind')?.textContent || '';
+          const datetime = cyclone.querySelector('datetime')?.textContent || '';
+          const headline = cyclone.querySelector('headline')?.textContent || '';
+
+          if (name && !seenCyclones.has(name)) {
+            seenCyclones.add(name);
+            const coords = center.split(',').map(s => parseFloat(s.trim()));
+            const windNum = parseInt(wind) || 0;
+            const pressureNum = parseInt(pressure) || 0;
+
+            storms.push({
+              name: name,
+              type: type || getStormType(windNum),
+              lat: coords[0] || 0,
+              lon: coords[1] || 0,
+              wind: windNum,
+              pressure: pressureNum,
+              movement: movement,
+              datetime: datetime,
+              headline: headline,
+            });
+          }
+        }
+
+        // 也解析 description 中的文本信息作为后备
+        const title = item.querySelector('title')?.textContent || '';
+        const desc = item.querySelector('description')?.textContent || '';
+        const titleMatch = title.match(/(?:Tropical Storm|Hurricane|Tropical Depression)\s+(\w+)/);
+        if (titleMatch && !seenCyclones.has(titleMatch[1])) {
+          // 从 description 提取数据
+          const locMatch = desc.match(/located near\s+(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/i);
+          const windMatch = desc.match(/maximum sustained winds.*?(\d+)\s*mph/i);
+          const pressureMatch = desc.match(/minimum central pressure.*?(\d+)\s*mb/i);
+          const movementMatch = desc.match(/movement\s+(\w+)\s+at\s+(\d+)\s*mph/i) || desc.match(/moving.*?(\w+).*?(\d+)\s*mph/i);
+
+          if (locMatch || windMatch) {
+            const name = titleMatch[1];
+            seenCyclones.add(name);
+            const windNum = windMatch ? parseInt(windMatch[1]) : 0;
+            storms.push({
+              name: name,
+              type: getStormType(windNum),
+              lat: locMatch ? parseFloat(locMatch[1]) : 0,
+              lon: locMatch ? parseFloat(locMatch[2]) : 0,
+              wind: windNum,
+              pressure: pressureMatch ? parseInt(pressureMatch[1]) : 0,
+              movement: movementMatch ? movementMatch[1] + ' at ' + movementMatch[2] + ' mph' : '未知',
+              datetime: '',
+              headline: '',
+            });
+          }
+        }
+      });
+
+      return storms;
+    }
+
+    // 优先用本地 /api/storms (Cloudflare Function), 后备用 CORS 代理
+    async function fetchNOAAData() {
+      // 方式1: 本地 API
+      try {
+        const resp = await fetch(API_URL, { cache: 'no-store' });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.storms) return data.storms;
+        }
+      } catch(e) { console.warn('本地 API 失败，尝试代理'); }
+
+      // 方式2: CORS 代理
+      const proxies = [
+        'https://corsproxy.io/?url=' + encodeURIComponent(NOAA_RSS_URL),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(NOAA_RSS_URL),
+      ];
+      for (const proxy of proxies) {
+        try {
+          const resp = await fetch(proxy, { cache: 'no-store' });
+          if (resp.ok) {
+            const text = await resp.text();
+            if (text && text.includes('<rss')) {
+              return parseStormsFromRSS(text);
+            }
+          }
+        } catch(e) { console.warn('代理失败:', proxy); }
+      }
+      return null;
+    }
+
+    async function loadStorms() {
+      const statusText = document.getElementById('status-text');
+      const statusTime = document.getElementById('status-time');
+      const lastFetch = document.getElementById('last-fetch');
+
+      statusText.textContent = '正在获取 NOAA NHC 数据...';
+
+      const result = await fetchNOAAData();
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('zh-CN', { timeZone: 'UTC', hour12: false }) + ' UTC';
+
+      if (!result) {
+        statusText.textContent = '⚠️ 无法连接 NOAA';
+        statusTime.textContent = '';
+        lastFetch.textContent = timeStr;
+        return null;
+      }
+
+      const storms = Array.isArray(result) ? result : [];
+
+      if (storms.length === 0) {
+        statusText.textContent = '☀️ 暂无活跃风暴';
+      } else {
+        statusText.textContent = '🟢 实时 — ' + storms.length + ' 个活跃风暴';
+      }
+      statusTime.textContent = '已更新：' + timeStr;
+      lastFetch.textContent = timeStr;
+
+      return storms;
+    }
+
+    function renderStormsOnMap(storms) {
+      if (!mapInstance || !stormLayer) return;
+
+      stormLayer.clearLayers();
+
+      if (!storms || storms.length === 0) {
+        document.getElementById('map-loading').style.display = 'none';
+        const listEl = document.getElementById('active-storms-list');
+        listEl.innerHTML = '<p class="no-storms">☀️ 暂无活跃热带风暴</p>';
+        return;
+      }
+
+      const allLatLngs = [];
+
+      storms.forEach(function(storm) {
+        if (!storm.lat || !storm.lon) return;
+
+        const color = getIntensityColor(storm.wind);
+        const latlng = [storm.lat, storm.lon];
+        allLatLngs.push(latlng);
+
+        // 当前位置标记
+        const marker = L.circleMarker(latlng, {
+          radius: 14,
+          fillColor: color,
+          color: '#fff',
+          weight: 3,
+          fillOpacity: 0.9,
+        }).addTo(stormLayer);
+
+        marker.bindPopup(
+          '<div style="font-family: Inter, sans-serif; min-width: 180px;">' +
+          '<strong style="font-size: 1.1rem;">' + storm.name + '</strong><br>' +
+          '<span style="color: #64748b;">' + storm.type + '</span><br>' +
+          '<hr style="margin: 6px 0; border: none; border-top: 1px solid #e2e8f0;">' +
+          '💨 风速：<strong>' + storm.wind + ' mph</strong><br>' +
+          '📊 气压：<strong>' + storm.pressure + ' mb</strong><br>' +
+          '🧭 移动：' + storm.movement + '<br>' +
+          (storm.datetime ? '🕐 ' + storm.datetime : '') +
+          '</div>'
+        );
+
+        // 如果有 headline，添加为标记 tooltip
+        if (storm.headline) {
+          marker.bindTooltip(storm.headline, { direction: 'top', offset: [0, -10] });
+        }
+      });
+
+      // 自适应缩放到所有风暴
+      if (allLatLngs.length > 0) {
+        if (allLatLngs.length === 1) {
+          mapInstance.setView(allLatLngs[0], 5);
+        } else {
+          mapInstance.fitBounds(allLatLngs, { padding: [50, 50] });
+        }
+      }
+
+      // 隐藏加载状态
+      document.getElementById('map-loading').style.display = 'none';
+
+      // 更新侧边栏
+      const listEl = document.getElementById('active-storms-list');
+      listEl.innerHTML = storms.map(function(s) {
+        const color = getIntensityColor(s.wind);
+        return '<div class="active-storm-item">' +
+          '<div class="storm-item-header">' +
+            '<strong>' + s.name + '</strong>' +
+            '<span class="storm-item-type" style="color: ' + color + ';">' + s.type + '</span>' +
+          '</div>' +
+          '<div class="storm-item-stats">' +
+            '<span>💨 ' + s.wind + ' mph</span>' +
+            '<span>📊 ' + s.pressure + ' mb</span>' +
+            '<span>🧭 ' + s.movement + '</span>' +
+          '</div>' +
+          (s.headline ? '<div class="storm-item-headline">' + s.headline + '</div>' : '') +
+        '</div>';
+      }).join('');
+    }
+
+    // 初始化地图
+    function initMap() {
+      if (typeof L === 'undefined') {
+        setTimeout(initMap, 100);
+        return;
+      }
+
+      mapInstance = L.map('storm-map', {
+        center: [28, -85],
+        zoom: 4,
+        minZoom: 2,
+        maxZoom: 10,
+        scrollWheelZoom: false,
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(mapInstance);
+
+      stormLayer = L.layerGroup().addTo(mapInstance);
+
+      // 首次加载
+      loadStorms().then(function(storms) {
+        renderStormsOnMap(storms);
+      });
+
+      // 自动刷新
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(function() {
+        loadStorms().then(function(storms) {
+          renderStormsOnMap(storms);
+        });
+      }, REFRESH_INTERVAL);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMap);
+    } else {
+      initMap();
+    }
+  </script>
+
+  <style>
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-time { margin-left: auto; color: var(--color-text-secondary); font-size: 0.85rem; }
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+    #storm-map { width: 100%; height: 100%; background: #e8eef4; z-index: 1; }
+    .map-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: rgba(232, 238, 244, 0.92);
+      z-index: 10;
+      color: var(--color-text);
+    }
+    .loading-spinner {
+      width: 40px; height: 40px;
+      border: 4px solid rgba(0,0,0,0.1);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .legend {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .legend h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+    .legend-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+    .legend-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.2); }
+    .legend-line { width: 20px; height: 2px; background: #ffd43b; border-top: 2px dashed #ffd43b; flex-shrink: 0; }
+    .storm-sidebar {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .storm-sidebar h3 { margin-bottom: 1rem; }
+    .loading-text { color: var(--color-text-secondary); }
+    .no-storms { text-align: center; padding: 2rem; color: var(--color-text-secondary); }
+    .active-storm-item {
+      padding: 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+    .storm-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .storm-item-type { font-size: 0.8rem; }
+    .storm-item-stats { display: flex; gap: 1rem; font-size: 0.85rem; flex-wrap: wrap; }
+    .storm-item-headline { margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary); line-height: 1.4; }
+    .data-source {
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+      padding: 1rem;
+    }
+    .data-source a { color: var(--color-primary); }
+    @media (max-width: 768px) { .legend-items { grid-template-columns: 1fr 1fr; } }
+  </style>
+</BaseLayout>
