@@ -49,7 +49,7 @@ const activeCount = activeStorms ?? 0;
         {activeCount > 0 ? (
           <span class="badge badge-active">🌪️ {activeCount} Active</span>
         ) : (
-          <span class="badge badge-safe">☀️ No Active Storms</span>
+          <span class="badge badge-safe"><span aria-hidden="true">☀️</span> No Active Storms</span>
         )}
       </div>
       <h1 class="hero-title">Track Tropical Storms in Real-Time</h1>
@@ -58,7 +58,7 @@ const activeCount = activeStorms ?? 0;
         Powered by <strong>NOAA &amp; NHC</strong> data.
       </p>
       <div class="hero-ctas">
-        <a href="/map" class="btn btn-primary">🗺️ View Live Map</a>
+        <a href="/map" class="btn btn-primary"><span aria-hidden="true">🗺️</span> View Live Map</a>
         <a href="/storms" class="btn btn-outline">🌪️ Storm Database</a>
       </div>
       <p class="hero-source">
@@ -73,7 +73,7 @@ const activeCount = activeStorms ?? 0;
   {activeCount > 0 ? (
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">⚡ Active Storms</h2>
+        <h2 class="section-title"><span aria-hidden="true">⚡</span> Active Storms</h2>
         <span class="live-dot">🟢 Live</span>
       </div>
       <div class="grid grid-2">
@@ -91,12 +91,12 @@ const activeCount = activeStorms ?? 0;
               <div class="storm-card-stats">
                 <div class="stat"><span class="stat-label">💨 Wind</span><span class="stat-value">{storm.wind} mph</span></div>
                 <div class="stat"><span class="stat-label">📊 Pressure</span><span class="stat-value">{storm.pressure > 0 ? `${storm.pressure} mb` : '—'}</span></div>
-                <div class="stat"><span class="stat-label">📍 Location</span><span class="stat-value">{storm.lat.toFixed(1)}°N, {Math.abs(storm.lon).toFixed(1)}°W</span></div>
+                <div class="stat"><span class="stat-label"><span aria-hidden="true">📍</span> Location</span><span class="stat-value">{storm.lat.toFixed(1)}°N, {Math.abs(storm.lon).toFixed(1)}°W</span></div>
                 <div class="stat"><span class="stat-label">➡️ Movement</span><span class="stat-value">{storm.movement}</span></div>
               </div>
               {storm.headline && <p class="storm-headline">{storm.headline}</p>}
               <div class="storm-card-footer">
-                <span class="view-details">View Details →</span>
+                <span class="view-details"><span aria-hidden="true">→</span> View Details</span>
               </div>
             </a>
           );
@@ -107,10 +107,10 @@ const activeCount = activeStorms ?? 0;
     <!-- Non-Storm Season / No Active -->
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">⚡ Active Storms</h2>
+        <h2 class="section-title"><span aria-hidden="true">⚡</span> Active Storms</h2>
       </div>
       <div class="no-active-card">
-        <div class="no-active-icon">☀️</div>
+        <div class="no-active-icon" aria-hidden="true">☀️</div>
         <h3>No Active Tropical Storms</h3>
         <p>
           Good news — the Atlantic basin is currently quiet. Tropical cyclones are most common between
@@ -118,7 +118,7 @@ const activeCount = activeStorms ?? 0;
         </p>
         <div class="no-active-ctas">
           <a href="/storms" class="btn btn-outline">📊 Browse Historical Storms</a>
-          <a href="/preparedness" class="btn btn-primary">🛡️ Preparedness Guide</a>
+          <a href="/preparedness" class="btn btn-primary"><span aria-hidden="true">🛡️</span> Preparedness Guide</a>
         </div>
         <p class="hero-source">
           <span class="source-dot"></span>
@@ -131,7 +131,7 @@ const activeCount = activeStorms ?? 0;
   <!-- Season Outlook -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title">📊 {year} Season Outlook</h2>
+      <h2 class="section-title"><span aria-hidden="true">📊</span> {year} Season Outlook</h2>
       <a href="/storms" class="see-all">Full Database →</a>
     </div>
     <div class="season-card">
@@ -188,7 +188,7 @@ const activeCount = activeStorms ?? 0;
             <span class="badge" style={`background: ${categoryColors[storm.category] || '#e2e8f0'}33; color: ${categoryColors[storm.category] || '#64748b'};`}>{storm.category}</span>
           </div>
           <div class="storm-list-stats">
-            <span>📅 {storm.year} — {storm.formed}</span>
+            <span><span aria-hidden="true">📅</span> {storm.year} — {storm.formed}</span>
             <span>💨 {storm.maxWind} mph · 📊 {storm.minPressure} mb</span>
             <span>📍 {storm.landfall}</span>
             <span>💰 {storm.damage} · ⚠️ {storm.fatalities} deaths</span>
@@ -201,7 +201,7 @@ const activeCount = activeStorms ?? 0;
   <!-- Preparedness CTA -->
   <section class="section cta-section">
     <div class="cta-card">
-      <h2>🛡️ Storm Preparedness</h2>
+      <h2><span aria-hidden="true">🛡️</span> Storm Preparedness</h2>
       <p>Know what to do before, during, and after a tropical storm. Get checklists, evacuation plans, and emergency kit guides.</p>
       <a href="/preparedness" class="btn btn-primary">Read Preparedness Guide →</a>
     </div>
@@ -318,5 +318,151 @@ const activeCount = activeStorms ?? 0;
     .cta-card { background: linear-gradient(135deg, #0ea5e9, #0284c7); border-radius: var(--radius); padding: 2.5rem; text-align: center; color: white; }
     .cta-card h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
     .cta-card p { opacity: 0.9; max-width: 480px; margin: 0 auto 1.5rem; }
+
+    /* Storm list card - cursor hint */
+    .storm-list-card {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .storm-list-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    .storm-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .storm-list-header h3 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    .storm-list-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* Empty state - brighter CTA button */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary-light {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary-light:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* See-all link styled as button */
+    .see-all-btn {
+      display: inline-block;
+      padding: 0.4rem 0.875rem;
+      background: var(--color-primary);
+      color: white !important;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .see-all-btn:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* Storm list card - cursor hint */
+    .storm-list-card {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .storm-list-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    /* Empty state - brighter CTA button */
+    .no-active-card {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-radius: var(--radius);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .no-active-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .no-active-ctas {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .btn-primary-light {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary-light:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* See-all link styled as button pill */
+    .see-all-btn {
+      display: inline-block;
+      padding: 0.4rem 0.875rem;
+      background: var(--color-primary);
+      color: white !important;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .see-all-btn:hover {
+      background: var(--color-primary-dark);
+    }
   </style>
 </BaseLayout>

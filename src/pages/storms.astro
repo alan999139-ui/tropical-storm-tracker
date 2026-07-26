@@ -33,7 +33,7 @@ const totalFatalities = seasonStats.reduce((sum, s) => sum + s.fatalities, 0);
   lang="en"
 >
   <div class="page-header">
-    <h1>🌪️ Storm Database</h1>
+    <h1><span aria-hidden="true">🌪️</span> Storm Database</h1>
     <p>Comprehensive records of {historicalStorms.length} major tropical storms and hurricanes (2017–2026). Data sourced from NOAA HURDAT2 and NHC.</p>
   </div>
 
@@ -60,7 +60,7 @@ const totalFatalities = seasonStats.reduce((sum, s) => sum + s.fatalities, 0);
   <!-- 年度趋势图 -->
   <div class="chart-section">
     <div class="chart-header">
-      <h2>📊 Annual Storm Frequency (2017–2026)</h2>
+      <h2><span aria-hidden="true">📊</span> Annual Storm Frequency (2017–2026)</h2>
       <div class="chart-legend">
         <span class="chart-legend-item"><span class="legend-dot" style="background:#0ea5e9;"></span>Named Storms</span>
         <span class="chart-legend-item"><span class="legend-dot" style="background:#f59e0b;"></span>Hurricanes</span>

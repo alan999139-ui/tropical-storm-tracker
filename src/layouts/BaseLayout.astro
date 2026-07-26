@@ -204,7 +204,8 @@ const langSwitchLinks = Object.values(languages).map(l => ({
       height: 64px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 1rem;
+      overflow: hidden;
     }
 
     .nav-logo {
@@ -222,7 +223,8 @@ const langSwitchLinks = Object.values(languages).map(l => ({
     .nav-links {
       display: flex;
       list-style: none;
-      gap: 2rem;
+      gap: 1.75rem;
+      flex-shrink: 0;
     }
 
     .nav-links a {

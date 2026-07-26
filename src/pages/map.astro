@@ -16,13 +16,13 @@ const buildTime = new Date(fetchedAt).toLocaleString('en-US', {
 >
   {(_fallback) && (
     <div class="warning-banner">
-      ⚠️ Live data temporarily unavailable — showing cached data from {buildTime}. Updates will resume shortly.
+      <span aria-hidden="true">⚠️</span> Live data temporarily unavailable — showing cached data from {buildTime}. Updates will resume shortly.
     </div>
   )}
 
   <div class="page-header">
     <div>
-      <h1>🗺️ Live Storm Map</h1>
+      <h1><span aria-hidden="true">🗺️</span> Live Storm Map</h1>
       <p>Real-time tracking of active tropical storms. Data from <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA National Hurricane Center</a>.</p>
     </div>
     <div class="map-status" id="map-status">
@@ -31,7 +31,7 @@ const buildTime = new Date(fetchedAt).toLocaleString('en-US', {
   </div>
 
   <div class="map-legend">
-    <div class="legend-title">🌪️ Legend</div>
+    <div class="legend-title"><span aria-hidden="true">🌪️</span> Legend</div>
     <div class="legend-items">
       <span class="legend-item"><span class="legend-dot" style="background:#4dabf7;"></span> Tropical Depression</span>
       <span class="legend-item"><span class="legend-dot" style="background:#ffd43b;"></span> Tropical Storm</span>
@@ -47,7 +47,7 @@ const buildTime = new Date(fetchedAt).toLocaleString('en-US', {
 
   <div class="map-footer">
     <p>
-      🟢 <strong id="fetch-status">Live</strong> · Updated: <span id="last-updated">{buildTime}</span>
+      <span aria-hidden="true">🟢</span> <strong id="fetch-status">Live</strong> · Updated: <span id="last-updated">{buildTime}</span>
       · Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a>
       · Auto-refresh every 5 minutes
     </p>
@@ -56,7 +56,7 @@ const buildTime = new Date(fetchedAt).toLocaleString('en-US', {
   <script is:inline define:vars={{ fallback: _fallback, buildTime }}>
     // 从构建时数据中获取初始标记
     // 地图数据由客户端 JS 从 /api/storms 实时获取
-    document.getElementById('fetch-status').textContent = fallback ? '⚠️ Cached' : '🟢 Live';
+    document.getElementById('fetch-status').textContent = fallback ? '<span aria-hidden="true">⚠️</span> Cached' : '🟢 Live';
   </script>
 
   <script is:inline>
@@ -103,7 +103,7 @@ const buildTime = new Date(fetchedAt).toLocaleString('en-US', {
           statusTextEl.textContent = text;
         }
         if (fetchStatusEl) {
-          fetchStatusEl.textContent = type === 'error' ? '⚠️ Unavailable' : type === 'loading' ? 'Loading...' : '🟢 Live';
+          fetchStatusEl.textContent = type === 'error' ? '<span aria-hidden="true">⚠️</span> Unavailable' : type === 'loading' ? 'Loading...' : '🟢 Live';
         }
       }
 
@@ -148,7 +148,7 @@ const buildTime = new Date(fetchedAt).toLocaleString('en-US', {
           });
           map.fitBounds(markersLayer.getBounds(), { padding: [50, 50] });
         } else {
-          setStatus('no-active', '☀️ No active storms');
+          setStatus('no-active', '<span aria-hidden="true">☀️</span> No active storms');
         }
 
         if (data.fetchedAt && lastUpdatedEl) {
