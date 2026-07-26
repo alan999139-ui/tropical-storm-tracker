@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../i18n/dict';
+
+const lang = 'en';
+---
+
+<BaseLayout
+  title="Sign In"
+  description="Sign in to your Tropical Storm Tracker account to manage alerts and subscription."
+  lang={lang}
+>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1><span aria-hidden="true">🔐</span> Sign In</h1>
+      <p class="auth-subtitle">Welcome back. Manage your storm alerts and subscription.</p>
+
+      <form id="signin-form" class="auth-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required />
+        </div>
+        <div class="form-row">
+          <label class="checkbox-row">
+            <input type="checkbox" name="remember" />
+            <span>Remember me</span>
+          </label>
+          <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <div class="auth-divider">
+        <span>or continue with</span>
+      </div>
+
+      <div class="oauth-buttons">
+        <button class="btn btn-oauth" data-provider="google">
+          <span class="oauth-icon" aria-hidden="true">🔍</span> Google
+        </button>
+        <button class="btn btn-oauth" data-provider="github">
+          <span class="oauth-icon" aria-hidden="true">🐙</span> GitHub
+        </button>
+      </div>
+
+      <p class="auth-footer">
+        Don't have an account? <a href="/signup">Create one free →</a>
+      </p>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.getElementById('signin-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const email = formData.get('email');
+
+      // Demo: store session locally
+      localStorage.setItem('storm_user_email', email);
+      localStorage.setItem('storm_user_logged_in', 'true');
+      localStorage.setItem('storm_login_time', new Date().toISOString());
+
+      window.location.href = '/dashboard';
+    });
+
+    document.querySelectorAll('.btn-oauth').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const provider = btn.dataset.provider;
+        // In production: redirect to OAuth provider
+        localStorage.setItem('storm_user_email', `user@${provider}.com`);
+        localStorage.setItem('storm_user_logged_in', 'true');
+        localStorage.setItem('storm_login_provider', provider);
+        window.location.href = '/dashboard';
+      });
+    });
+  </script>
+
+  <style>
+    .auth-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+      padding: 2rem 1rem;
+    }
+    .auth-card {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      max-width: 440px;
+      width: 100%;
+    }
+    .auth-card h1 { font-size: 1.75rem; margin-bottom: 0.5rem; text-align: center; }
+    .auth-subtitle { text-align: center; color: var(--color-text-secondary); margin-bottom: 2rem; font-size: 0.95rem; }
+
+    .auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-weight: 600; font-size: 0.9rem; }
+    .form-group input {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border 0.2s;
+    }
+    .form-group input:focus { outline: none; border-color: var(--color-primary); }
+
+    .form-row { display: flex; justify-content: space-between; align-items: center; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; cursor: pointer; }
+    .checkbox-row input { width: 16px; height: 16px; accent-color: var(--color-primary); }
+    .forgot-link { font-size: 0.85rem; color: var(--color-primary); text-decoration: none; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-block { width: 100%; text-align: center; padding: 0.85rem; font-size: 1rem; }
+
+    .auth-divider { text-align: center; margin: 1.5rem 0; position: relative; }
+    .auth-divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--color-border);
+    }
+    .auth-divider span {
+      background: var(--color-surface);
+      padding: 0 1rem;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      position: relative;
+    }
+
+    .oauth-buttons { display: flex; gap: 0.75rem; }
+    .btn-oauth {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-surface);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-oauth:hover { border-color: var(--color-primary); background: #f0f9ff; }
+    .oauth-icon { font-size: 1.1rem; }
+
+    .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--color-text-secondary); }
+    .auth-footer a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+  </style>
+</BaseLayout>

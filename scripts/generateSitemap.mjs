@@ -42,7 +42,9 @@ function generateSitemap(urls) {
 
   const staticPages = [
     '/', '/storms/', '/map/', '/preparedness/', '/about/',
+    '/alerts/', '/pricing/', '/signin/', '/signup/', '/dashboard/',
     '/zh/', '/zh/storms/', '/zh/map/', '/zh/preparedness/', '/zh/about/',
+    '/zh/alerts/', '/zh/pricing/', '/zh/signin/', '/zh/signup/', '/zh/dashboard/',
     '/feed.xml',
   ];
 
@@ -75,7 +77,7 @@ ${urlEntries}
 </urlset>`;
 }
 
-const STATIC_PAGES_COUNT = 11;
+const STATIC_PAGES_COUNT = 21;
 
 try {
   const urls = walkDir(DIST_DIR);

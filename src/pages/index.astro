@@ -59,7 +59,7 @@ const activeCount = activeStorms ?? 0;
       </p>
       <div class="hero-ctas">
         <a href="/map" class="btn btn-primary"><span aria-hidden="true">🗺️</span> View Live Map</a>
-        <a href="/storms" class="btn btn-outline">🌪️ Storm Database</a>
+        <a href="/alerts" class="btn btn-outline btn-light"><span aria-hidden="true">🔔</span> Get Free Alerts</a>
       </div>
       <p class="hero-source">
         <span class="source-dot"></span>
@@ -204,6 +204,27 @@ const activeCount = activeStorms ?? 0;
       <h2><span aria-hidden="true">🛡️</span> Storm Preparedness</h2>
       <p>Know what to do before, during, and after a tropical storm. Get checklists, evacuation plans, and emergency kit guides.</p>
       <a href="/preparedness" class="btn btn-primary">Read Preparedness Guide →</a>
+    </div>
+  </section>
+
+  <!-- Pricing Teaser -->
+  <section class="section">
+    <div class="pricing-teaser">
+      <div class="teaser-content">
+        <h2><span aria-hidden="true">⭐</span> Go Pro for Ultimate Protection</h2>
+        <p>SMS alerts, 5 custom regions, 7-day forecast tracks, storm surge maps, and ad-free experience.</p>
+        <ul class="teaser-features">
+          <li><span aria-hidden="true">📱</span> Instant SMS notifications</li>
+          <li><span aria-hidden="true">🎯</span> Up to 5 alert regions</li>
+          <li><span aria-hidden="true">🗺️</span> 7-day forecast tracks</li>
+          <li><span aria-hidden="true">🌊</span> Storm surge maps</li>
+        </ul>
+        <div class="teaser-ctas">
+          <a href="/pricing" class="btn btn-primary">View Plans →</a>
+          <a href="/signup?plan=pro" class="btn btn-outline">Start 14-Day Free Trial</a>
+        </div>
+        <p class="teaser-price">From just <strong>$4.99/month</strong> · Cancel anytime</p>
+      </div>
     </div>
   </section>
 
@@ -378,6 +399,44 @@ const activeCount = activeStorms ?? 0;
 
     .btn-primary-light:hover {
       background: var(--color-primary-dark);
+    }
+
+    /* Pricing Teaser */
+    .pricing-teaser {
+      background: linear-gradient(135deg, #1e3a5f, #0ea5e9);
+      border-radius: var(--radius);
+      padding: 3rem;
+      color: white;
+    }
+    .teaser-content { max-width: 680px; margin: 0 auto; text-align: center; }
+    .teaser-content h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .teaser-content p { opacity: 0.9; margin-bottom: 1.5rem; line-height: 1.6; }
+    .teaser-features {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .teaser-features li { font-size: 0.95rem; display: flex; gap: 0.5rem; align-items: center; }
+    .teaser-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .teaser-ctas .btn-outline { border-color: rgba(255,255,255,0.5); color: white; }
+    .teaser-ctas .btn-outline:hover { background: rgba(255,255,255,0.15); }
+    .teaser-price { font-size: 0.9rem; opacity: 0.8; }
+    .teaser-price strong { font-size: 1.1rem; }
+
+    /* btn-light for hero */
+    .btn-light {
+      background: rgba(255,255,255,0.15) !important;
+      color: white !important;
+      border: 2px solid rgba(255,255,255,0.4);
+    }
+    .btn-light:hover {
+      background: rgba(255,255,255,0.25) !important;
     }
 
     /* See-all link styled as button */

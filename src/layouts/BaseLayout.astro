@@ -96,20 +96,31 @@ const langSwitchLinks = Object.values(languages).map(l => ({
         <li><a href={localizedPath('/', lang)}>{t('nav.home', lang)}</a></li>
         <li><a href={localizedPath('/storms', lang)}>{t('nav.storms', lang)}</a></li>
         <li><a href={localizedPath('/map', lang)}>{t('nav.map', lang)}</a></li>
+        <li><a href={localizedPath('/alerts', lang)}>{t('nav.alerts', lang)}</a></li>
         <li><a href={localizedPath('/preparedness', lang)}>{t('nav.preparedness', lang)}</a></li>
         <li><a href={localizedPath('/about', lang)}>{t('nav.about', lang)}</a></li>
       </ul>
-      <!-- Language Switcher -->
-      <div class="lang-switcher">
-        {langSwitchLinks.map((l, i) => (
-          <>
-            {i > 0 && <span class="lang-sep">|</span>}
-            <a href={l.url} class:list={["lang-link", { active: l.active }]} title={l.name}>
-              <span class="lang-flag">{l.flag}</span>
-              <span class="lang-code">{l.code.toUpperCase()}</span>
-            </a>
-          </>
-        ))}
+      <!-- Auth + Language -->
+      <div class="nav-actions">
+        <div class="lang-switcher">
+          {langSwitchLinks.map((l, i) => (
+            <>
+              {i > 0 && <span class="lang-sep">|</span>}
+              <a href={l.url} class:list={["lang-link", { active: l.active }]} title={l.name}>
+                <span class="lang-flag">{l.flag}</span>
+                <span class="lang-code">{l.code.toUpperCase()}</span>
+              </a>
+            </>
+          ))}
+        </div>
+        <div class="auth-buttons" id="nav-auth">
+          <a href="/signin" class="nav-signin">{t('nav.signIn', lang)}</a>
+          <a href="/signup" class="btn btn-nav-cta">{t('nav.signUp', lang)}</a>
+        </div>
+        <div class="auth-buttons hidden" id="nav-user">
+          <a href="/dashboard" class="nav-dashboard">📊</a>
+          <button class="btn btn-nav-cta" id="nav-signout">{t('dashboard.signOut', lang)}</button>
+        </div>
       </div>
     </nav>
   </header>
@@ -137,7 +148,18 @@ const langSwitchLinks = Object.values(languages).map(l => ({
         <ul>
           <li><a href={localizedPath('/map', lang)}>{t('nav.map', lang)}</a></li>
           <li><a href={localizedPath('/storms', lang)}>{t('nav.storms', lang)}</a></li>
+          <li><a href={localizedPath('/alerts', lang)}>{t('nav.alerts', lang)}</a></li>
+          <li><a href="/pricing">Pricing</a></li>
           <li><a href="/feed.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>{t('footer.account', lang)}</h4>
+        <ul>
+          <li><a href="/signin">{t('nav.signIn', lang)}</a></li>
+          <li><a href="/signup">{t('nav.signUp', lang)}</a></li>
+          <li><a href="/dashboard">{t('dashboard.title', lang)}</a></li>
+          <li><a href="/alerts">{t('nav.alerts', lang)}</a></li>
         </ul>
       </div>
     </div>
@@ -148,6 +170,21 @@ const langSwitchLinks = Object.values(languages).map(l => ({
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
+
+  <!-- Auth state check -->
+  <script is:inline>
+    (function() {
+      const loggedIn = localStorage.getItem('storm_user_logged_in');
+      if (loggedIn === 'true') {
+        document.getElementById('nav-auth')?.classList.add('hidden');
+        document.getElementById('nav-user')?.classList.remove('hidden');
+      }
+      document.getElementById('nav-signout')?.addEventListener('click', () => {
+        localStorage.removeItem('storm_user_logged_in');
+        window.location.reload();
+      });
+    })();
+  </script>
 
   <style is:global>
     :root {
@@ -236,6 +273,48 @@ const langSwitchLinks = Object.values(languages).map(l => ({
 
     .nav-links a:hover { color: var(--color-primary); }
 
+    /* Nav Actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-left: auto;
+    }
+
+    /* Auth Buttons */
+    .auth-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-signin {
+      text-decoration: none;
+      color: var(--color-text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-signin:hover { color: var(--color-primary); }
+    .btn-nav-cta {
+      background: var(--color-primary);
+      color: white !important;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-nav-cta:hover { background: var(--color-primary-dark); }
+    .nav-dashboard {
+      font-size: 1.3rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
     /* Language Switcher */
     .lang-switcher {
       display: flex;
@@ -270,7 +349,7 @@ const langSwitchLinks = Object.values(languages).map(l => ({
       margin: 0 auto;
       padding: 3rem 1.5rem 2rem;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 2rem;
     }
 
@@ -291,11 +370,19 @@ const langSwitchLinks = Object.values(languages).map(l => ({
 
     /* 响应式 */
     @media (max-width: 768px) {
-      .nav-links { gap: 1rem; font-size: 0.9rem; }
+      .nav-links { gap: 0.75rem; font-size: 0.85rem; }
       .nav-logo .logo-text { display: none; }
       .lang-link .lang-code { display: none; }
-      .footer-content { grid-template-columns: 1fr; gap: 1.5rem; }
+      .nav-signin { display: none; }
+      .nav-actions { gap: 0.5rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     }
+    @media (max-width: 480px) {
+      .nav-links { gap: 0.5rem; }
+      .nav-links a { font-size: 0.8rem; }
+    }
+
+    .hidden { display: none !important; }
 
     /* 卡片 */
     .card {

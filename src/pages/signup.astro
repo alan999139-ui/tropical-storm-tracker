@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../i18n/dict';
+
+const lang = 'en';
+---
+
+<BaseLayout
+  title="Sign Up"
+  description="Create your free Tropical Storm Tracker account. Get storm alerts, save your regions, and track storms in real-time."
+  lang={lang}
+>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1><span aria-hidden="true">🌪️</span> Create Your Account</h1>
+      <p class="auth-subtitle">Free forever. Get storm alerts in under 2 minutes.</p>
+
+      <form id="signup-form" class="auth-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="John Doe" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="At least 8 characters" minlength="8" required />
+          <div class="password-strength" id="password-strength"></div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required />
+        </div>
+
+        <div class="form-group">
+          <label>I want alerts for:</label>
+          <div class="signup-regions">
+            <label class="checkbox-row">
+              <input type="checkbox" name="regions" value="atlantic" checked />
+              <span>🌊 Atlantic / Gulf Coast</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="regions" value="caribbean" />
+              <span>🏝️ Caribbean</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="regions" value="pacific" />
+              <span>🌅 Eastern Pacific</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="regions" value="wpacific" />
+              <span>🌏 Western Pacific / Asia</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="regions" value="global" />
+              <span>🌐 Global (all basins)</span>
+            </label>
+          </div>
+        </div>
+
+        <label class="checkbox-row consent">
+          <input type="checkbox" name="terms" required />
+          <span>I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a></span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <span aria-hidden="true">🚀</span> Create Free Account
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span>or sign up with</span>
+      </div>
+
+      <div class="oauth-buttons">
+        <button class="btn btn-oauth" data-provider="google">
+          <span class="oauth-icon" aria-hidden="true">🔍</span> Google
+        </button>
+        <button class="btn btn-oauth" data-provider="github">
+          <span class="oauth-icon" aria-hidden="true">🐙</span> GitHub
+        </button>
+      </div>
+
+      <p class="auth-footer">
+        Already have an account? <a href="/signin">Sign in →</a>
+      </p>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Password strength
+    const pwd = document.getElementById('password');
+    const strength = document.getElementById('password-strength');
+    pwd?.addEventListener('input', () => {
+      const val = pwd.value;
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (val.length >= 12) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+      const colors = ['', '#ef4444', '#f59e0b', '#eab308', '#22c55e', '#16a34a'];
+      if (val.length === 0) {
+        strength.textContent = '';
+      } else {
+        strength.innerHTML = `<span style="color:${colors[score]}">● ${labels[score]}</span>`;
+      }
+    });
+
+    // Form submit
+    document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        regions: formData.getAll('regions'),
+        createdAt: new Date().toISOString(),
+      };
+      localStorage.setItem('storm_user_email', data.email);
+      localStorage.setItem('storm_user_name', data.name);
+      localStorage.setItem('storm_user_logged_in', 'true');
+      localStorage.setItem('storm_user_plan', 'free');
+      localStorage.setItem('storm_user_regions', JSON.stringify(data.regions));
+      window.location.href = '/dashboard';
+    });
+
+    document.querySelectorAll('.btn-oauth').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const provider = btn.dataset.provider;
+        localStorage.setItem('storm_user_email', `user@${provider}.com`);
+        localStorage.setItem('storm_user_logged_in', 'true');
+        localStorage.setItem('storm_user_plan', 'free');
+        localStorage.setItem('storm_login_provider', provider);
+        window.location.href = '/dashboard';
+      });
+    });
+  </script>
+
+  <style>
+    .auth-page { display: flex; justify-content: center; align-items: center; min-height: 70vh; padding: 2rem 1rem; }
+    .auth-card { background: var(--color-surface); border-radius: var(--radius); padding: 2.5rem; box-shadow: var(--shadow-lg); max-width: 480px; width: 100%; }
+    .auth-card h1 { font-size: 1.75rem; margin-bottom: 0.5rem; text-align: center; }
+    .auth-subtitle { text-align: center; color: var(--color-text-secondary); margin-bottom: 2rem; font-size: 0.95rem; }
+    .auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-weight: 600; font-size: 0.9rem; }
+    .form-group input { padding: 0.75rem 1rem; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1rem; font-family: inherit; transition: border 0.2s; }
+    .form-group input:focus { outline: none; border-color: var(--color-primary); }
+    .password-strength { font-size: 0.8rem; margin-top: 0.25rem; min-height: 1.2em; }
+    .signup-regions { display: flex; flex-direction: column; gap: 0.5rem; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; }
+    .checkbox-row input { width: 18px; height: 18px; accent-color: var(--color-primary); }
+    .checkbox-row a { color: var(--color-primary); }
+    .consent { margin-top: 0.5rem; font-size: 0.85rem; }
+    .btn-block { width: 100%; text-align: center; padding: 0.85rem; font-size: 1rem; }
+    .auth-divider { text-align: center; margin: 1.5rem 0; position: relative; }
+    .auth-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--color-border); }
+    .auth-divider span { background: var(--color-surface); padding: 0 1rem; font-size: 0.85rem; color: var(--color-text-secondary); position: relative; }
+    .oauth-buttons { display: flex; gap: 0.75rem; }
+    .btn-oauth { flex: 1; padding: 0.75rem; border: 2px solid var(--color-border); border-radius: 8px; background: var(--color-surface); cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-oauth:hover { border-color: var(--color-primary); background: #f0f9ff; }
+    .oauth-icon { font-size: 1.1rem; }
+    .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--color-text-secondary); }
+    .auth-footer a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+  </style>
+</BaseLayout>

@@ -1,0 +1,367 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../i18n/dict';
+
+const lang = 'en';
+---
+
+<BaseLayout
+  title="Dashboard"
+  description="Your storm tracking dashboard. Manage alerts, view subscription, and track active storms."
+  lang={lang}
+>
+  <div class="dashboard-page">
+    <!-- Greeting -->
+    <div class="dashboard-greeting">
+      <h1 id="greeting">Welcome back</h1>
+      <p id="user-email">Loading...</p>
+    </div>
+
+    <!-- Plan Banner -->
+    <div class="plan-banner" id="plan-banner">
+      <div class="plan-info">
+        <span class="plan-badge" id="plan-badge">Free Plan</span>
+        <p class="plan-desc">You're on the free plan. Upgrade to Pro for SMS alerts, custom regions, and more.</p>
+      </div>
+      <a href="/pricing" class="btn btn-primary">Upgrade to Pro →</a>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Alert Regions -->
+      <div class="card dashboard-card">
+        <div class="card-header">
+          <h2><span aria-hidden="true">🌍</span> Your Alert Regions</h2>
+          <button class="btn btn-sm btn-outline" id="add-region-btn">+ Add Region</button>
+        </div>
+        <div class="regions-list" id="regions-list">
+          <p class="empty-state-text">Loading your regions...</p>
+        </div>
+      </div>
+
+      <!-- Alert History -->
+      <div class="card dashboard-card">
+        <div class="card-header">
+          <h2><span aria-hidden="true">📬</span> Alert History</h2>
+          <span class="alert-count" id="alert-count">0 alerts</span>
+        </div>
+        <div class="alerts-history" id="alerts-history">
+          <div class="empty-state-text">
+            <span aria-hidden="true">📭</span>
+            <p>No alerts yet. We'll notify you when a storm develops in your regions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Storms Quick View -->
+      <div class="card dashboard-card">
+        <div class="card-header">
+          <h2><span aria-hidden="true">⚡</span> Active Storms</h2>
+          <a href="/map" class="see-all-link">View Map →</a>
+        </div>
+        <div class="active-storms-list" id="active-storms-list">
+          <div class="empty-state-text">
+            <span aria-hidden="true">☀️</span>
+            <p>No active storms right now. The Atlantic basin is quiet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Settings -->
+      <div class="card dashboard-card">
+        <div class="card-header">
+          <h2><span aria-hidden="true">⚙️</span> Account Settings</h2>
+        </div>
+        <div class="settings-list">
+          <a href="#" class="settings-item">
+            <span class="settings-icon" aria-hidden="true">📧</span>
+            <span>Change email</span>
+            <span class="settings-arrow">→</span>
+          </a>
+          <a href="#" class="settings-item">
+            <span class="settings-icon" aria-hidden="true">🔑</span>
+            <span>Change password</span>
+            <span class="settings-arrow">→</span>
+          </a>
+          <a href="#" class="settings-item">
+            <span class="settings-icon" aria-hidden="true">🔔</span>
+            <span>Notification preferences</span>
+            <span class="settings-arrow">→</span>
+          </a>
+          <a href="/pricing" class="settings-item">
+            <span class="settings-icon" aria-hidden="true">💳</span>
+            <span>Billing & subscription</span>
+            <span class="settings-arrow">→</span>
+          </a>
+          <button class="settings-item settings-danger" id="signout-btn">
+            <span class="settings-icon" aria-hidden="true">🚪</span>
+            <span>Sign out</span>
+            <span class="settings-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro Features Preview (for free users) -->
+    <div class="pro-preview" id="pro-preview">
+      <h2><span aria-hidden="true">⭐</span> Unlock with Storm Tracker Pro</h2>
+      <div class="pro-features-grid">
+        <div class="pro-feature">
+          <span class="pro-feature-icon" aria-hidden="true">📱</span>
+          <h3>SMS Alerts</h3>
+          <p>Get instant text messages when storms approach your area.</p>
+        </div>
+        <div class="pro-feature">
+          <span class="pro-feature-icon" aria-hidden="true">🎯</span>
+          <h3>5 Custom Regions</h3>
+          <p>Monitor up to 5 regions — perfect for travelers and multi-location families.</p>
+        </div>
+        <div class="pro-feature">
+          <span class="pro-feature-icon" aria-hidden="true">🗺️</span>
+          <h3>7-Day Forecast Tracks</h3>
+          <p>See where storms are predicted to go over the next 7 days.</p>
+        </div>
+        <div class="pro-feature">
+          <span class="pro-feature-icon" aria-hidden="true">🌊</span>
+          <h3>Storm Surge Maps</h3>
+          <p>Visualize potential coastal flooding from approaching hurricanes.</p>
+        </div>
+      </div>
+      <a href="/pricing" class="btn btn-primary btn-large">Start 14-Day Free Trial →</a>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Load user data
+    const userEmail = localStorage.getItem('storm_user_email');
+    const userName = localStorage.getItem('storm_user_name') || '';
+    const loggedIn = localStorage.getItem('storm_user_logged_in');
+    const plan = localStorage.getItem('storm_user_plan') || 'free';
+    const regions = JSON.parse(localStorage.getItem('storm_user_regions') || '["atlantic"]');
+
+    // Redirect if not logged in
+    if (!loggedIn || !userEmail) {
+      window.location.href = '/signin';
+    }
+
+    // Populate greeting
+    document.getElementById('greeting').textContent = `Welcome back${userName ? ', ' + userName : ''}!`;
+    document.getElementById('user-email').textContent = userEmail;
+
+    // Plan badge
+    const planBadge = document.getElementById('plan-badge');
+    if (plan === 'pro') {
+      planBadge.textContent = '⭐ Pro Plan';
+      planBadge.classList.add('plan-pro');
+      document.getElementById('plan-banner').classList.add('hidden');
+      document.getElementById('pro-preview').classList.add('hidden');
+    }
+
+    // Regions
+    const regionNames = {
+      atlantic: { name: 'Atlantic / Gulf Coast', icon: '🌊' },
+      caribbean: { name: 'Caribbean', icon: '🏝️' },
+      pacific: { name: 'Eastern Pacific', icon: '🌅' },
+      wpacific: { name: 'Western Pacific / Asia', icon: '🌏' },
+      indian: { name: 'Indian Ocean', icon: '🌍' },
+      global: { name: 'Global (All Basins)', icon: '🌐' },
+    };
+    const regionsList = document.getElementById('regions-list');
+    if (regions.length === 0) {
+      regionsList.innerHTML = '<p class="empty-state-text">No regions selected. <a href="/alerts">Add alerts →</a></p>';
+    } else {
+      regionsList.innerHTML = regions.map(r => {
+        const info = regionNames[r] || { name: r, icon: '📍' };
+        const locked = plan === 'free' && regions.indexOf(r) > 0;
+        return `
+          <div class="region-item ${locked ? 'region-locked' : ''}">
+            <span class="region-item-icon" aria-hidden="true">${info.icon}</span>
+            <span class="region-item-name">${info.name}</span>
+            ${locked ? '<span class="lock-badge">🔒 Pro</span>' : '<button class="btn-remove" data-region="' + r + '">✕</button>'}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Add region button
+    document.getElementById('add-region-btn')?.addEventListener('click', () => {
+      if (plan === 'free' && regions.length >= 1) {
+        alert('Free plan allows 1 region. Upgrade to Pro for up to 5 regions!');
+        window.location.href = '/pricing';
+      }
+    });
+
+    // Remove region
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const region = btn.dataset.region;
+        const newRegions = regions.filter(r => r !== region);
+        localStorage.setItem('storm_user_regions', JSON.stringify(newRegions));
+        location.reload();
+      });
+    });
+
+    // Sign out
+    document.getElementById('signout-btn')?.addEventListener('click', () => {
+      localStorage.removeItem('storm_user_logged_in');
+      localStorage.removeItem('storm_login_time');
+      window.location.href = '/';
+    });
+
+    // Fetch active storms
+    fetch('/api/storms')
+      .then(r => r.json())
+      .then(data => {
+        if (data.storms && data.storms.length > 0) {
+          const list = document.getElementById('active-storms-list');
+          list.innerHTML = data.storms.map(s => `
+            <a href="/storms/${s.name.toLowerCase()}" class="active-storm-item">
+              <span class="storm-dot" style="background: ${s.wind >= 74 ? '#ff8787' : '#ffd43b'};"></span>
+              <span class="storm-name">${s.name}</span>
+              <span class="storm-wind">${s.wind} mph</span>
+            </a>
+          `).join('');
+        }
+      })
+      .catch(() => {});
+  </script>
+
+  <style>
+    .dashboard-page { max-width: 1100px; margin: 0 auto; }
+    .dashboard-greeting { margin-bottom: 1.5rem; }
+    .dashboard-greeting h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+    .dashboard-greeting p { color: var(--color-text-secondary); font-size: 0.95rem; }
+
+    .plan-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .plan-badge {
+      display: inline-block;
+      background: white;
+      padding: 0.3rem 0.875rem;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #92400e;
+      margin-bottom: 0.5rem;
+    }
+    .plan-badge.plan-pro { background: #0ea5e9; color: white; }
+    .plan-desc { font-size: 0.9rem; color: #78350f; margin: 0; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .dashboard-card { padding: 1.5rem; }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .card-header h2 { font-size: 1.15rem; margin: 0; }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+    .alert-count { font-size: 0.85rem; color: var(--color-text-secondary); }
+    .see-all-link { font-size: 0.85rem; color: var(--color-primary); text-decoration: none; font-weight: 600; }
+
+    .regions-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .region-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .region-item-icon { font-size: 1.2rem; }
+    .region-item-name { flex: 1; font-weight: 500; }
+    .region-locked { opacity: 0.6; }
+    .lock-badge { font-size: 0.75rem; background: #fef3c7; color: #92400e; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+    .btn-remove { background: none; border: none; color: var(--color-danger); cursor: pointer; font-size: 0.9rem; padding: 0.25rem; }
+
+    .empty-state-text { text-align: center; color: var(--color-text-secondary); font-size: 0.9rem; padding: 1.5rem; }
+    .empty-state-text span { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    .empty-state-text a { color: var(--color-primary); }
+
+    .active-storms-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .active-storm-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg);
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .active-storm-item:hover { background: #e0f2fe; }
+    .storm-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .storm-name { font-weight: 600; flex: 1; }
+    .storm-wind { color: var(--color-text-secondary); }
+
+    .settings-list { display: flex; flex-direction: column; gap: 0; }
+    .settings-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--color-border);
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+    }
+    .settings-item:last-child { border-bottom: none; }
+    .settings-item:hover { background: var(--color-bg); }
+    .settings-icon { font-size: 1.1rem; }
+    .settings-arrow { margin-left: auto; color: var(--color-text-secondary); }
+    .settings-danger { color: var(--color-danger); }
+
+    .pro-preview {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    .pro-preview h2 { font-size: 1.75rem; margin-bottom: 1.5rem; }
+    .pro-features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .pro-feature { text-align: center; }
+    .pro-feature-icon { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    .pro-feature h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+    .pro-feature p { font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5; }
+    .btn-large { padding: 1rem 2rem; font-size: 1.05rem; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .pro-features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</BaseLayout>
