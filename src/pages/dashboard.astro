@@ -137,7 +137,7 @@ const lang = 'en';
     const userName = localStorage.getItem('storm_user_name') || '';
     const loggedIn = localStorage.getItem('storm_user_logged_in');
     const plan = localStorage.getItem('storm_user_plan') || 'free';
-    const regions = JSON.parse(localStorage.getItem('storm_user_regions') || '["atlantic"]');
+    const regions = JSON.parse(localStorage.getItem('storm_user_regions') || '["north_atlantic"]');
 
     // Redirect if not logged in
     if (!loggedIn || !userEmail) {
@@ -157,13 +157,16 @@ const lang = 'en';
       document.getElementById('pro-preview').classList.add('hidden');
     }
 
-    // Regions
+    // Regions (must match basin ids from src/data/basins.mjs)
     const regionNames = {
-      atlantic: { name: 'Atlantic / Gulf Coast', icon: '🌊' },
-      caribbean: { name: 'Caribbean', icon: '🏝️' },
-      pacific: { name: 'Eastern Pacific', icon: '🌅' },
-      wpacific: { name: 'Western Pacific / Asia', icon: '🌏' },
-      indian: { name: 'Indian Ocean', icon: '🌍' },
+      north_atlantic: { name: 'North Atlantic', icon: '🌊' },
+      east_pacific: { name: 'East Pacific', icon: '🌅' },
+      central_pacific: { name: 'Central Pacific', icon: '🌺' },
+      northwest_pacific: { name: 'Northwest Pacific', icon: '🌏' },
+      north_indian: { name: 'North Indian Ocean', icon: '🌊' },
+      south_indian: { name: 'Southwest Indian Ocean', icon: '🌊' },
+      australia: { name: 'Australian Region', icon: '🇦🇺' },
+      south_pacific: { name: 'South Pacific', icon: '🌴' },
       global: { name: 'Global (All Basins)', icon: '🌐' },
     };
     const regionsList = document.getElementById('regions-list');
@@ -215,10 +218,10 @@ const lang = 'en';
         if (data.storms && data.storms.length > 0) {
           const list = document.getElementById('active-storms-list');
           list.innerHTML = data.storms.map(s => `
-            <a href="/storms/${s.name.toLowerCase()}" class="active-storm-item">
-              <span class="storm-dot" style="background: ${s.wind >= 74 ? '#ff8787' : '#ffd43b'};"></span>
+            <a href="/map" class="active-storm-item">
+              <span class="storm-dot" style="background: ${s.windMph >= 74 ? '#ff8787' : '#ffd43b'};"></span>
               <span class="storm-name">${s.name}</span>
-              <span class="storm-wind">${s.wind} mph</span>
+              <span class="storm-wind">${s.windMph} mph</span>
             </a>
           `).join('');
         }

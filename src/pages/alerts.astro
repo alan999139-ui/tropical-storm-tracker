@@ -1,13 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { t } from '../i18n/dict';
+import { BASIN_LIST } from '../data/basins.mjs';
 
 const lang = 'en';
+// 全球 8 个流域 + 官方机构，作为地区选择器数据源
+const regions = BASIN_LIST.map(b => ({
+  value: b.id,
+  name: b.names[lang] || b.names.en,
+  agency: b.agency,
+  flag: b.flag,
+}));
 ---
 
 <BaseLayout
   title="Alerts"
-  description="Get free email alerts when tropical storms and hurricanes develop near your region. Powered by NOAA data."
+  description="Get free email alerts when tropical storms and hurricanes develop near your region. Powered by NOAA NHC & JTWC data worldwide."
   lang={lang}
 >
   <section class="alerts-hero">
@@ -46,46 +54,16 @@ const lang = 'en';
           <label>Alert Regions <span class="required">*</span></label>
           <p class="form-hint">Select all regions you want alerts for.</p>
           <div class="region-grid">
-            <label class="region-option">
-              <input type="checkbox" name="regions" value="atlantic" />
-              <span class="region-card">
-                <span class="region-icon" aria-hidden="true">🌊</span>
-                <span class="region-name">Atlantic / Gulf Coast</span>
-                <span class="region-desc">US East Coast, Gulf of Mexico</span>
-              </span>
-            </label>
-            <label class="region-option">
-              <input type="checkbox" name="regions" value="caribbean" />
-              <span class="region-card">
-                <span class="region-icon" aria-hidden="true">🏝️</span>
-                <span class="region-name">Caribbean</span>
-                <span class="region-desc">Caribbean Sea, Bahamas, Cuba</span>
-              </span>
-            </label>
-            <label class="region-option">
-              <input type="checkbox" name="regions" value="pacific" />
-              <span class="region-card">
-                <span class="region-icon" aria-hidden="true">🌅</span>
-                <span class="region-name">Eastern Pacific</span>
-                <span class="region-desc">Mexico, California coast</span>
-              </span>
-            </label>
-            <label class="region-option">
-              <input type="checkbox" name="regions" value="wpacific" />
-              <span class="region-card">
-                <span class="region-icon" aria-hidden="true">🌏</span>
-                <span class="region-name">Western Pacific / Asia</span>
-                <span class="region-desc">Japan, Philippines, Taiwan, China</span>
-              </span>
-            </label>
-            <label class="region-option">
-              <input type="checkbox" name="regions" value="indian" />
-              <span class="region-card">
-                <span class="region-icon" aria-hidden="true">🌍</span>
-                <span class="region-name">Indian Ocean</span>
-                <span class="region-desc">Bay of Bengal, Arabian Sea</span>
-              </span>
-            </label>
+            {regions.map((r) => (
+              <label class="region-option">
+                <input type="checkbox" name="regions" value={r.value} />
+                <span class="region-card">
+                  <span class="region-icon" aria-hidden="true">{r.flag}</span>
+                  <span class="region-name">{r.name}</span>
+                  <span class="region-desc">{r.agency}</span>
+                </span>
+              </label>
+            ))}
             <label class="region-option">
               <input type="checkbox" name="regions" value="global" />
               <span class="region-card">

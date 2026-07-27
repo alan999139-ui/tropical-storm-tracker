@@ -1,8 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { t } from '../i18n/dict';
+import { BASIN_LIST } from '../data/basins.mjs';
 
 const lang = 'en';
+// 全球 8 个流域 + 官方机构，作为注册时地区选择数据源
+const regions = BASIN_LIST.map(b => ({
+  value: b.id,
+  name: b.names[lang] || b.names.en,
+  agency: b.agency,
+  flag: b.flag,
+}));
+const defaultRegion = 'north_atlantic';
 ---
 
 <BaseLayout
@@ -37,22 +46,12 @@ const lang = 'en';
         <div class="form-group">
           <label>I want alerts for:</label>
           <div class="signup-regions">
-            <label class="checkbox-row">
-              <input type="checkbox" name="regions" value="atlantic" checked />
-              <span>🌊 Atlantic / Gulf Coast</span>
-            </label>
-            <label class="checkbox-row">
-              <input type="checkbox" name="regions" value="caribbean" />
-              <span>🏝️ Caribbean</span>
-            </label>
-            <label class="checkbox-row">
-              <input type="checkbox" name="regions" value="pacific" />
-              <span>🌅 Eastern Pacific</span>
-            </label>
-            <label class="checkbox-row">
-              <input type="checkbox" name="regions" value="wpacific" />
-              <span>🌏 Western Pacific / Asia</span>
-            </label>
+            {regions.map((r) => (
+              <label class="checkbox-row">
+                <input type="checkbox" name="regions" value={r.value} checked={r.value === defaultRegion} />
+                <span>{r.flag} {r.name}</span>
+              </label>
+            ))}
             <label class="checkbox-row">
               <input type="checkbox" name="regions" value="global" />
               <span>🌐 Global (all basins)</span>

@@ -247,7 +247,7 @@ import { t } from '../../i18n/dict';
       storms.forEach(function(storm) {
         if (!storm.lat || !storm.lon) return;
 
-        const color = getIntensityColor(storm.wind);
+        const color = getIntensityColor(storm.windMph);
         const latlng = [storm.lat, storm.lon];
         allLatLngs.push(latlng);
 
@@ -265,10 +265,10 @@ import { t } from '../../i18n/dict';
           '<strong style="font-size: 1.1rem;">' + storm.name + '</strong><br>' +
           '<span style="color: #64748b;">' + storm.type + '</span><br>' +
           '<hr style="margin: 6px 0; border: none; border-top: 1px solid #e2e8f0;">' +
-          '💨 风速：<strong>' + storm.wind + ' mph</strong><br>' +
-          '📊 气压：<strong>' + storm.pressure + ' mb</strong><br>' +
+          '💨 风速：<strong>' + storm.windMph + ' mph</strong><br>' +
+          '📊 气压：<strong>' + storm.pressureMb + ' mb</strong><br>' +
           '🧭 移动：' + storm.movement + '<br>' +
-          (storm.datetime ? '🕐 ' + storm.datetime : '') +
+          (storm.issuedAt ? '🕐 ' + new Date(storm.issuedAt).toLocaleString('zh-CN') : '') +
           '</div>'
         );
 
@@ -293,15 +293,15 @@ import { t } from '../../i18n/dict';
       // 更新侧边栏
       const listEl = document.getElementById('active-storms-list');
       listEl.innerHTML = storms.map(function(s) {
-        const color = getIntensityColor(s.wind);
+        const color = getIntensityColor(s.windMph);
         return '<div class="active-storm-item">' +
           '<div class="storm-item-header">' +
             '<strong>' + s.name + '</strong>' +
             '<span class="storm-item-type" style="color: ' + color + ';">' + s.type + '</span>' +
           '</div>' +
           '<div class="storm-item-stats">' +
-            '<span>💨 ' + s.wind + ' mph</span>' +
-            '<span>📊 ' + s.pressure + ' mb</span>' +
+            '<span>💨 ' + s.windMph + ' mph</span>' +
+            '<span>📊 ' + s.pressureMb + ' mb</span>' +
             '<span>🧭 ' + s.movement + '</span>' +
           '</div>' +
           (s.headline ? '<div class="storm-item-headline">' + s.headline + '</div>' : '') +

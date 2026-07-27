@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/fetchNOAA.mjs",
+    "prebuild": "node scripts/fetchGlobal.mjs",
     "build": "astro build && node scripts/generateSitemap.mjs",
-    "fetch": "node scripts/fetchNOAA.mjs",
+    "fetch": "node scripts/fetchGlobal.mjs",
     "postbuild": "node scripts/generateSitemap.mjs",
     "preview": "astro preview",
     "deploy": "astro build && npx wrangler pages deploy dist"

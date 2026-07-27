@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { t } from '../i18n/dict';
 import { historicalStorms, seasonStats } from '../data/historical';
-// 构建时 NOAA 数据（prebuild 钩子写入，Zod 校验）
-// 若 fetchNOAA.mjs 失败且无缓存，_fallback=true 且风暴数组为空
+// 构建时全球数据（prebuild 钩子写入，Zod 校验）
+// 若 fetchGlobal.mjs 失败且无缓存，_fallback=true 且风暴数组为空
 import activeData from '../data/active.json';
 import { getCategory } from '../data/noaa';
 
@@ -32,7 +32,7 @@ const activeCount = activeStorms ?? 0;
 
 <BaseLayout
   title="Home"
-  description="Track tropical storms, hurricanes, and cyclones in real-time. Official NOAA data, interactive maps, and historical storm database."
+  description="Track tropical storms, hurricanes, and cyclones worldwide in real-time. Official NOAA NHC & JTWC data, interactive maps, and historical storm database."
   lang={lang}
 >
   <!-- 数据来源 & 更新状态横幅 -->
@@ -55,7 +55,7 @@ const activeCount = activeStorms ?? 0;
       <h1 class="hero-title">Track Tropical Storms in Real-Time</h1>
       <p class="hero-desc">
         Live tracking, alerts, and historical data for tropical storms, hurricanes, and cyclones worldwide.
-        Powered by <strong>NOAA &amp; NHC</strong> data.
+        Powered by <strong>NOAA NHC &amp; JTWC</strong> data.
       </p>
       <div class="hero-ctas">
         <a href="/map" class="btn btn-primary"><span aria-hidden="true">🗺️</span> View Live Map</a>
@@ -63,7 +63,7 @@ const activeCount = activeStorms ?? 0;
       </div>
       <p class="hero-source">
         <span class="source-dot"></span>
-        Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a>
+        Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> &amp; <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
         · Updated {buildTime}
       </p>
     </div>
@@ -78,25 +78,25 @@ const activeCount = activeStorms ?? 0;
       </div>
       <div class="grid grid-2">
         {liveStorms.map((storm: any) => {
-          const intensity = getCategory(storm.wind);
+          const intensity = getCategory(storm.windMph);
           return (
-            <a href={`/storms/${storm.name.toLowerCase()}`} class="card storm-card">
+            <a href="/map" class="card storm-card">
               <div class="storm-card-header">
                 <div>
-                  <h3>{storm.name}</h3>
+                  <h3>{storm.name}{storm.designation ? ` (${storm.designation})` : ''}</h3>
                   <span class="storm-type">{storm.type}</span>
+                  <span class="storm-source">{storm.agency || storm.source} · {storm.basinName}</span>
                 </div>
                 <span class="badge" style={`background: ${categoryColors[intensity] || '#e2e8f0'}33; color: ${categoryColors[intensity] || '#64748b'};`}>{intensity}</span>
               </div>
               <div class="storm-card-stats">
-                <div class="stat"><span class="stat-label">💨 Wind</span><span class="stat-value">{storm.wind} mph</span></div>
-                <div class="stat"><span class="stat-label">📊 Pressure</span><span class="stat-value">{storm.pressure > 0 ? `${storm.pressure} mb` : '—'}</span></div>
-                <div class="stat"><span class="stat-label"><span aria-hidden="true">📍</span> Location</span><span class="stat-value">{storm.lat.toFixed(1)}°N, {Math.abs(storm.lon).toFixed(1)}°W</span></div>
+                <div class="stat"><span class="stat-label">💨 Wind</span><span class="stat-value">{storm.windMph} mph</span></div>
+                <div class="stat"><span class="stat-label">📊 Pressure</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
+                <div class="stat"><span class="stat-label"><span aria-hidden="true">📍</span> Location</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
                 <div class="stat"><span class="stat-label">➡️ Movement</span><span class="stat-value">{storm.movement}</span></div>
               </div>
-              {storm.headline && <p class="storm-headline">{storm.headline}</p>}
               <div class="storm-card-footer">
-                <span class="view-details"><span aria-hidden="true">→</span> View Details</span>
+                <span class="view-details"><span aria-hidden="true">→</span> View on Map</span>
               </div>
             </a>
           );
@@ -113,8 +113,9 @@ const activeCount = activeStorms ?? 0;
         <div class="no-active-icon" aria-hidden="true">☀️</div>
         <h3>No Active Tropical Storms</h3>
         <p>
-          Good news — the Atlantic basin is currently quiet. Tropical cyclones are most common between
-          <strong>June 1 – November 30</strong>, with peak activity around <strong>September 10</strong>.
+          Good news — all monitored ocean basins are currently quiet. Tropical cyclone seasons vary by region:
+          the Atlantic &amp; East Pacific peak <strong>June 1 – November 30</strong>, while the Northwest Pacific
+          stays active nearly year-round.
         </p>
         <div class="no-active-ctas">
           <a href="/storms" class="btn btn-outline">📊 Browse Historical Storms</a>
@@ -122,7 +123,7 @@ const activeCount = activeStorms ?? 0;
         </div>
         <p class="hero-source">
           <span class="source-dot"></span>
-          Last checked: {buildTime} · Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a>
+          Last checked: {buildTime} · Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> &amp; <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
         </p>
       </div>
     </section>
@@ -304,6 +305,7 @@ const activeCount = activeStorms ?? 0;
     .storm-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
     .storm-card-header h3 { font-size: 1.25rem; font-weight: 700; margin: 0; }
     .storm-type { font-size: 0.85rem; color: var(--color-text-secondary); }
+    .storm-source { display: block; font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 2px; }
     .storm-card-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
     .stat { display: flex; flex-direction: column; gap: 0.15rem; }
     .stat-label { font-size: 0.75rem; color: var(--color-text-secondary); font-weight: 600; }
