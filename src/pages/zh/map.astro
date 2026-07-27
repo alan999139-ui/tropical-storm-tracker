@@ -121,8 +121,56 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
         document.querySelectorAll('.basin-btn').forEach(function(b){ b.classList.remove('active'); });
         btn.classList.add('active');
         currentBasin = btn.getAttribute('data-basin');
+
+        // GA4 事件：流域筛选
+        if (typeof trackEvent !== 'undefined') {
+          var fb = BASINS.find(function(b){ return b.id === currentBasin; });
+          trackEvent('map_filter_basin', {
+            basin_id: currentBasin,
+            basin_name: fb ? fb.name : '全部流域',
+            page_language: 'zh'
+          });
+        }
+
         renderMarkers();
       });
+
+      // GA4 事件：地图缩放
+      map.on('zoomend', function() {
+        if (typeof trackEvent !== 'undefined') {
+          trackEvent('map_zoom', {
+            zoom_level: map.getZoom(),
+            view_type: currentBasin === 'all' ? 'global' : 'basin',
+            page_language: 'zh'
+          });
+        }
+      });
+
+      // GA4 事件：地图平移（防抖）
+      var panTimeout;
+      map.on('moveend', function() {
+        clearTimeout(panTimeout);
+        panTimeout = setTimeout(function() {
+          if (typeof trackEvent !== 'undefined') {
+            var center = map.getCenter();
+            trackEvent('map_pan', {
+              center_lat: center.lat.toFixed(2),
+              center_lon: center.lng.toFixed(2),
+              zoom_level: map.getZoom(),
+              page_language: 'zh'
+            });
+          }
+        }, 2000);  // 2秒防抖
+      });
+
+      // GA4 事件：地图加载完成
+      if (typeof trackEvent !== 'undefined') {
+        trackEvent('map_loaded', {
+          initial_zoom: 3,
+          initial_center: '15N,140E',
+          page_language: 'zh'
+        });
+      }
     }
 
     function renderMarkers() {
@@ -162,6 +210,22 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
           '</div>';
         marker.bindPopup(popup);
         markersLayer.addLayer(marker);
+
+        // GA4 事件：标记点击
+        marker.on('click', function() {
+          if (typeof trackEvent !== 'undefined') {
+            trackEvent('map_marker_click', {
+              storm_name: storm.name,
+              storm_designation: storm.designation || '',
+              storm_category: getIntensityColor(storm.windMph),
+              wind_mph: storm.windMph,
+              basin_id: storm.basin,
+              basin_name: storm.basinName,
+              agency: storm.agency || storm.source,
+              page_language: 'zh'
+            });
+          }
+        });
       });
       if (currentBasin === 'all') {
         map.fitBounds(bounds, { padding: [50, 50], maxZoom: 5 });

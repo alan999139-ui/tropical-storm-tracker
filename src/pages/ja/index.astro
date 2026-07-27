@@ -40,8 +40,8 @@ const categoryColors: Record<string, string> = {
       <h1>{t('hero.title', lang)}</h1>
       <p>{t('hero.desc', lang)}</p>
       <div class="hero-actions">
-        <a href="/ja/map" class="btn btn-primary">{t('hero.viewMap', lang)}</a>
-        <a href="/ja/storms" class="btn btn-outline">{t('hero.stormDatabase', lang)}</a>
+        <a href="/ja/map" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'ja'})">{t('hero.viewMap', lang)}</a>
+        <a href="/ja/storms" class="btn btn-outline" onclick="trackEvent('hero_cta_click', {button: 'storm_database', page_section: 'hero', language: 'ja'})">{t('hero.stormDatabase', lang)}</a>
       </div>
     </div>
   </section>
