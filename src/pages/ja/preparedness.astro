@@ -1,0 +1,403 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
+---
+
+<BaseLayout
+  title={t('prepPage.title', 'ja')}
+  description={t('prepPage.desc', 'ja')}
+  lang="ja"
+>
+  <div class="page-header">
+    <h1>{t('prepPage.title', 'ja')}</h1>
+    <p>{t('prepPage.desc', 'ja')}</p>
+  </div>
+
+  <!-- クイックナビ -->
+  <nav class="toc">
+    <h3>{t('prepPage.quickNav', 'ja')}</h3>
+    <ul>
+      <li><a href="#before">暴風前に</a></li>
+      <li><a href="#during">暴風中</a></li>
+      <li><a href="#after">暴風後に</a></li>
+      <li><a href="#kit">緊急キット</a></li>
+      <li><a href="#evacuation">避難ガイド</a></li>
+      <li><a href="#categories">暴風カテゴリー</a></li>
+    </ul>
+  </nav>
+
+  <!-- カテゴリー -->
+  <section id="categories" class="content-section">
+    <h2>{t('prepPage.categories', 'ja')}</h2>
+    <div class="category-table">
+      <div class="category-row">
+        <span class="cat-badge" style="background: #4dabf733; color: #1971c2;">TD</span>
+        <div class="cat-info">
+          <strong>熱帯低気圧</strong>
+          <p>風速：38 mph 未満。暴雨や洪水の恐れがありますが、風害は较小です。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #ffd43b33; color: #f08c00;">TS</span>
+        <div class="cat-info">
+          <strong>热带暴風</strong>
+          <p>風速：39-73 mph。深刻な洪水、停電、軽度の構造物被害を引き起こす可能性があります。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #ff878733; color: #c92a2a;">1级</span>
+        <div class="cat-info">
+          <strong>カテゴリ1ハリケーン</strong>
+          <p>風速：74-95 mph。屋根、木、电線が損傷。沿岸部は洪水の恐れ。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #fa525233; color: #c92a2a;">2级</span>
+        <div class="cat-info">
+          <strong>カテゴリ2ハリケーン</strong>
+          <p>風速：96-110 mph。屋根と外壁に深刻な被害，几乎全面停电が予想されます。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #e6498033; color: #a61e4d;">3级</span>
+        <div class="cat-info">
+          <strong>カテゴリ3ハリケーン（大型）</strong>
+          <p>風速：111-129 mph。破壊的な被害。断水・停電が数日から数週間続く可能性。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #cc5de833; color: #862e9c;">4级</span>
+        <div class="cat-info">
+          <strong>カテゴリ4ハリケーン（大型）</strong>
+          <p>風速：130-156 mph。壊滅的な被害。ほとんどの地域で数週間〜数ヶ月住めない可能性。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #845ef733; color: #5f3dc4;">5级</span>
+        <div class="cat-info">
+          <strong>カテゴリ5ハリケーン（大型）</strong>
+          <p>風速：157 mph 以上。屋根完全崩落、壁崩壊。その地域は数ヶ月住めない可能性大。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 暴風前に -->
+  <section id="before" class="content-section">
+    <h2>{t('prepPage.before', 'ja')}</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>緊急キットを準備</strong>
+          <p>3日分の必需品を準備：饮用水（大人1人1日1ガロン）、保存食、懐中電灯、電池、救急キット、処方薬、重要書類の防水保存。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>家族計画を作成</strong>
+          <p>去哪，怎么联系，走散了怎么办这些问题都要和家庭成员讨论。州外に連絡先を確保します。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>家を補強</strong>
+          <p>防風シャッター設置または板abetで窓を覆う。庭の緩んだ物品を整理。屋根の緩んだタイルを確認。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>保険を確認</strong>
+          <p>標準的な家保険は洪水被害をカバーしません。国家洪水保険計画（NFIP）で洪水保険を検討してください。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>避難区域を把握</strong>
+          <p>现地避難区域とルートを確認。宿泊先を確保。シーズン中は给油箱を満タンに。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 暴風中 -->
+  <section id="during" class="content-section">
+    <h2>{t('prepPage.during', 'ja')}</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>屋内に留まる</strong>
+          <p>官方宣布安全前不要外出。暴风眼会带来短暂平静——这时千万不要出门。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>最新情報を確認</strong>
+          <p>电池供电または手回し式のラジオでNOAA気象广播または現地のニュースを確認。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>窓から離れる</strong>
+          <p>洪水の恐れがない最低階の内側の部屋に留まる。すべての内側のドアを閉める。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>必要に応じて公用サービスを遮断</strong>
+          <p>当局の指示があるか、損傷が疑われる場合は、ガス・電気・水道を遮断。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>屋内では発電機を使用しない</strong>
+          <p>発電機の一酸化炭素は致命的な可能性があります。発電体は屋外で、窓から少なくとも20フィート離して設置。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 暴風後に -->
+  <section id="after" class="content-section">
+    <h2>{t('prepPage.after', 'ja')}</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>公式警報解除を待つ</strong>
+          <p>当局が安全を宣言するまで帰宅しない。倒れた电线や冠水した道路に注意。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>被害を記録</strong>
+          <p>片付ける前にすべての被害の写真を撮影。速やかに保険会社に連絡。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>冠水地域に近づかない</strong>
+          <p>冠水した水は汚染されていたり、带電していたり、危険な破片が含まれている可能性があります。絶対に步行や車で通過しない。</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">&#10003;</span>
+        <div>
+          <strong>近所の様子を心配</strong>
+          <p>特に高齢者や障がいを持つ方で、手伝いが必要な方を気にかけましょう。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 緊急キット -->
+  <section id="kit" class="content-section">
+    <h2>{t('prepPage.kit', 'ja')}</h2>
+    <div class="kit-grid">
+      <div class="kit-card">
+        <h4>💧 水と食料</h4>
+        <ul>
+          <li>大人1人1日1ガロンの水（3日分以上）</li>
+          <li>保存食（罐头、エネルギーバー）</li>
+          <li>手動缶切り</li>
+          <li>ペットフード（ペットがいる場合）</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🔦 照明と電源</h4>
+        <ul>
+          <li>懐中電灯（蜡烛は避ける）</li>
+          <li>予備電池（AA、AAA、C、D）</li>
+          <li>电池駆動または手回しラジオ</li>
+          <li>モバイルバッテリー</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🏥 健康と救急</h4>
+        <ul>
+          <li>救急キット</li>
+          <li>処方薬（7日分）</li>
+          <li>市販薬</li>
+          <li>メガネまたはコンタクトレンズ</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>📋 書類</h4>
+        <ul>
+          <li>身分証明書と保険証</li>
+          <li>銀行口座情報</li>
+          <li>緊急連絡先リスト</li>
+          <li>防水袋に入れたコピー</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🧰 工具</h4>
+        <ul>
+          <li>多功能ナイフ</li>
+          <li>防水テープ</li>
+          <li>プラスチックシート</li>
+          <li>救援口笛</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🧹 衛生用品</h4>
+        <ul>
+          <li>洗手液</li>
+          <li>ウェットティッシュ</li>
+          <li>ゴミ袋</li>
+          <li>トイレットペーパー</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 避難ガイド -->
+  <section id="evacuation" class="content-section">
+    <h2>{t('prepPage.evacuation', 'ja')}</h2>
+    <div class="evac-steps">
+      <div class="evac-step">
+        <span class="step-number">1</span>
+        <div>
+          <strong>避難区域を把握</strong>
+          <p>ready.gov または現地の应急管理ウェブサイトで自分の区域を確認。A区域は通常最先撤离。</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">2</span>
+        <div>
+          <strong>ルートを計画</strong>
+          <p>道路封闭に備えて複数のルートを事前に確認。当局が指定した避難ルートがある場合は、それに従ってください。</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">3</span>
+        <div>
+          <strong>車両を準備</strong>
+          <p>シーズン中は给油箱を少なくとも半分満タンに。タイヤ・オイル・バッテリーを確認。車載緊急キットを準備。</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">4</span>
+        <div>
+          <strong>持ち物を確認</strong>
+          <p>紧急キット、重要な書類、薬、3日分の衣類、現金、携帯充电器、貴重品。</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">5</span>
+        <div>
+          <strong>去哪</strong>
+          <p>首先考虑投奔亲友。公共避難所も可能だが最后の手段として使用。避難区域外のホテルも選択肢。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="content-section">
+    <h2>{t('prepPage.faq', 'ja')}</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>热带暴風とは？</summary>
+        <p>热带暴風は、継続的風速が39-73 mph（63-118 km/h）の热带低気圧です。热带低気圧より強く、ハリケーンより弱いです。</p>
+      </details>
+      <details class="faq-item">
+        <summary>热带暴風とハリケーンの違いは？</summary>
+        <p>主な違いは風速です。热带暴風は39-73 mph、ハリケーンは74 mph 以上です。どちらも洪水や風で甚大な被害を引き起こす可能性があります。</p>
+      </details>
+      <details class="faq-item">
+        <summary>热带暴風の継続期間は？</summary>
+        <p>热带暴風は通常2-7日間ですが、 数週間続くもあります。継続時間は海面水温、風のシアー、大気 условия  зависит.</p>
+      </details>
+      <details class="faq-item">
+        <summary>热带暴風季はいつ？</summary>
+        <p>大西洋の热带暴風季は6月1日から11月30日、9月がピーク。太平洋は5月15日から11月30日です。</p>
+      </details>
+      <details class="faq-item">
+        <summary>热带暴風が接近，我该怎么办？</summary>
+        <p>现地の天气预报を確認、家を補強、避難計画を確認、紧急キットを準備。当局の指示にはすべて従ってください。</p>
+      </details>
+    </div>
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "热带暴風とは？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "热带暴風は、継続的風速が39-73 mph（63-118 km/h）の热带低気圧です。热带低気圧より強く、ハリケーンより弱いです。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "热带暴風とハリケーンの違いは？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "主な違いは風速です。热带暴風は39-73 mph、ハリケーンは74 mph 以上です。どちらも洪水や風で甚大な被害を引き起こす可能性があります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "热带暴風季はいつ？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "大西洋の热带暴風季は6月1日から11月30日、9月がピーク。太平洋は5月15日から11月30日です。"
+          }
+        }
+      ]
+    })} />
+  </section>
+
+  <style>
+    .page-header { margin-bottom: 2rem; }
+    .toc { background: var(--color-surface); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem; }
+    .toc h3 { margin-bottom: 0.75rem; }
+    .toc ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .toc li { display: inline-flex; }
+    .toc a { color: var(--color-primary); text-decoration: none; font-weight: 500; padding: 0.4rem 0.9rem; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.88rem; transition: all 0.15s ease; }
+    .toc a:hover { text-decoration: none; background: var(--color-primary); color: white; border-color: var(--color-primary); }
+    .content-section { margin-bottom: 3rem; }
+    .content-section h2 { font-size: 1.75rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--color-border); }
+    .category-table { display: flex; flex-direction: column; gap: 0.75rem; }
+    .category-row { display: flex; align-items: flex-start; gap: 1rem; background: var(--color-surface); padding: 1rem 1.5rem; border-radius: 8px; box-shadow: var(--shadow-sm); }
+    .cat-badge { display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 32px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+    .cat-info strong { display: block; margin-bottom: 0.25rem; }
+    .cat-info p { color: var(--color-text-secondary); font-size: 0.9rem; }
+    .checklist { display: flex; flex-direction: column; gap: 1rem; }
+    .checklist-item { display: flex; align-items: flex-start; gap: 1rem; background: var(--color-surface); padding: 1rem 1.5rem; border-radius: 8px; box-shadow: var(--shadow-sm); }
+    .check { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #d1fae5; color: #065f46; border-radius: 50%; font-weight: 700; flex-shrink: 0; }
+    .checklist-item strong { display: block; margin-bottom: 0.25rem; }
+    .checklist-item p { color: var(--color-text-secondary); font-size: 0.9rem; }
+    .kit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media (max-width: 768px) { .kit-grid { grid-template-columns: 1fr; } }
+    .kit-card { background: var(--color-surface); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow-sm); }
+    .kit-card h4 { margin-bottom: 0.75rem; }
+    .kit-card ul { list-style: none; padding: 0; }
+    .kit-card li { padding: 0.4rem 0; font-size: 0.9rem; border-bottom: 1px solid var(--color-border); }
+    .kit-card li:last-child { border-bottom: none; }
+    .kit-card li::before { content: '•'; color: var(--color-primary); font-weight: bold; margin-right: 0.5rem; }
+    .evac-steps { display: flex; flex-direction: column; gap: 1rem; }
+    .evac-step { display: flex; align-items: flex-start; gap: 1rem; background: var(--color-surface); padding: 1rem 1.5rem; border-radius: 8px; box-shadow: var(--shadow-sm); }
+    .step-number { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--color-primary); color: white; border-radius: 50%; font-weight: 700; flex-shrink: 0; }
+    .evac-step strong { display: block; margin-bottom: 0.25rem; }
+    .evac-step p { color: var(--color-text-secondary); font-size: 0.9rem; }
+    .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .faq-item { background: var(--color-surface); border-radius: 8px; padding: 1rem 1.5rem; box-shadow: var(--shadow-sm); cursor: pointer; }
+    .faq-item summary { font-weight: 600; font-size: 1rem; }
+    .faq-item p { margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 0.9rem; }
+  </style>
+</BaseLayout>

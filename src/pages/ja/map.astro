@@ -1,0 +1,284 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
+import { BASIN_LIST } from '../../data/basins.mjs';
+
+const lang = 'ja';
+const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
+  id: b.id, name: b.names.ja, agency: b.agencyShort, flag: b.flag, center: b.center,
+})));
+---
+
+<BaseLayout
+  title={t('map.title', lang)}
+  description={t('map.desc', lang)}
+  lang={lang}
+>
+  <div class="page-header">
+    <div>
+      <h1><span aria-hidden="true">🌍</span> グローバルリアルタイム暴風マップ</h1>
+      <p>世界中の海域で発生する活発な熱帯暴風のリアルタイム追跡。データは <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> および <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a> を使用し、各海域の公式機関に帰属します。</p>
+    </div>
+    <div class="map-status" id="map-status">
+      <span class="status-indicator loading">データソースに接続中...</span>
+    </div>
+  </div>
+
+  <div class="basin-filter" id="basin-filter" role="group" aria-label="海域でフィルター">
+    <button class="basin-btn active" data-basin="all">🌍 全海域</button>
+  </div>
+
+  <div class="map-legend">
+    <div class="legend-title"><span aria-hidden="true">🌀</span> 凡例</div>
+    <div class="legend-items">
+      <span class="legend-item"><span class="legend-dot" style="background:#4dabf7;"></span> 熱帯低気圧</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ffd43b;"></span> 热带暴風</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ff8787;"></span> カテゴリ1</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#fa5252;"></span> カテゴリ2</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#e64980;"></span> カテゴリ3</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#cc5de8;"></span> カテゴリ4</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#845ef7;"></span> カテゴリ5</span>
+    </div>
+  </div>
+
+  <div id="storm-map" class="storm-map"></div>
+
+  <div class="map-footer">
+    <p>
+      <span aria-hidden="true">🟢</span> <strong id="fetch-status">リアルタイム</strong> · 更新：<span id="last-updated">—</span>
+      · データソース：
+      <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a>（大西洋/東太/中央太）、
+      <a href="https://www.jma.go.jp/bosai/map.html#contents=typhoon" target="_blank" rel="noopener">気象庁</a>（北西太平洋）、
+      <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener">IMD</a>（北インド洋）、
+      <a href="https://meteofrance.com/" target="_blank" rel="noopener">フランス気象局</a>（南西インド洋）、
+      <a href="http://www.bom.gov.au/" target="_blank" rel="noopener">オーストラリア気象局</a>（オーストラリア海域）、
+      <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">フィジー気象サービス</a>（南太平洋）（JTWC 经由）
+    </p>
+  </div>
+
+  <script is:inline define:vars={{ basinsJson }}>
+    var BASINS = JSON.parse(basinsJson);
+    (function() {
+      var filter = document.getElementById('basin-filter');
+      if (filter && BASINS) {
+        BASINS.forEach(function(b) {
+          var btn = document.createElement('button');
+          btn.className = 'basin-btn';
+          btn.setAttribute('data-basin', b.id);
+          btn.innerHTML = b.flag + ' ' + b.name;
+          filter.appendChild(btn);
+        });
+      }
+    })();
+  </script>
+
+  <script is:inline>
+    var map;
+    var markersLayer;
+    var allStorms = [];
+    var currentBasin = 'all';
+
+    function getIntensityColor(wind) {
+      if (wind < 39) return '#4dabf7';
+      if (wind < 74) return '#ffd43b';
+      if (wind < 96) return '#ff8787';
+      if (wind < 111) return '#fa5252';
+      if (wind < 130) return '#e64980';
+      if (wind < 157) return '#cc5de8';
+      return '#845ef7';
+    }
+
+    function getBasinCenter(basinId) {
+      var b = BASINS.find(function(x){ return x.id === basinId; });
+      return b ? b.center : [15, 140];
+    }
+
+    function initMap() {
+      if (typeof L === 'undefined') { setTimeout(initMap, 100); return; }
+
+      map = L.map('storm-map', {
+        center: [15, 140],
+        zoom: 3,
+        scrollWheelZoom: true,
+        zoomControl: true,
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 18,
+      }).addTo(map);
+
+      markersLayer = L.layerGroup().addTo(map);
+      fetchAndDisplayStorms();
+
+      document.getElementById('basin-filter').addEventListener('click', function(e) {
+        var btn = e.target.closest('.basin-btn');
+        if (!btn) return;
+        document.querySelectorAll('.basin-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentBasin = btn.getAttribute('data-basin');
+        renderMarkers();
+      });
+    }
+
+    function renderMarkers() {
+      markersLayer.clearLayers();
+      var shown = allStorms.filter(function(s){ return currentBasin === 'all' || s.basin === currentBasin; });
+      if (shown.length === 0) {
+        var statusEl = document.querySelector('#map-status .status-indicator');
+        if (statusEl) {
+          statusEl.className = 'status-indicator no-active';
+          statusEl.innerHTML = currentBasin === 'all' ? '<span aria-hidden="true">☀️</span> 帜やかな暴風なし' : '当該海域に帜やかな暴風なし';
+        }
+        return;
+      }
+      var bounds = [];
+      shown.forEach(function(storm) {
+        var color = getIntensityColor(storm.windMph);
+        var marker = L.circleMarker([storm.lat, storm.lon], {
+          radius: 12,
+          fillColor: color,
+          color: '#ffffff',
+          weight: 2.5,
+          fillOpacity: 0.85,
+        });
+        bounds.push([storm.lat, storm.lon]);
+
+        var popup = '<div style="min-width:220px;">' +
+          '<h3 style="margin:0 0 4px;font-size:1.1em;">' + storm.name + (storm.designation ? ' (' + storm.designation + ')' : '') + '</h3>' +
+          '<p style="margin:0 0 6px;font-size:0.82em;color:#64748b;">' + (storm.type || '热带低気圧') + ' · ' + (storm.basinName || '') + '</p>' +
+          '<table style="width:100%;font-size:0.82em;border-collapse:collapse;">' +
+          '<tr><td style="padding:2px 4px;font-weight:600;">風速</td><td style="padding:2px 4px;">' + storm.windMph + ' mph</td></tr>' +
+          '<tr><td style="padding:2px 4px;font-weight:600;">気圧</td><td style="padding:2px 4px;">' + (storm.pressureMb > 0 ? storm.pressureMb + ' mb' : '—') + '</td></tr>' +
+          '<tr><td style="padding:2px 4px;font-weight:600;">移動</td><td style="padding:2px 4px;">' + storm.movement + '</td></tr>' +
+          '<tr><td style="padding:2px 4px;font-weight:600;">位置</td><td style="padding:2px 4px;">' + Math.abs(storm.lat).toFixed(1) + '°' + (storm.lat>=0?'N':'S') + ', ' + Math.abs(storm.lon).toFixed(1) + '°' + (storm.lon>=0?'E':'W') + '</td></tr>' +
+          '<tr><td style="padding:2px 4px;font-weight:600;">ソース</td><td style="padding:2px 4px;">' + (storm.agency || storm.source) + '</td></tr>' +
+          '</table>' +
+          (storm.warningUrl ? '<p style="margin:8px 0 0;font-size:0.8em;"><a href="' + storm.warningUrl + '" target="_blank" rel="noopener">公式警報を確認 →</a></p>' : '') +
+          '</div>';
+        marker.bindPopup(popup);
+        markersLayer.addLayer(marker);
+      });
+      if (currentBasin === 'all') {
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 5 });
+      } else {
+        var c = getBasinCenter(currentBasin);
+        map.setView(c, 4);
+      }
+    }
+
+    async function fetchAndDisplayStorms() {
+      var statusEl = document.getElementById('map-status');
+      var statusTextEl = statusEl ? statusEl.querySelector('.status-indicator') : null;
+      var fetchStatusEl = document.getElementById('fetch-status');
+      var lastUpdatedEl = document.getElementById('last-updated');
+
+      function setStatus(type, text) {
+        if (statusTextEl) {
+          statusTextEl.className = 'status-indicator ' + type;
+          statusTextEl.innerHTML = text;
+        }
+        if (fetchStatusEl) {
+          fetchStatusEl.innerHTML = type === 'error' ? '<span aria-hidden="true">⚠️</span> 使用不可' : type === 'loading' ? '読み込み中...' : '🟢 ライブ';
+        }
+      }
+
+      setStatus('loading', 'リアルタイムデータを取得中...');
+
+      try {
+        var resp = await fetch('/api/global-storms');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var data = await resp.json();
+        allStorms = data.storms || [];
+
+        if (allStorms.length > 0) {
+          setStatus('live', '🟢 ライブ — ' + allStorms.length + ' 件の帜やかな暴風');
+        } else {
+          setStatus('no-active', '<span aria-hidden="true">☀️</span> 帜やかな暴風なし');
+        }
+        renderMarkers();
+
+        if (data.fetchedAt && lastUpdatedEl) {
+          var d = new Date(data.fetchedAt);
+          lastUpdatedEl.textContent = d.toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', timeZoneName: 'short' });
+        }
+      } catch (err) {
+        setStatus('error', '⚠️ リアルタイムデータソースに接続不可');
+        console.error('取得エラー:', err);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMap);
+    } else {
+      initMap();
+    }
+
+    setInterval(fetchAndDisplayStorms, 5 * 60 * 1000);
+  </script>
+
+  <style>
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .page-header h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+    .page-header p { color: var(--color-text-secondary); margin: 0; max-width: 640px; }
+    .page-header a { color: var(--color-primary); }
+    .map-status { text-align: right; }
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .status-indicator.loading { background: #dbeafe; color: #1e40af; }
+    .status-indicator.live { background: #d1fae5; color: #065f46; }
+    .status-indicator.no-active { background: #f0fdf4; color: #166534; }
+    .status-indicator.error { background: #fef3c7; color: #92400e; }
+    .basin-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .basin-btn {
+      border: 2px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .basin-btn:hover { border-color: var(--color-primary); }
+    .basin-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .map-legend {
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .legend-title { font-weight: 700; font-size: 0.85rem; }
+    .legend-items { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--color-text-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .storm-map { width: 100%; height: 550px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-lg); background: #e8eef4; }
+    .map-footer { margin-top: 0.75rem; font-size: 0.8rem; color: var(--color-text-secondary); }
+    .map-footer a { color: var(--color-primary); }
+    @media (max-width: 768px) {
+      .storm-map { height: 400px; }
+      .map-legend { flex-direction: column; align-items: flex-start; }
+      .basin-filter { gap: 0.4rem; }
+      .basin-btn { font-size: 0.75rem; padding: 0.4rem 0.7rem; }
+    }
+  </style>
+</BaseLayout>

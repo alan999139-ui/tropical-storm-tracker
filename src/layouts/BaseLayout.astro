@@ -16,22 +16,24 @@ const {
 } = Astro.props;
 
 const siteName = t('brand.name', lang);
-const fullTitle = title === "Home" ? `${siteName} — ${lang === 'zh' ? '实时风暴追踪与预警' : 'Real-Time Storm Tracking & Alerts'}` : `${title} | ${siteName}`;
+const fullTitle = title === "Home" ? `${siteName} — ${t('brand.tagline', lang)}` : `${title} | ${siteName}`;
 const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site).toString();
 const currentPath = Astro.url.pathname;
+const basePath = currentPath.replace(/^\/(zh|fr|ja)(?=\/|$)/, '') || '/';
+const htmlLang = (languages as Record<string, any>)[lang]?.htmlLang || 'en';
 
 // 语言切换链接
 const langSwitchLinks = Object.values(languages).map(l => ({
   code: l.code,
   name: l.name,
   flag: l.flag,
-  url: localizedPath(currentPath.replace(/^\/zh/, ''), l.code),
+  url: localizedPath(basePath, l.code),
   active: l.code === lang,
 }));
 ---
 
 <!DOCTYPE html>
-<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
+<html lang={htmlLang}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -47,7 +49,7 @@ const langSwitchLinks = Object.values(languages).map(l => ({
   {langSwitchLinks.map(l => (
     <link rel="alternate" hreflang={l.code} href={new URL(l.url, Astro.site).toString()} />
   ))}
-  <link rel="alternate" hreflang="x-default" href={new URL(currentPath.replace(/^\/zh/, ''), Astro.site).toString()} />
+  <link rel="alternate" hreflang="x-default" href={new URL(basePath, Astro.site).toString()} />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -56,7 +58,7 @@ const langSwitchLinks = Object.values(languages).map(l => ({
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:site_name" content={siteName} />
   <meta property="og:image" content="/og-image.png" />
-  <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+  <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : lang === 'fr' ? 'fr_FR' : lang === 'ja' ? 'ja_JP' : 'en_US'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -82,7 +84,7 @@ const langSwitchLinks = Object.values(languages).map(l => ({
     "name": siteName,
     "url": Astro.site?.toString() || "https://tropical-storm-tracker.pages.dev",
     "description": description,
-    "inLanguage": lang === 'zh' ? 'zh-CN' : 'en',
+    "inLanguage": htmlLang,
   })} />
 </head>
 <body>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
+---
+
+<BaseLayout
+  title={t('about.title', 'ja')}
+  description="熱帯暴風追跡について——私たちのミッション、データソース、准确な暴風情報をお届けする約束について。"
+  lang="ja"
+>
+  <div class="page-header">
+    <h1>{t('about.title', 'ja')}</h1>
+    <p>暴風高リスク地域にお住まいの方へ、正確でタイムリーな热带暴風情報をお届けするプラットフォームです。</p>
+  </div>
+
+  <div class="content">
+    <section class="section">
+      <h2>{t('about.mission', 'ja')}</h2>
+      <p>暴風高リスク地域に住むすべての人々が、清晰で正確かつ及时な热带暴風情報にアクセスできるべきだと信じています。本プラットフォームは公式機関からのデータを汇集し、わかりやすくお届けします。</p>
+    </section>
+
+    <section class="section">
+      <h2>データソース</h2>
+      <ul class="source-list">
+        <li><strong>NOAA / NHC</strong> —— 米国立ハリケーンセンター。リアルタイム暴風データ、警報、GIS製品を提供。</li>
+        <li><strong>HURDAT2</strong> —— 大西洋ハリケーンデータベース。1851年からの歴史的暴風記録を収録。</li>
+        <li><strong>JTWC（聯合台風警報センター）</strong> —— 太平洋の暴風追跡データを提供。</li>
+        <li><strong>NWS（国立気象サービス）</strong> —— 気象警報・注意報を提供。</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>免責事項</h2>
+      <div class="disclaimer">
+        <p>&#9888; <strong>重要なお知らせ：</strong>本ウェブサイトは仅供参考としてください。生命に関わる意思決定には、必ず现地应急管理当局の指示に従ってください。暴風警報や避難命令の取得には、本ウェブサイトのみに依存しないでください。</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>テクノロジー</h2>
+      <p>Astro 构建、Cloudflare Pages グローバルエッジネットワークにデプロイ。NOAA オープンデータ API 提供。</p>
+    </section>
+
+    <section class="section">
+      <h2>お問い合わせ</h2>
+      <p>ご質問またはフィードバックは：<a href="mailto:info@tropicalstormtracker.example.com">info@tropicalstormtracker.example.com</a></p>
+    </section>
+  </div>
+
+  <style>
+    .page-header { margin-bottom: 2rem; }
+    .content { max-width: 720px; }
+    .section { margin-bottom: 2rem; }
+    .section h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .section p { color: var(--color-text-secondary); line-height: 1.7; }
+    .source-list { list-style: none; padding: 0; }
+    .source-list li { padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary); }
+    .source-list li:last-child { border-bottom: none; }
+    .disclaimer { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 1rem 1.5rem; color: #92400e; }
+  </style>
+</BaseLayout>

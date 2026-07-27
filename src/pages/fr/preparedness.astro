@@ -1,0 +1,617 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
+
+// Guide de préparation — contenu original de haute qualité, page à fort poids SEO (version française)
+---
+
+<BaseLayout
+  title={t('prepPage.title', 'fr')}
+  description={t('prepPage.desc', 'fr')}
+  lang="fr"
+>
+  <div class="page-header">
+    <h1>{t('prepPage.title', 'fr')}</h1>
+    <p>{t('prepPage.desc', 'fr')}</p>
+  </div>
+
+  <!-- Navigation rapide -->
+  <nav class="toc">
+    <h3>{t('prepPage.quickNav', 'fr')}</h3>
+    <ul>
+      <li><a href="#before">{t('prepPage.before', 'fr')}</a></li>
+      <li><a href="#during">{t('prepPage.during', 'fr')}</a></li>
+      <li><a href="#after">{t('prepPage.after', 'fr')}</a></li>
+      <li><a href="#kit">{t('prepPage.kit', 'fr')}</a></li>
+      <li><a href="#evacuation">{t('prepPage.evacuation', 'fr')}</a></li>
+      <li><a href="#categories">{t('prepPage.categories', 'fr')}</a></li>
+    </ul>
+  </nav>
+
+  <!-- Catégories de tempêtes -->
+  <section id="categories" class="content-section">
+    <h2>{t('prepPage.categories', 'fr')}</h2>
+    <div class="category-table">
+      <div class="category-row">
+        <span class="cat-badge" style="background: #4dabf733; color: #1971c2;">TD</span>
+        <div class="cat-info">
+          <strong>Dépression Tropicale</strong>
+          <p>Vents : moins de 38 mph. Peut apporter de fortes pluies et des inondations, mais des dégâts de vent limités.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #ffd43b33; color: #f08c00;">TS</span>
+        <div class="cat-info">
+          <strong>Tempête Tropicale</strong>
+          <p>Vents : 39-73 mph. Peut causer des inondations importantes, des coupures de courant et des dommages structurels mineurs.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #ff878733; color: #c92a2a;">Cat 1</span>
+        <div class="cat-info">
+          <strong>Ouragan Catégorie 1</strong>
+          <p>Vents : 74-95 mph. Dégâts aux toits, arbres et lignes électriques. Inondations possibles dans les zones côtières.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #fa525233; color: #c92a2a;">Cat 2</span>
+        <div class="cat-info">
+          <strong>Ouragan Catégorie 2</strong>
+          <p>Vents : 96-110 mph. Dégâts importants aux toits et façades. Coupure de courant quasi totale attendue.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #e6498033; color: #a61e4d;">Cat 3</span>
+        <div class="cat-info">
+          <strong>Ouragan Catégorie 3 (Majeur)</strong>
+          <p>Vents : 111-129 mph. Dégâts dévastateurs. Coupures d'eau et d'électricité pouvant durer de plusieurs jours à plusieurs semaines.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #cc5de833; color: #862e9c;">Cat 4</span>
+        <div class="cat-info">
+          <strong>Ouragan Catégorie 4 (Majeur)</strong>
+          <p>Vents : 130-156 mph. Dégâts catastrophiques. La majorité de la zone sera inhabitable pendant des semaines ou des mois.</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <span class="cat-badge" style="background: #845ef733; color: #5f3dc4;">Cat 5</span>
+        <div class="cat-info">
+          <strong>Ouragan Catégorie 5 (Majeur)</strong>
+          <p>Vents : 157 mph et plus. Effondrement complet des toits et des murs. La zone sera inhabitable pendant des mois.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Avant la tempête -->
+  <section id="before" class="content-section">
+    <h2>{t('prepPage.before', 'fr')}</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Préparer un kit d'urgence</strong>
+          <p>Prévoyez 3 jours de fournitures essentielles : eau potable (1 gallon par personne et par jour), nourriture non périssable, lampe de poche, piles, trousse de premiers secours, médicaments et documents importants dans un contenant étanche.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Établir un plan familial</strong>
+          <p>Discutez avec votre famille : où aller, comment communiquer, que faire en cas de séparation. Désignez un contact hors de la région.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Sécuriser votre maison</strong>
+          <p>Installez des volets anti-tempête ou barricadez les fenêtres avec des planches. Rangez les objets libres du jardin. Renforcez la porte de garage. Vérifiez les tuiles du toit.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Vérifier votre couverture d'assurance</strong>
+          <p>L'assurance habitation standard ne couvre pas les dégâts d'inondation. Envisagez une assurance inondation via le programme national d'assurance inondation (NFIP).</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Connaître votre zone d'évacuation</strong>
+          <p>Consultez les zones et itinéraires d'évacuation locaux. Planifiez votre hébergement. Gardez le réservoir plein pendant la saison des tempêtes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pendant la tempête -->
+  <section id="during" class="content-section">
+    <h2>{t('prepPage.during', 'fr')}</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Rester à l'intérieur</strong>
+          <p>Ne sortez pas avant l'annonce officielle de fin d'alerte. L'œil du cyclone apporte un calme temporaire — ne sortez surtout pas.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Rester informé</strong>
+          <p>Utilisez une radio à piles ou à manivelle pour écouter la radio météo NOAA ou les informations locales.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>S'éloigner des fenêtres</strong>
+          <p>Restez dans une pièce intérieure au niveau le plus bas non inondable. Fermez toutes les portes intérieures.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Couper les services si nécessaire</strong>
+          <p>Coupez le gaz, l'électricité et l'eau si les autorités le demandent ou en cas de dommages suspectés.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Ne jamais utiliser de générateur à l'intérieur</strong>
+          <p>Le monoxyde de carbone produit par les générateurs peut être mortel. Placez le générateur dehors, à au moins 6 mètres des fenêtres.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Après la tempête -->
+  <section id="after" class="content-section">
+    <h2>{t('prepPage.after', 'fr')}</h2>
+    <div class="checklist">
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Attendre la levée officielle de l'alerte</strong>
+          <p>Ne rentrez pas chez vous avant que les autorités ne déclarent la zone sûre. Attention aux lignes électriques tombées et aux routes inondées.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Documenter les dégâts</strong>
+          <p>Prenez des photos et vidéos de tous les dommages avant de nettoyer. Contactez immédiatement votre assurance.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Éviter les eaux de crue</strong>
+          <p>L'eau stagnante peut être contaminée, électrifiée ou cacher des débris dangereux. Ne traversez jamais à pied ou en voiture.</p>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <span class="check">✓</span>
+        <div>
+          <strong>Prendre des nouvelles des voisins</strong>
+          <p>En particulier les personnes âgées ou en situation de handicap qui pourraient avoir besoin d'aide.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Liste du kit d'urgence -->
+  <section id="kit" class="content-section">
+    <h2>{t('prepPage.kit', 'fr')}</h2>
+    <div class="kit-grid">
+      <div class="kit-card">
+        <h4>💧 Eau et Nourriture</h4>
+        <ul>
+          <li>1 gallon d'eau par personne et par jour (minimum 3 jours)</li>
+          <li>Nourriture non périssable (conserves, barres énergétiques)</li>
+          <li>Ouvre-boîte manuel</li>
+          <li>Nourriture pour animaux (si vous en avez)</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🔦 Éclairage et Énergie</h4>
+        <ul>
+          <li>Lampe de poche (évitez les bougies)</li>
+          <li>Piles de rechange (AA, AAA, C, D)</li>
+          <li>Radio à piles ou à manivelle</li>
+          <li>Batterie externe pour téléphone</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🏥 Santé et Premiers Secours</h4>
+        <ul>
+          <li>Trousse de premiers secours</li>
+          <li>Médicaments sur ordonnance (7 jours)</li>
+          <li>Médicaments sans ordonnance</li>
+          <li>Lunettes ou lentilles de contact</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>📋 Documents</h4>
+        <ul>
+          <li>Pièce d'identité et carte d'assurance</li>
+          <li>Informations bancaires</li>
+          <li>Liste de contacts d'urgence</li>
+          <li>Copies dans un sac étanche</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🧰 Outils</h4>
+        <ul>
+          <li>Couteau multifonction ou couteau suisse</li>
+          <li>Ruban adhésif étanche</li>
+          <li>Bâche en plastique</li>
+          <li>Sifflet de détresse</li>
+        </ul>
+      </div>
+      <div class="kit-card">
+        <h4>🧹 Hygiène</h4>
+        <ul>
+          <li>Gel hydroalcoolique</li>
+          <li>Lingettes humides</li>
+          <li>Sacs poubelle</li>
+          <li>Papier toilette</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guide d'évacuation -->
+  <section id="evacuation" class="content-section">
+    <h2>{t('prepPage.evacuation', 'fr')}</h2>
+    <div class="evac-steps">
+      <div class="evac-step">
+        <span class="step-number">1</span>
+        <div>
+          <strong>Connaître votre zone d'évacuation</strong>
+          <p>Consultez votre zone d'évacuation sur ready.gov ou le site local de gestion des urgences. La zone A est généralement évacuée en premier.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">2</span>
+        <div>
+          <strong>Planifier votre itinéraire</strong>
+          <p>Repérez plusieurs itinéraires à l'avance en cas de fermetures de routes. Les autorités locales désignent des itinéraires d'évacuation — suivez leurs instructions.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">3</span>
+        <div>
+          <strong>Préparer votre véhicule</strong>
+          <p>Gardez le réservoir au moins à moitié plein pendant la saison des tempêtes. Vérifiez les pneus, l'huile et la batterie. Préparez un kit d'urgence pour la voiture.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">4</span>
+        <div>
+          <strong>Quoi emporter</strong>
+          <p>Kit d'urgence, documents importants, médicaments, vêtements pour 3 jours, argent liquide, chargeur de téléphone et objets de valeur.</p>
+        </div>
+      </div>
+      <div class="evac-step">
+        <span class="step-number">5</span>
+        <div>
+          <strong>Où aller</strong>
+          <p>Privilégiez la famille et les amis. Les abris publics sont disponibles mais en dernier recours. Les hôtels hors zone d'évacuation sont aussi une option.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="content-section">
+    <h2>{t('prepPage.faq', 'fr')}</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Qu'est-ce qu'une tempête tropicale ?</summary>
+        <p>Une tempête tropicale est un cyclone tropical avec des vents soutenus entre 39 et 73 mph (63-118 km/h). Elle est plus forte qu'une dépression tropicale mais plus faible qu'un ouragan.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Quelle est la différence entre une tempête tropicale et un ouragan ?</summary>
+        <p>La différence principale est la vitesse du vent. Une tempête tropicale a des vents de 39 à 73 mph, tandis qu'un ouragan a des vents de 74 mph et plus. Les deux peuvent causer des dégâts importants par les inondations et le vent.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Combien de temps dure une tempête tropicale ?</summary>
+        <p>Une tempête tropicale dure généralement de 2 à 7 jours, mais certaines peuvent durer des semaines. Sa durée dépend de la température de la mer, du cisaillement du vent et d'autres conditions atmosphériques.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Quand a lieu la saison des tempêtes tropicales ?</summary>
+        <p>La saison atlantique s'étend du 1 juin au 30 novembre, avec un pic en septembre. La saison du Pacifique s'étend du 15 mai au 30 novembre.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Que dois-je faire à l'approche d'une tempête tropicale ?</summary>
+        <p>Suivez les bulletins météo locaux, sécurisez votre maison, vérifiez votre plan d'évacuation et préparez un kit d'urgence. Suivez toutes les instructions des autorités locales.</p>
+      </details>
+    </div>
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce qu'une tempête tropicale ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Une tempête tropicale est un cyclone tropical avec des vents soutenus entre 39 et 73 mph (63-118 km/h). Elle est plus forte qu'une dépression tropicale mais plus faible qu'un ouragan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quelle est la différence entre une tempête tropicale et un ouragan ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La différence principale est la vitesse du vent. Une tempête tropicale a des vents de 39 à 73 mph, tandis qu'un ouragan a des vents de 74 mph et plus."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quand a lieu la saison des tempêtes tropicales ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La saison atlantique s'étend du 1 juin au 30 novembre, avec un pic en septembre. La saison du Pacifique s'étend du 15 mai au 30 novembre."
+          }
+        }
+      ]
+    })} />
+  </section>
+
+  <style>
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .toc {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 {
+      margin-bottom: 0.75rem;
+    }
+
+    .toc ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .toc li {
+      display: inline-flex;
+    }
+
+    .toc a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      font-size: 0.88rem;
+      transition: all 0.15s ease;
+    }
+
+    .toc a:hover {
+      text-decoration: none;
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    .content-section {
+      margin-bottom: 3rem;
+    }
+
+    .content-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    /* Category Table */
+    .category-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .category-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--color-surface);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cat-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 32px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .cat-info strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .cat-info p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Checklist */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--color-surface);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #d1fae5;
+      color: #065f46;
+      border-radius: 50%;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .checklist-item strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .checklist-item p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Kit Grid */
+    .kit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .kit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kit-card {
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kit-card h4 {
+      margin-bottom: 0.75rem;
+    }
+
+    .kit-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .kit-card li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .kit-card li:last-child {
+      border-bottom: none;
+    }
+
+    .kit-card li::before {
+      content: '•';
+      color: var(--color-primary);
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+
+    /* Evacuation Steps */
+    .evac-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .evac-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--color-surface);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .evac-step strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .evac-step p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .faq-item {
+      background: var(--color-surface);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+
+    .faq-item summary {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .faq-item p {
+      margin-top: 0.75rem;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+  </style>
+</BaseLayout>

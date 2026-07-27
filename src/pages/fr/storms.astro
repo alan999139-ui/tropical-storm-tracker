@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/dict';
+import { historicalStorms, seasonStats, averages } from '../../data/historical';
+
+const lang = 'fr';
+
+const categoryColors: Record<string, string> = {
+  TD: '#4dabf7', TS: '#ffd43b', 'Cat-1': '#ff8787', 'Cat-2': '#fa5252',
+  'Cat-3': '#e64980', 'Cat-4': '#cc5de8', 'Cat-5': '#845ef7',
+};
+
+const years = [...new Set(historicalStorms.map(s => s.year))].sort((a, b) => b - a);
+
+const maxNamed = Math.max(...seasonStats.map(s => s.namedStorms));
+const avgNamed = averages.namedStorms;
+const avgAce = averages.ace;
+const totalDamage = seasonStats.reduce((sum, s) => {
+  const val = parseFloat(s.damage.replace(/[$BMBK,]/g, '')) || 0;
+  return sum + (s.damage.includes('B') ? val : 0);
+}, 0);
+const totalFatalities = seasonStats.reduce((sum, s) => sum + s.fatalities, 0);
+---
+
+<BaseLayout
+  title={t('storms.title', lang)}
+  description="Parcourez la base de données complète des tempêtes tropicales et ouragans de l'Atlantique. Recherchez par année, nom, catégorie ou région. Données historiques 2017-2026."
+  lang={lang}
+>
+  <div class="page-header">
+    <h1>{t('storms.title', lang)}</h1>
+    <p>{historicalStorms.length} tempêtes tropicales et ouragans majeurs enregistrés (2017–2026). {t('storms.desc', lang)}</p>
+  </div>
+
+  <div class="stats-overview">
+    <div class="stat-box">
+      <span class="stat-num">{historicalStorms.length}</span>
+      <span class="stat-label">Tempêtes majeures suivies</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">${totalDamage}B+</span>
+      <span class="stat-label">Dégâts totaux (2017-2026)</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">{totalFatalities.toLocaleString('fr-FR')}</span>
+      <span class="stat-label">Victimes totales</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">{seasonStats.length}</span>
+      <span class="stat-label">Saisons analysées</span>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
+      <h2>📊 Fréquence annuelle des tempêtes (2017–2026)</h2>
+      <div class="chart-legend">
+        <span class="chart-legend-item"><span class="legend-dot" style="background:#0ea5e9;"></span>{t('season.namedStorms', lang)}</span>
+        <span class="chart-legend-item"><span class="legend-dot" style="background:#f59e0b;"></span>{t('season.hurricanes', lang)}</span>
+        <span class="chart-legend-item"><span class="legend-dot" style="background:#ef4444;"></span>{t('season.majorHurricanes', lang)}</span>
+        <span class="chart-legend-item"><span class="legend-line-dashed"></span>Moyenne sur 30 ans</span>
+      </div>
+    </div>
+    <div class="bar-chart">
+      {seasonStats.map((s) => (
+        <div class="bar-group" data-year={s.year}>
+          <div class="bars">
+            <div class="bar bar-named" style={`height: ${(s.namedStorms / maxNamed) * 100}%;`} title={`Nommées : ${s.namedStorms}`}>
+              <span class="bar-value">{s.namedStorms}</span>
+            </div>
+            <div class="bar bar-hurr" style={`height: ${(s.hurricanes / maxNamed) * 100}%;`} title={`Ouragans : ${s.hurricanes}`}>
+              <span class="bar-value">{s.hurricanes}</span>
+            </div>
+            <div class="bar bar-major" style={`height: ${(s.majorHurricanes / maxNamed) * 100}%;`} title={`Majeurs : ${s.majorHurricanes}`}>
+              <span class="bar-value">{s.majorHurricanes}</span>
+            </div>
+          </div>
+          <span class="bar-label">{s.year}</span>
+        </div>
+      ))}
+    </div>
+    <div class="avg-line-container">
+      <div class="avg-line" style={`bottom: ${(avgNamed / maxNamed) * 100}%;`}></div>
+      <span class="avg-label" style={`bottom: ${(avgNamed / maxNamed) * 100}%; transform: translateY(50%);`}>Moyenne : {avgNamed}</span>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
+      <h2>🌀 Tendance de l'indice ACE</h2>
+      <span class="chart-note">Énergie cyclonique accumulée — mesure de l'énergie totale</span>
+    </div>
+    <div class="ace-chart">
+      {seasonStats.map((s) => (
+        <div class="ace-bar-group">
+          <div class="ace-bar" style={`height: ${(s.ace / 250) * 100}%; background: ${s.ace > avgAce ? 'linear-gradient(to top, #f59e0b, #ef4444)' : 'linear-gradient(to top, #0ea5e9, #38bdf8)'};`} title={`ACE : ${s.ace}`}>
+            <span class="ace-value">{s.ace}</span>
+          </div>
+          <span class="ace-label">{s.year}</span>
+        </div>
+      ))}
+    </div>
+    <div class="ace-avg-line" style={`bottom: ${(avgAce / 250) * 100}%;`}></div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label>{t('storms.filterYear', lang)}</label>
+      <select id="filter-year">
+        <option value="">{t('storms.allYears', lang)}</option>
+        {years.map(year => <option value={year}>{year}</option>)}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>{t('storms.filterCategory', lang)}</label>
+      <select id="filter-category">
+        <option value="">{t('storms.allCategories', lang)}</option>
+        <option value="TD">Dépression Tropicale</option>
+        <option value="TS">Tempête Tropicale</option>
+        <option value="Cat-1">Ouragan Cat. 1</option>
+        <option value="Cat-2">Ouragan Cat. 2</option>
+        <option value="Cat-3">Ouragan Cat. 3</option>
+        <option value="Cat-4">Ouragan Cat. 4</option>
+        <option value="Cat-5">Ouragan Cat. 5</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>{t('storms.filterRegion', lang)}</label>
+      <select id="filter-region">
+        <option value="">{t('storms.allRegions', lang)}</option>
+        <option value="Atlantic">Atlantique</option>
+        <option value="Gulf of Mexico">Golfe du Mexique</option>
+        <option value="Caribbean">Caraïbes</option>
+        <option value="Pacific">Pacifique</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Recherche</label>
+      <input type="text" id="filter-search" placeholder={t('storms.filterSearch', lang)} />
+    </div>
+  </div>
+
+  <div class="results-bar">
+    <span id="results-count">{historicalStorms.length} {t('storms.found', lang)}</span>
+  </div>
+
+  <div class="table-container">
+    <table class="storm-table">
+      <thead>
+        <tr>
+          <th>{t('storms.colName', lang)}</th>
+          <th>{t('storms.colYear', lang)}</th>
+          <th>{t('storms.colCategory', lang)}</th>
+          <th>{t('storms.colMaxWind', lang)}</th>
+          <th>{t('storms.colMinPressure', lang)}</th>
+          <th>{t('storms.colFormed', lang)}</th>
+          <th>{t('storms.colDissipated', lang)}</th>
+          <th>{t('storms.colRegion', lang)}</th>
+          <th>{t('storms.colDamage', lang)}</th>
+          <th>{t('seasonStorms.fatalities', lang)}</th>
+        </tr>
+      </thead>
+      <tbody id="storm-table-body">
+        {historicalStorms.map((storm) => (
+          <tr data-year={storm.year} data-category={storm.category} data-region={storm.region} data-name={storm.name.toLowerCase()}>
+            <td><a href={`/fr/storms/${storm.name.toLowerCase()}`} class="storm-link">{storm.name}</a></td>
+            <td>{storm.year}</td>
+            <td><span class="badge" style={`background: ${categoryColors[storm.category] || '#e2e8f0'}33; color: ${categoryColors[storm.category] || '#64748b'};`}>{storm.category}</span></td>
+            <td>{storm.maxWind} mph</td>
+            <td>{storm.minPressure} mb</td>
+            <td>{storm.formed}</td>
+            <td>{storm.dissipated}</td>
+            <td>{storm.region}</td>
+            <td>{storm.damage}</td>
+            <td>{storm.fatalities}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="no-results" class="no-results" style="display: none;">
+    <span class="no-results-icon">🔍</span>
+    <p>{t('storms.noMatch', lang)}</p>
+  </div>
+
+  <script is:inline>
+    const yearFilter = document.getElementById('filter-year');
+    const categoryFilter = document.getElementById('filter-category');
+    const regionFilter = document.getElementById('filter-region');
+    const searchInput = document.getElementById('filter-search');
+    const tableBody = document.getElementById('storm-table-body');
+    const resultsCount = document.getElementById('results-count');
+    const noResults = document.getElementById('no-results');
+    const tableContainer = document.querySelector('.table-container');
+
+    function applyFilters() {
+      const year = yearFilter.value;
+      const category = categoryFilter.value;
+      const region = regionFilter.value;
+      const search = searchInput.value.toLowerCase();
+      let visible = 0;
+      const rows = tableBody.querySelectorAll('tr');
+      rows.forEach(row => {
+        const matchYear = !year || row.dataset.year === year;
+        const matchCategory = !category || row.dataset.category === category;
+        const matchRegion = !region || row.dataset.region === region;
+        const matchSearch = !search || row.dataset.name.includes(search);
+        if (matchYear && matchCategory && matchRegion && matchSearch) {
+          row.style.display = ''; visible++;
+        } else { row.style.display = 'none'; }
+      });
+      resultsCount.textContent = `${visible} tempêtes trouvées`;
+      noResults.style.display = visible === 0 ? 'block' : 'none';
+      tableContainer.style.display = visible === 0 ? 'none' : 'block';
+    }
+    [yearFilter, categoryFilter, regionFilter].forEach(el => el.addEventListener('change', applyFilters));
+    searchInput.addEventListener('input', applyFilters);
+  </script>
+
+  <style>
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .page-header p { color: var(--color-text-secondary); }
+    .stats-overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .stat-box { background: var(--color-surface); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-md); text-align: center; display: flex; flex-direction: column; gap: 0.25rem; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--color-primary); line-height: 1.2; }
+    .stat-label { font-size: 0.8rem; color: var(--color-text-secondary); }
+    .chart-section { background: var(--color-surface); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow-md); margin-bottom: 2.5rem; position: relative; }
+    .chart-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+    .chart-header h2 { font-size: 1.25rem; }
+    .chart-legend { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: 0.8rem; }
+    .chart-legend-item { display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-secondary); }
+    .legend-line-dashed { width: 20px; height: 2px; border-top: 2px dashed var(--color-text-secondary); }
+    .bar-chart { display: flex; gap: 0.75rem; align-items: flex-end; height: 250px; padding-bottom: 2rem; border-bottom: 2px solid var(--color-border); position: relative; }
+    .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; position: relative; }
+    .bars { display: flex; gap: 4px; align-items: flex-end; height: 100%; width: 100%; justify-content: center; }
+    .bar { width: 20px; border-radius: 6px 6px 0 0; position: relative; transition: height 0.5s ease; min-height: 4px; cursor: pointer; }
+    .bar-named { background: linear-gradient(to top, #0284c7, #0ea5e9); }
+    .bar-hurr { background: linear-gradient(to top, #d97706, #f59e0b); }
+    .bar-major { background: linear-gradient(to top, #dc2626, #ef4444); }
+    .bar-value { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 700; }
+    .bar-label { margin-top: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary); font-weight: 600; }
+    .avg-line-container { position: absolute; bottom: 2rem; left: 0; right: 0; pointer-events: none; }
+    .avg-line { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed var(--color-text-secondary); opacity: 0.5; }
+    .avg-label { position: absolute; right: 0; font-size: 0.7rem; color: var(--color-text-secondary); background: var(--color-surface); padding: 0 4px; }
+    .ace-chart { display: flex; gap: 0.75rem; align-items: flex-end; height: 250px; padding-bottom: 2rem; border-bottom: 2px solid var(--color-border); position: relative; }
+    .ace-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+    .ace-bar { width: 36px; border-radius: 6px 6px 0 0; position: relative; transition: height 0.5s ease; min-height: 4px; cursor: pointer; }
+    .ace-value { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 700; }
+    .ace-label { margin-top: 0.5rem; font-size: 0.75rem; color: var(--color-text-secondary); font-weight: 600; }
+    .ace-avg-line { position: absolute; left: 0; right: 0; bottom: 2rem; height: 0; border-top: 2px dashed var(--color-text-secondary); opacity: 0.5; }
+    .ace-avg-line::after { content: 'Moyenne : 123'; position: absolute; right: 0; top: -18px; font-size: 0.7rem; color: var(--color-text-secondary); background: var(--color-surface); padding: 0 4px; }
+    .chart-note { font-size: 0.8rem; color: var(--color-text-secondary); }
+    .filters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; background: var(--color-surface); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+    .filter-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .filter-group label { font-size: 0.8rem; color: var(--color-text-secondary); font-weight: 600; }
+    .filter-group select, .filter-group input { padding: 0.6rem 0.75rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; background: white; }
+    .filter-group select:focus, .filter-group input:focus { outline: 2px solid var(--color-primary); outline-offset: -1px; border-color: var(--color-primary); }
+    .results-bar { margin-bottom: 1rem; color: var(--color-text-secondary); font-size: 0.9rem; }
+    .table-container { overflow-x: auto; background: var(--color-surface); border-radius: var(--radius); box-shadow: var(--shadow-md); }
+    .storm-table { width: 100%; border-collapse: collapse; }
+    .storm-table th { background: #f1f5f9; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; color: var(--color-text-secondary); font-weight: 600; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+    .storm-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
+    .storm-table tbody tr:hover { background: #f8fafc; }
+    .storm-link { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+    .storm-link:hover { text-decoration: underline; }
+    .no-results { text-align: center; padding: 3rem 2rem; }
+    .no-results-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+    @media (max-width: 768px) { .filters { grid-template-columns: 1fr 1fr; } .stats-overview { grid-template-columns: repeat(2, 1fr); } .bar { width: 12px; } }
+    @media (max-width: 480px) { .stats-overview { grid-template-columns: 1fr; } .bar { width: 8px; } }
+  </style>
+</BaseLayout>
