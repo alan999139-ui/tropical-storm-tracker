@@ -1,13 +1,13 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-07-27T12:47:44.429Z",
-  "activeStorms": 1,
+  "fetchedAt": "2026-07-27T13:02:49.108Z",
+  "activeStorms": 0,
   "basins": {
     "north_atlantic": 0,
     "east_pacific": 0,
     "central_pacific": 0,
-    "northwest_pacific": 1,
+    "northwest_pacific": 0,
     "north_indian": 0,
     "south_indian": 0,
     "australia": 0,
@@ -23,27 +23,10 @@
     "australia": "BOM (via JTWC)",
     "south_pacific": "FMS (via JTWC)"
   },
-  "degraded": false,
-  "storms": [
-    {
-      "id": "jtwc-northwest_pacific-12W",
-      "name": "Dolphin",
-      "designation": "12W",
-      "type": "Typhoon",
-      "category": 0,
-      "windMph": 39,
-      "pressureMb": 0,
-      "lat": 13.4,
-      "lon": 176.7,
-      "movement": "See JTWC product",
-      "status": "Active",
-      "basin": "northwest_pacific",
-      "basinName": "Northwest Pacific",
-      "agency": "JMA",
-      "source": "JTWC",
-      "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1226web.txt",
-      "issuedAt": "2026-07-27T12:47:44.429Z"
-    }
+  "degraded": true,
+  "errors": [
+    "JTWC RSS: fetch failed"
   ],
-  "_buildTime": "2026-07-27T12:47:44.431Z"
+  "storms": [],
+  "_buildTime": "2026-07-27T13:02:49.108Z"
 }
