@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { t } from '../../../i18n/dict';
 import { historicalStorms } from '../../../data/historical';
+import ShareButtons from '../../../components/ShareButtons.astro';
 
 const lang = 'fr';
 
@@ -54,6 +55,11 @@ const eventData = {
       <span class="storm-year">{t('detail.season', lang)} {storm.year}</span>
     </div>
     <span class="badge" style={`background: ${catColor}33; color: ${catColor};`}>{storm.category}</span>
+  </div>
+
+  <!-- Share Buttons -->
+  <div data-lang="fr" class="share-container">
+    <ShareButtons url={new URL(`/fr/storms/${storm.name.toLowerCase()}/`, Astro.site).toString()} title={`${storm.name} ${storm.year}`} lang="fr" />
   </div>
 
   <div class="stats-grid">

@@ -69,6 +69,30 @@ const langSwitchLinks = Object.values(languages).map(l => ({
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+  <!-- Google Analytics 4 -->
+  <!-- TODO: Replace GA_MEASUREMENT_ID with your actual GA4 Measurement ID (G-XXXXXXXX) -->
+  <script is:inline>
+    // GA4 Measurement ID - replace 'GA_MEASUREMENT_ID' with your actual ID from Google Analytics
+    const GA4_ID = 'GA_MEASUREMENT_ID';
+    
+    if (GA4_ID !== 'GA_MEASUREMENT_ID') {
+      // Only load GA4 if configured
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtag/js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',GA4_ID);
+      
+      window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+      gtag('js', new Date());
+      gtag('config', GA4_ID, {
+        'page_language': htmlLang,
+        'page_title': fullTitle,
+        'send_page_view': true
+      });
+    }
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -86,6 +110,30 @@ const langSwitchLinks = Object.values(languages).map(l => ({
     "description": description,
     "inLanguage": htmlLang,
   })} />
+
+  <!-- GA4 Event Tracking Helper -->
+  <script is:inline>
+    // Helper function for GA4 events (used across all pages)
+    window.trackEvent = function(eventName, eventParams = {}) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, eventParams);
+        console.log('GA4 Event:', eventName, eventParams);
+      }
+    };
+    
+    // Track language switches
+    document.addEventListener('click', function(e) {
+      const langLink = e.target.closest('.lang-link');
+      if (langLink) {
+        const targetLang = langLink.getAttribute('href').match(/\/(zh|fr|ja)(\/|$)/)?.[1] || 'en';
+        trackEvent('language_switch', {
+          from_language: document.documentElement.lang,
+          to_language: targetLang,
+          page_path: window.location.pathname
+        });
+      }
+    });
+  </script>
 </head>
 <body>
   <header class="site-header">

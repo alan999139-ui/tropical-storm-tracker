@@ -1,7 +1,7 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-07-27T14:28:23.727Z",
+  "fetchedAt": "2026-07-27T14:46:40.844Z",
   "activeStorms": 1,
   "basins": {
     "north_atlantic": 0,
@@ -42,8 +42,8 @@
       "agency": "JMA",
       "source": "JTWC",
       "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1226web.txt",
-      "issuedAt": "2026-07-27T14:28:23.727Z"
+      "issuedAt": "2026-07-27T14:46:40.844Z"
     }
   ],
-  "_buildTime": "2026-07-27T14:28:23.728Z"
+  "_buildTime": "2026-07-27T14:46:40.846Z"
 }

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { historicalStorms } from '../../data/historical';
+import ShareButtons from '../../components/ShareButtons.astro';
 
 export function getStaticPaths() {
   return historicalStorms.map(storm => ({
@@ -51,6 +52,11 @@ const eventData = {
       <span class="storm-year">{storm.year} Atlantic Hurricane Season</span>
     </div>
     <span class="badge" style={`background: ${catColor}33; color: ${catColor};`}>{storm.category}</span>
+  </div>
+
+  <!-- Share Buttons -->
+  <div data-lang="en" class="share-container">
+    <ShareButtons url={new URL(`/storms/${storm.name.toLowerCase()}/`, Astro.site).toString()} title={`${storm.name} ${storm.year}`} lang="en" />
   </div>
 
   <div class="stats-grid">

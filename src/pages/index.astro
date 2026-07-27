@@ -58,8 +58,8 @@ const activeCount = activeStorms ?? 0;
         Powered by <strong>NOAA NHC &amp; JTWC</strong> data.
       </p>
       <div class="hero-ctas">
-        <a href="/map" class="btn btn-primary"><span aria-hidden="true">🗺️</span> View Live Map</a>
-        <a href="/alerts" class="btn btn-outline btn-light"><span aria-hidden="true">🔔</span> Get Free Alerts</a>
+        <a href="/map" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'en'})"><span aria-hidden="true">🗺️</span> View Live Map</a>
+        <a href="/alerts" class="btn btn-outline btn-light" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'en', ab_variant: 'control'})"><span aria-hidden="true">🔔</span> Get Free Alerts</a>
       </div>
       <p class="hero-source">
         <span class="source-dot"></span>
@@ -221,8 +221,8 @@ const activeCount = activeStorms ?? 0;
           <li><span aria-hidden="true">🌊</span> Storm surge maps</li>
         </ul>
         <div class="teaser-ctas">
-          <a href="/pricing" class="btn btn-primary">View Plans →</a>
-          <a href="/signup?plan=pro" class="btn btn-outline">Start 14-Day Free Trial</a>
+          <a href="/pricing" class="btn btn-primary" onclick="trackEvent('pricing_cta_click', {button: 'view_plans', page_section: 'pricing_teaser', language: 'en'})">View Plans →</a>
+          <a href="/signup?plan=pro" class="btn btn-outline" onclick="trackEvent('pricing_cta_click', {button: 'free_trial', page_section: 'pricing_teaser', language: 'en', plan: 'pro'})">Start 14-Day Free Trial</a>
         </div>
         <p class="teaser-price">From just <strong>$4.99/month</strong> · Cancel anytime</p>
       </div>
