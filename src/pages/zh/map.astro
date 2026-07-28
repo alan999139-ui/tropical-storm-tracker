@@ -309,6 +309,13 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
 
     // 每 5 分钟自动刷新
     setInterval(fetchAndDisplayStorms, 5 * 60 * 1000);
+
+    // 修复地图容器尺寸问题：窗口resize时刷新地图
+    window.addEventListener('resize', function() {
+      if (map) {
+        setTimeout(function() { map.invalidateSize(); }, 100);
+      }
+    });
   </script>
 
   <style>

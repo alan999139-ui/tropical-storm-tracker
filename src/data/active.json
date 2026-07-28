@@ -1,11 +1,11 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-07-27T14:46:40.844Z",
-  "activeStorms": 1,
+  "fetchedAt": "2026-07-28T13:23:43.410Z",
+  "activeStorms": 2,
   "basins": {
     "north_atlantic": 0,
-    "east_pacific": 0,
+    "east_pacific": 1,
     "central_pacific": 0,
     "northwest_pacific": 1,
     "north_indian": 0,
@@ -30,11 +30,11 @@
       "name": "Dolphin",
       "designation": "12W",
       "type": "Typhoon",
-      "category": 0,
-      "windMph": 39,
+      "category": 1,
+      "windMph": 74,
       "pressureMb": 0,
-      "lat": 13.6,
-      "lon": 175.2,
+      "lat": 13.3,
+      "lon": 171.7,
       "movement": "See JTWC product",
       "status": "Active",
       "basin": "northwest_pacific",
@@ -42,8 +42,27 @@
       "agency": "JMA",
       "source": "JTWC",
       "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1226web.txt",
-      "issuedAt": "2026-07-27T14:46:40.844Z"
+      "issuedAt": "2026-07-28T13:23:43.410Z"
+    },
+    {
+      "id": "jtwc-east_pacific-06E",
+      "name": "Fausto",
+      "designation": "06E",
+      "type": "Typhoon",
+      "category": 0,
+      "windMph": 58,
+      "pressureMb": 0,
+      "lat": 21.8,
+      "lon": -149.7,
+      "movement": "See JTWC product",
+      "status": "Active",
+      "basin": "east_pacific",
+      "basinName": "East Pacific",
+      "agency": "NOAA NHC",
+      "source": "JTWC",
+      "warningUrl": "https://www.metoc.navy.mil/jtwc/products/ep0626web.txt",
+      "issuedAt": "2026-07-28T13:23:43.401Z"
     }
   ],
-  "_buildTime": "2026-07-27T14:46:40.846Z"
+  "_buildTime": "2026-07-28T13:23:43.414Z"
 }
