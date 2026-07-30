@@ -71,6 +71,24 @@ export const onRequestPost = async (context) => {
   }
 };
 
+// GET handler: return API info (no secrets exposed)
+export const onRequestGet = () => {
+  return new Response(JSON.stringify({
+    endpoint: '/api/subscribe',
+    method: 'POST',
+    description: 'Subscribe to storm alerts for specific regions',
+    required_fields: ['email', 'regions'],
+    optional_fields: ['name', 'alertTypes', 'frequency'],
+    regions: ['north_atlantic', 'east_pacific', 'central_pacific', 'northwest_pacific', 'north_indian', 'south_indian', 'australia', 'south_pacific', 'global'],
+  }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+};
+
 // Handle CORS preflight
 export const onRequestOptions = () => {
   return new Response(null, {

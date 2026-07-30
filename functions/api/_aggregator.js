@@ -210,7 +210,7 @@ async function fetchText(url, timeoutMs = 12000) {
     const resp = await fetch(url, {
       signal: ctrl.signal,
       headers: {
-        'User-Agent': 'TropicalStormTracker/1.0 (+https://tropical-storm-tracker.pages.dev)',
+        'User-Agent': 'TropicalStormTracker/1.0 (+https://tropicalstormtracker.quest)',
         'Accept': 'application/rss+xml, application/xml, text/*',
       },
     });

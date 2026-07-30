@@ -7,7 +7,7 @@
 import { readdirSync, writeFileSync, statSync } from 'fs';
 import { join, extname } from 'path';
 
-const SITE_URL = 'https://tropical-storm-tracker.pages.dev';
+const SITE_URL = 'https://tropicalstormtracker.quest';
 const DIST_DIR = './dist';
 const OUTPUT_PATH = './dist/sitemap.xml';
 
