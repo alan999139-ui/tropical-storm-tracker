@@ -1,13 +1,13 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-07-31T13:45:46.443Z",
-  "activeStorms": 0,
+  "fetchedAt": "2026-07-31T14:40:50.673Z",
+  "activeStorms": 2,
   "basins": {
     "north_atlantic": 0,
-    "east_pacific": 0,
+    "east_pacific": 1,
     "central_pacific": 0,
-    "northwest_pacific": 0,
+    "northwest_pacific": 1,
     "north_indian": 0,
     "south_indian": 0,
     "australia": 0,
@@ -23,10 +23,46 @@
     "australia": "BOM (via JTWC)",
     "south_pacific": "FMS (via JTWC)"
   },
-  "degraded": true,
-  "errors": [
-    "JTWC RSS: fetch failed"
+  "degraded": false,
+  "storms": [
+    {
+      "id": "jtwc-northwest_pacific-12W",
+      "name": "Dolphin",
+      "designation": "12W",
+      "type": "Super Typhoon",
+      "category": 1,
+      "windMph": 74,
+      "pressureMb": 0,
+      "lat": 19.1,
+      "lon": 160.1,
+      "movement": "See JTWC product",
+      "status": "Active",
+      "basin": "northwest_pacific",
+      "basinName": "Northwest Pacific",
+      "agency": "JMA",
+      "source": "JTWC",
+      "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1226web.txt",
+      "issuedAt": "2026-07-31T14:40:50.647Z"
+    },
+    {
+      "id": "jtwc-east_pacific-07E",
+      "name": "Genevieve",
+      "designation": "07E",
+      "type": "Typhoon",
+      "category": 0,
+      "windMph": 58,
+      "pressureMb": 0,
+      "lat": 21.5,
+      "lon": -126.6,
+      "movement": "See JTWC product",
+      "status": "Active",
+      "basin": "east_pacific",
+      "basinName": "East Pacific",
+      "agency": "NOAA NHC",
+      "source": "JTWC",
+      "warningUrl": "https://www.metoc.navy.mil/jtwc/products/ep0726web.txt",
+      "issuedAt": "2026-07-31T14:40:50.673Z"
+    }
   ],
-  "storms": [],
-  "_buildTime": "2026-07-31T13:45:46.443Z"
+  "_buildTime": "2026-07-31T14:40:50.675Z"
 }

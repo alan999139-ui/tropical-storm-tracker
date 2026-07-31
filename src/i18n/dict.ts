@@ -57,16 +57,16 @@ export const dict = {
   'hero.badge.loading': { en: 'Loading...', zh: '加载中...', fr: 'Chargement...', ja: '読み込み中...' },
   'hero.badge.noStorms': { en: '☀️ No Active Storms', zh: '☀️ 暂无活跃风暴', fr: '☀️ Aucune tempête active', ja: '☀️ 活発な暴風なし' },
   'hero.title': {
-    en: 'Track Tropical Storms in Real-Time',
-    zh: '实时追踪热带风暴',
-    fr: 'Suivez les Tempêtes Tropicales en Temps Réel',
-    ja: '熱帯暴風をリアルタイム追跡',
+    en: '你知道你家的风暴风险吗？',
+    zh: '你知道你家的风暴风险吗？',
+    fr: 'Connaissez-vous le risque de tempête chez vous?',
+    ja: 'あなたの家の暴風リスクを知っていますか？',
   },
   'hero.desc': {
-    en: 'Live tracking, alerts, and historical data for tropical storms, hurricanes, and cyclones worldwide. Powered by NOAA & NHC data.',
-    zh: '实时追踪、预警和历史数据，涵盖热带风暴、飓风和气旋。数据来自 NOAA 和 NHC。',
-    fr: 'Suivi en direct, alertes et données historiques pour les tempêtes tropicales, ouragans et cyclones dans le monde. Données NOAA & NHC.',
-    ja: '世界中の熱帯暴風、ハリケーン、サイクロンのリアルタイム追跡、アラート、履歴データ。NOAA・NHCデータ提供。',
+    en: '3 秒查看实时威胁 + 免费预警通知。全球覆盖 8 大海域，多语言支持。',
+    zh: '3 秒查看实时威胁 + 免费预警通知。全球覆盖 8 大海域，多语言支持。',
+    fr: '3 secondes pour voir les menaces + alertes gratuites. Couverture mondiale.',
+    ja: '3秒で脅威を確認 + 無料アラート。世界8海域カバー。',
   },
   'hero.viewMap': { en: '🗺️ View Live Map', zh: '🗺️ 查看实时地图', fr: '🗺️ Voir la Carte', ja: '🗺️ ライブマップ' },
   'hero.stormDatabase': { en: 'Storm Database', zh: '风暴数据库', fr: 'Base de Données', ja: '暴風データベース' },
@@ -277,6 +277,7 @@ export const dict = {
   'footer.resources': { en: 'Resources', zh: '资源', fr: 'Ressources', ja: 'リソース' },
   'footer.quickLinks': { en: 'Quick Links', zh: '快速链接', fr: 'Liens Rapides', ja: 'クイックリンク' },
   'footer.account': { en: 'Account', zh: '账户', fr: 'Compte', ja: 'アカウント' },
+  'footer.pricing': { en: 'Pricing', zh: '定价', fr: 'Tarifs', ja: '料金' },
   'footer.rss': { en: 'RSS Feed', zh: 'RSS 订阅', fr: 'Flux RSS', ja: 'RSSフィード' },
   'footer.copyright': {
     en: 'StormTracker. Data sourced from NOAA/NHC. Not for life-safety decisions.',
@@ -352,6 +353,25 @@ export const dict = {
   'detail.wind': { en: 'Wind (mph)', zh: '风速 (mph)', fr: 'Vent (mph)', ja: '風速 (mph)' },
   'detail.pressure': { en: 'Pressure (mb)', zh: '气压 (mb)', fr: 'Pression (mb)', ja: '気圧 (mb)' },
   'detail.season': { en: 'Atlantic Hurricane Season', zh: '大西洋飓风季', fr: 'Saison des Ouragans', ja: '大西洋ハリケーンシーズン' },
+
+  // 风暴等级中文化
+  'storm.category.TD': { en: 'Tropical Depression', zh: '热带低压', fr: 'Dépression Tropicale', ja: '熱帯低気圧' },
+  'storm.category.TS': { en: 'Tropical Storm', zh: '热带风暴', fr: 'Tempête Tropicale', ja: '熱帯暴風' },
+  'storm.category.Cat1': { en: 'Category 1 Hurricane', zh: '1级飓风', fr: 'Ouragan Catégorie 1', ja: 'カテゴリー1ハリケーン' },
+  'storm.category.Cat2': { en: 'Category 2 Hurricane', zh: '2级飓风', fr: 'Ouragan Catégorie 2', ja: 'カテゴリー2ハリケーン' },
+  'storm.category.Cat3': { en: 'Category 3 Hurricane', zh: '3级飓风', fr: 'Ouragan Catégorie 3', ja: 'カテゴリー3ハリケーン' },
+  'storm.category.Cat4': { en: 'Category 4 Hurricane', zh: '4级飓风', fr: 'Ouragan Catégorie 4', ja: 'カテゴリー4ハリケーン' },
+  'storm.category.Cat5': { en: 'Category 5 Hurricane', zh: '5级飓风', fr: 'Ouragan Catégorie 5', ja: 'カテゴリー5ハリケーン' },
+
+  // 用户分类模块（6大洲）
+  'region.title': { en: '🌏 你住在哪个地区？', zh: '🌏 你住在哪个地区？', fr: '🌏 Où habitez-vous?', ja: '🌏 どこに住んでいますか？' },
+  'region.intro': { en: '选择你的地区，查看该海域的风暴情况和预警服务', zh: '选择你的地区，查看该海域的风暴情况和预警服务', fr: 'Choisissez votre région', ja: '地域を選択' },
+  'region.asia': { en: '亚洲', zh: '亚洲', fr: 'Asie', ja: 'アジア' },
+  'region.northAmerica': { en: '北美洲', zh: '北美洲', fr: 'Amérique du Nord', ja: '北米' },
+  'region.oceania': { en: '大洋洲', zh: '大洋洲', fr: 'Océanie', ja: 'オセアニア' },
+  'region.latinAmerica': { en: '拉丁美洲', zh: '拉丁美洲', fr: 'Amérique Latine', ja: 'ラテンアメリカ' },
+  'region.africa': { en: '非洲', zh: '非洲', fr: 'Afrique', ja: 'アフリカ' },
+  'region.europe': { en: '欧洲', zh: '欧洲', fr: 'Europe', ja: 'ヨーロッパ' },
 };
 
 // 翻译函数
