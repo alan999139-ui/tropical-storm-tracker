@@ -182,6 +182,92 @@ const categoryColors: Record<string, string> = {
     </div>
   </section>
 
+  <!-- 地域選択 -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">🌏 どの地域にお住まいですか？</h2>
+    </div>
+    <p class="region-intro">お住まいの地域を選択して、その海域の暴風状況とアラートサービスをご確認ください。世界8海域カバー、多言語対応。</p>
+    
+    <div class="region-grid">
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌏</span><h3>アジア</h3></div>
+        <div class="region-content">
+          <p class="region-desc">北西太平洋（台風）+ 北インド洋（サイクロン）</p>
+          <div class="region-details">
+            <p><strong>カバー地域:</strong> 日本、フィリピン、中国沿海、ベトナム、インド、バングラデシュ</p>
+            <p><strong>暴風シーズン:</strong> 通年（ピーク 7-10月）</p>
+            <p><strong>データソース:</strong> JMA、JTWC、IMD</p>
+            <p><strong>対応言語:</strong> 日本語 · 中国語 · 英語</p>
+          </div>
+          <a href="/ja/map" class="btn btn-outline btn-sm">アジア暴風マップを見る</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌎</span><h3>北米</h3></div>
+        <div class="region-content">
+          <p class="region-desc">北大西洋 + 東太平洋 + 中太平洋（ハリケーン）</p>
+          <div class="region-details">
+            <p><strong>カバー地域:</strong> 米国、カナダ、メキシコ</p>
+            <p><strong>暴風シーズン:</strong> 6月1日 - 11月30日（ピーク 9月）</p>
+            <p><strong>データソース:</strong> NOAA NHC</p>
+            <p><strong>対応言語:</strong> 英語 · 中国語 · フランス語 · 日本語</p>
+          </div>
+          <a href="/ja/alerts" class="btn btn-primary btn-sm">無料アラート設定</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌏</span><h3>オセアニア</h3></div>
+        <div class="region-content">
+          <p class="region-desc">オーストラリア海域 + 南太平洋（サイクロン）</p>
+          <div class="region-details">
+            <p><strong>カバー地域:</strong> オーストラリア、フィジー、ニューカレドニア</p>
+            <p><strong>暴風シーズン:</strong> 11月 - 4月</p>
+            <p><strong>データソース:</strong> BOM、FMS</p>
+          </div>
+          <a href="/ja/map" class="btn btn-outline btn-sm">オセアニア暴風マップを見る</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌎</span><h3>中南米</h3></div>
+        <div class="region-content">
+          <p class="region-desc">カリブ海 + 中米 + メキシコ（ハリケーン）</p>
+          <div class="region-details">
+            <p><strong>カバー地域:</strong> キューバ、ハイチ、ドミニカ共和国、プエルトリコ、メキシコ</p>
+            <p><strong>暴風シーズン:</strong> 5月15日 - 11月30日</p>
+            <p><strong>データソース:</strong> NOAA NHC</p>
+          </div>
+          <a href="/ja/map" class="btn btn-outline btn-sm">カリブ海マップを見る</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌍</span><h3>アフリカ</h3></div>
+        <div class="region-content">
+          <p class="region-desc">南インド洋 + 西アフリカ沿海（サイクロン/熱帯暴風）</p>
+          <div class="region-details">
+            <p><strong>カバー地域:</strong> マダガスカル、モザンビーク、タンザニア、ケニア</p>
+            <p><strong>暴風シーズン:</strong> 11月 - 4月</p>
+            <p><strong>データソース:</strong> Météo-France、JTWC</p>
+          </div>
+          <a href="/ja/map" class="btn btn-outline btn-sm">アフリカマップを見る</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌍</span><h3>ヨーロッパ</h3></div>
+        <div class="region-content">
+          <p class="region-desc">フランス海外領土 + 世界中の旅行者</p>
+          <div class="region-details">
+            <p><strong>カバー地域:</strong> レユニオン、マヨット、旅行者</p>
+            <p><strong>暴風シーズン:</strong> 11月 - 4月</p>
+            <p><strong>データソース:</strong> Météo-France、NOAA、JTWC</p>
+            <p><strong>対応言語:</strong> フランス語 · 英語</p>
+          </div>
+          <a href="/fr/" class="btn btn-outline btn-sm">フランス語版を見る</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 防災 -->
   <section class="section">
     <div class="section-header">
@@ -276,6 +362,19 @@ const categoryColors: Record<string, string> = {
     .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s ease-in-out infinite; }
     .loading-card { text-align: center; padding: 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; color: var(--color-text-secondary); }
     .loading-spinner-small { width: 32px; height: 32px; border: 3px solid var(--color-border); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    
+    .region-intro { color: var(--color-text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+    .region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .region-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; }
+    .region-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--color-primary); }
+    .region-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .region-icon { font-size: 2rem; }
+    .region-header h3 { font-size: 1.25rem; margin: 0; }
+    .region-desc { color: var(--color-primary); font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem; }
+    .region-details { margin-bottom: 1rem; }
+    .region-details p { font-size: 0.85rem; margin: 0.4rem 0; color: var(--color-text-secondary); }
+    .region-details strong { color: var(--color-text); }
+    
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>

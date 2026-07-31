@@ -175,117 +175,117 @@ const activeCount = activeStorms ?? 0;
     </div>
   </section>
 
-  <!-- 用户分类：你住在哪个地区？ -->
+  <!-- Region Selector -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title">🌏 你住在哪个地区？</h2>
+      <h2 class="section-title">🌏 Which Region Are You In?</h2>
     </div>
-    <p class="region-intro">选择你的地区，查看该海域的风暴情况和预警服务。全球覆盖 8 大海域，多语言支持。</p>
+    <p class="region-intro">Select your region to see storm activity and alert services for your area. Global coverage across 8 basins, multilingual support.</p>
     
     <div class="region-grid">
-      <!-- 亚洲 -->
+      <!-- Asia -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌏</span>
-          <h3>亚洲</h3>
+          <h3>Asia</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">西北太平洋（台风）+ 北印度洋（气旋）</p>
+          <p class="region-desc">Northwest Pacific (Typhoons) + North Indian Ocean (Cyclones)</p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>日本、菲律宾、中国沿海、越南、印度、孟加拉国</p>
-            <p><strong>风暴季：</strong>全年活跃（高峰 7-10月）</p>
-            <p><strong>数据源：</strong>JMA（日本气象厅）、JTWC、IMD（印度气象局）</p>
-            <p><strong>支持语言：</strong>日语 · 中文 · 英语</p>
+            <p><strong>Coverage:</strong> Japan, Philippines, coastal China, Vietnam, India, Bangladesh</p>
+            <p><strong>Storm Season:</strong> Year-round (peak Jul-Oct)</p>
+            <p><strong>Data Sources:</strong> JMA, JTWC, IMD</p>
+            <p><strong>Languages:</strong> Japanese · Chinese · English</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">查看亚洲风暴地图</a>
+          <a href="/map" class="btn btn-outline btn-sm">View Asia Storm Map</a>
         </div>
       </div>
       
-      <!-- 北美洲 -->
+      <!-- North America -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌎</span>
-          <h3>北美洲</h3>
+          <h3>North America</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">北大西洋 + 东太平洋 + 中太平洋（飓风）</p>
+          <p class="region-desc">North Atlantic + Eastern Pacific + Central Pacific (Hurricanes)</p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>美国（佛罗里达、德州、夏威夷）、加拿大、墨西哥</p>
-            <p><strong>风暴季：</strong>6月1日 - 11月30日（高峰 9月）</p>
-            <p><strong>数据源：</strong>NOAA NHC（美国国家飓风中心）</p>
-            <p><strong>支持语言：</strong>英语 · 中文 · 法语 · 日语</p>
+            <p><strong>Coverage:</strong> US (Florida, Texas, Hawaii), Canada, Mexico</p>
+            <p><strong>Storm Season:</strong> Jun 1 - Nov 30 (peak Sep)</p>
+            <p><strong>Data Sources:</strong> NOAA NHC</p>
+            <p><strong>Languages:</strong> English · Chinese · French · Japanese</p>
           </div>
-          <a href="/alerts" class="btn btn-primary btn-sm">设置免费预警</a>
+          <a href="/alerts" class="btn btn-primary btn-sm">Set Up Free Alerts</a>
         </div>
       </div>
       
-      <!-- 大洋洲 -->
+      <!-- Oceania -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌏</span>
-          <h3>大洋洲</h3>
+          <h3>Oceania</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">澳大利亚海域 + 南太平洋（气旋）</p>
+          <p class="region-desc">Australian Region + South Pacific (Cyclones)</p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>澳大利亚（昆士兰、北领地）、斐济、新喀里多尼亚</p>
-            <p><strong>风暴季：</strong>11月 - 4月（南半球夏季）</p>
-            <p><strong>数据源：</strong>BOM（澳大利亚气象局）、FMS（斐济气象局）</p>
+            <p><strong>Coverage:</strong> Australia (Queensland, Northern Territory), Fiji, New Caledonia</p>
+            <p><strong>Storm Season:</strong> Nov - Apr (Southern Hemisphere summer)</p>
+            <p><strong>Data Sources:</strong> BOM, FMS</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">查看大洋洲风暴地图</a>
+          <a href="/map" class="btn btn-outline btn-sm">View Oceania Storm Map</a>
         </div>
       </div>
       
-      <!-- 拉丁美洲 -->
+      <!-- Latin America -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌎</span>
-          <h3>拉丁美洲</h3>
+          <h3>Latin America</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">加勒比海 + 中美洲 + 墨西哥（飓风）</p>
+          <p class="region-desc">Caribbean + Central America + Mexico (Hurricanes)</p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>古巴、海地、多米尼加、波多黎各、墨西哥、中美洲</p>
-            <p><strong>风暴季：</strong>5月15日 - 11月30日</p>
-            <p><strong>数据源：</strong>NOAA NHC</p>
-            <p><strong>支持语言：</strong>英语 · 中文（西班牙语 Coming Soon）</p>
+            <p><strong>Coverage:</strong> Cuba, Haiti, Dominican Republic, Puerto Rico, Mexico, Central America</p>
+            <p><strong>Storm Season:</strong> May 15 - Nov 30</p>
+            <p><strong>Data Sources:</strong> NOAA NHC</p>
+            <p><strong>Languages:</strong> English · Chinese (Spanish Coming Soon)</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">查看加勒比海风暴地图</a>
+          <a href="/map" class="btn btn-outline btn-sm">View Caribbean Storm Map</a>
         </div>
       </div>
       
-      <!-- 非洲 -->
+      <!-- Africa -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌍</span>
-          <h3>非洲</h3>
+          <h3>Africa</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">南印度洋 + 西非沿海（气旋/热带风暴）</p>
+          <p class="region-desc">South Indian Ocean + West African Coast (Cyclones/Tropical Storms)</p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>马达加斯加、莫桑比克、坦桑尼亚、肯尼亚</p>
-            <p><strong>风暴季：</strong>11月 - 4月（南印度洋）</p>
-            <p><strong>数据源：</strong>Météo-France（法国气象局）、JTWC</p>
+            <p><strong>Coverage:</strong> Madagascar, Mozambique, Tanzania, Kenya</p>
+            <p><strong>Storm Season:</strong> Nov - Apr (South Indian Ocean)</p>
+            <p><strong>Data Sources:</strong> Météo-France, JTWC</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">查看非洲风暴地图</a>
+          <a href="/map" class="btn btn-outline btn-sm">View Africa Storm Map</a>
         </div>
       </div>
       
-      <!-- 欧洲 -->
+      <!-- Europe -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌍</span>
-          <h3>欧洲</h3>
+          <h3>Europe</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">法国海外省 + 全球度假游客</p>
+          <p class="region-desc">French Overseas Territories + Global Travelers</p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>法国留尼汪、马约特、度假游客</p>
-            <p><strong>风暴季：</strong>11月 - 4月（南印度洋）</p>
-            <p><strong>数据源：</strong>Météo-France、NOAA、JTWC</p>
-            <p><strong>支持语言：</strong>法语 · 英语</p>
+            <p><strong>Coverage:</strong> Réunion, Mayotte, vacation travelers</p>
+            <p><strong>Storm Season:</strong> Nov - Apr (South Indian Ocean)</p>
+            <p><strong>Data Sources:</strong> Météo-France, NOAA, JTWC</p>
+            <p><strong>Languages:</strong> French · English</p>
           </div>
-          <a href="/fr/" class="btn btn-outline btn-sm">查看法语版本</a>
+          <a href="/fr/" class="btn btn-outline btn-sm">View French Version</a>
         </div>
       </div>
     </div>

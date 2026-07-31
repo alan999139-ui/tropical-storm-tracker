@@ -5,6 +5,34 @@ import { historicalStorms, seasonStats, averages } from '../../data/historical';
 
 const lang = 'zh';
 
+// 风暴名称中文化映射
+const stormNames: Record<string, string> = {
+  'Arthur': '阿瑟', 'Bertha': '伯莎', 'Cristobal': '克里斯托瓦尔', 'Dolly': '多莉',
+  'Edouard': '爱德华', 'Fay': '费伊', 'Gonzalo': '贡萨洛', 'Hanna': '汉娜',
+  'Isaias': '伊萨亚斯', 'Laura': '劳拉', 'Marco': '马可', 'Nana': '娜娜',
+  'Omar': '奥马尔', 'Paulette': '波莱特', 'Rene': '雷内', 'Sally': '萨莉',
+  'Teddy': '泰迪', 'Vicky': '维基', 'Wilfred': '威尔弗雷德',
+  'Dorian': '多里安', 'Michael': '迈克尔', 'Florence': '弗洛伦斯', 'Maria': '玛丽亚',
+  'Irma': '艾尔玛', 'Harvey': '哈维', 'Ian': '伊恩', 'Idalia': '伊达利亚',
+  'Hilary': '希拉里', 'Lee': '李', 'Franklin': '富兰克林', 'Nigel': '奈杰尔',
+  'Tammy': '塔米', 'Fiona': '菲奥娜', 'Ida': '艾达', 'Elsa': '埃尔莎',
+  'Eta': '伊塔', 'Iota': '约塔',
+};
+
+// 风暴等级中文化
+const stormCategories: Record<string, string> = {
+  'TD': '热带低压', 'TS': '热带风暴', 'Cat-1': '1级飓风', 'Cat-2': '2级飓风',
+  'Cat-3': '3级飓风', 'Cat-4': '4级飓风', 'Cat-5': '5级飓风',
+};
+
+// 地区中文化
+const regionNames: Record<string, string> = {
+  'Atlantic': '大西洋', 'Gulf of Mexico': '墨西哥湾', 'Caribbean': '加勒比海',
+  'East Pacific': '东太平洋', 'Central Pacific': '中太平洋',
+  'Northwest Pacific': '西北太平洋', 'North Indian': '北印度洋',
+  'South Indian': '南印度洋', 'South Pacific': '南太平洋',
+};
+
 const categoryColors: Record<string, string> = {
   TD: '#4dabf7', TS: '#ffd43b', 'Cat-1': '#ff8787', 'Cat-2': '#fa5252',
   'Cat-3': '#e64980', 'Cat-4': '#cc5de8', 'Cat-5': '#845ef7',
@@ -163,14 +191,14 @@ const totalFatalities = seasonStats.reduce((sum, s) => sum + s.fatalities, 0);
       <tbody id="storm-table-body">
         {historicalStorms.map((storm) => (
           <tr data-year={storm.year} data-category={storm.category} data-region={storm.region} data-name={storm.name.toLowerCase()}>
-            <td><a href={`/zh/storms/${storm.name.toLowerCase()}`} class="storm-link">{storm.name}</a></td>
+            <td><a href={`/zh/storms/${storm.name.toLowerCase()}`} class="storm-link">{stormNames[storm.name] || storm.name}</a></td>
             <td>{storm.year}</td>
-            <td><span class="badge" style={`background: ${categoryColors[storm.category] || '#e2e8f0'}33; color: ${categoryColors[storm.category] || '#64748b'};`}>{storm.category}</span></td>
+            <td><span class="badge" style={`background: ${categoryColors[storm.category] || '#e2e8f0'}33; color: ${categoryColors[storm.category] || '#64748b'};`}>{stormCategories[storm.category] || storm.category}</span></td>
             <td>{storm.maxWind} mph</td>
             <td>{storm.minPressure} mb</td>
             <td>{storm.formed}</td>
             <td>{storm.dissipated}</td>
-            <td>{storm.region}</td>
+            <td>{regionNames[storm.region] || storm.region}</td>
             <td>{storm.damage}</td>
             <td>{storm.fatalities}</td>
           </tr>

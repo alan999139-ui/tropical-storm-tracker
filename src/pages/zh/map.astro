@@ -80,6 +80,13 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
     var allStorms = [];
     var currentBasin = 'all';
 
+    // 风暴名称中文化
+    var stormNameMap = { 'Arthur':'阿瑟','Bertha':'伯莎','Cristobal':'克里斯托瓦尔','Dolly':'多莉','Edouard':'爱德华','Fay':'费伊','Gonzalo':'贡萨洛','Hanna':'汉娜','Isaias':'伊萨亚斯','Laura':'劳拉','Marco':'马可','Nana':'娜娜','Omar':'奥马尔','Paulette':'波莱特','Rene':'雷内','Sally':'萨莉','Teddy':'泰迪','Vicky':'维基','Wilfred':'威尔弗雷德','Dorian':'多里安','Michael':'迈克尔','Florence':'弗洛伦斯','Maria':'玛丽亚','Irma':'艾尔玛','Harvey':'哈维','Ian':'伊恩','Idalia':'伊达利亚','Hilary':'希拉里','Lee':'李','Franklin':'富兰克林','Nigel':'奈杰尔','Tammy':'塔米','Fiona':'菲奥娜','Ida':'艾达','Elsa':'埃尔莎','Eta':'伊塔','Iota':'约塔','Dolphin':'海豚','Fausto':'福斯托','Genevieve':'吉纳维芙','Noul':'诺尔' };
+    function ln(n) { return stormNameMap[n] || n; }
+
+    // 流域中文化
+    var basinNameMap = { 'North Atlantic':'北大西洋','Eastern Pacific':'东太平洋','Central Pacific':'中太平洋','Northwest Pacific':'西北太平洋','North Indian':'北印度洋','South Indian':'南印度洋','South Pacific':'南太平洋','Australia':'澳大利亚海域' };
+
     function getIntensityColor(wind) {
       if (wind < 39) return '#4dabf7';
       if (wind < 74) return '#ffd43b';
@@ -197,8 +204,8 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
         bounds.push([storm.lat, storm.lon]);
 
         var popup = '<div style="min-width:220px;">' +
-          '<h3 style="margin:0 0 4px;font-size:1.1em;">' + storm.name + (storm.designation ? ' (' + storm.designation + ')' : '') + '</h3>' +
-          '<p style="margin:0 0 6px;font-size:0.82em;color:#64748b;">' + (storm.type || '热带气旋') + ' · ' + (storm.basinName || '') + '</p>' +
+          '<h3 style="margin:0 0 4px;font-size:1.1em;">' + ln(storm.name) + (storm.designation ? ' (' + storm.designation + ')' : '') + '</h3>' +
+          '<p style="margin:0 0 6px;font-size:0.82em;color:#64748b;">' + (storm.type || '热带气旋') + ' · ' + (basinNameMap[storm.basinName] || storm.basinName || '') + '</p>' +
           '<table style="width:100%;font-size:0.82em;border-collapse:collapse;">' +
           '<tr><td style="padding:2px 4px;font-weight:600;">风速</td><td style="padding:2px 4px;">' + storm.windMph + ' mph</td></tr>' +
           '<tr><td style="padding:2px 4px;font-weight:600;">气压</td><td style="padding:2px 4px;">' + (storm.pressureMb > 0 ? storm.pressureMb + ' mb' : '—') + '</td></tr>' +
@@ -247,13 +254,13 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
         var color = getIntensityColor(s.windMph);
         return '<div class="active-storm-item">' +
           '<div class="storm-item-header">' +
-            '<strong>' + s.name + (s.designation ? ' (' + s.designation + ')' : '') + '</strong>' +
+            '<strong>' + ln(s.name) + (s.designation ? ' (' + s.designation + ')' : '') + '</strong>' +
             '<span class="storm-item-type" style="color: ' + color + ';">' + s.type + '</span>' +
           '</div>' +
           '<div class="storm-item-stats">' +
             '<span>💨 ' + s.windMph + ' mph</span>' +
             '<span>📊 ' + (s.pressureMb > 0 ? s.pressureMb + ' mb' : '—') + '</span>' +
-            '<span>🌐 ' + (s.basinName || '') + '</span>' +
+            '<span>🌐 ' + (basinNameMap[s.basinName] || s.basinName || '') + '</span>' +
             '<span>🏛️ ' + (s.agency || s.source) + '</span>' +
           '</div>' +
         '</div>';

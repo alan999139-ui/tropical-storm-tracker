@@ -182,6 +182,92 @@ const categoryColors: Record<string, string> = {
     </div>
   </section>
 
+  <!-- Sélecteur de région -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">🌏 Dans quelle région habitez-vous?</h2>
+    </div>
+    <p class="region-intro">Sélectionnez votre région pour voir l'activité des tempêtes et les services d'alerte. Couverture mondiale, 8 bassins, multilingue.</p>
+    
+    <div class="region-grid">
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌏</span><h3>Asie</h3></div>
+        <div class="region-content">
+          <p class="region-desc">Pacifique Nord-Ouest (Typhons) + Océan Indien Nord (Cyclones)</p>
+          <div class="region-details">
+            <p><strong>Couverture:</strong> Japon, Philippines, Chine côtière, Vietnam, Inde, Bangladesh</p>
+            <p><strong>Saison:</strong> Toute l'année (pic juil-oct)</p>
+            <p><strong>Sources:</strong> JMA, JTWC, IMD</p>
+            <p><strong>Langues:</strong> Japonais · Chinois · Anglais</p>
+          </div>
+          <a href="/fr/map" class="btn btn-outline btn-sm">Voir la carte Asie</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌎</span><h3>Amérique du Nord</h3></div>
+        <div class="region-content">
+          <p class="region-desc">Atlantique Nord + Pacifique Est + Pacifique Central (Ouragans)</p>
+          <div class="region-details">
+            <p><strong>Couverture:</strong> États-Unis, Canada, Mexique</p>
+            <p><strong>Saison:</strong> 1 juin - 30 nov (pic sep)</p>
+            <p><strong>Sources:</strong> NOAA NHC</p>
+            <p><strong>Langues:</strong> Anglais · Chinois · Français · Japonais</p>
+          </div>
+          <a href="/fr/alerts" class="btn btn-primary btn-sm">Alertes gratuites</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌏</span><h3>Océanie</h3></div>
+        <div class="region-content">
+          <p class="region-desc">Région australienne + Pacifique Sud (Cyclones)</p>
+          <div class="region-details">
+            <p><strong>Couverture:</strong> Australie, Fidji, Nouvelle-Calédonie</p>
+            <p><strong>Saison:</strong> Nov - Avr</p>
+            <p><strong>Sources:</strong> BOM, FMS</p>
+          </div>
+          <a href="/fr/map" class="btn btn-outline btn-sm">Voir la carte Océanie</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌎</span><h3>Amérique Latine</h3></div>
+        <div class="region-content">
+          <p class="region-desc">Caraïbes + Amérique Centrale + Mexique (Ouragans)</p>
+          <div class="region-details">
+            <p><strong>Couverture:</strong> Cuba, Haïti, République Dominicaine, Porto Rico, Mexique</p>
+            <p><strong>Saison:</strong> 15 mai - 30 nov</p>
+            <p><strong>Sources:</strong> NOAA NHC</p>
+          </div>
+          <a href="/fr/map" class="btn btn-outline btn-sm">Voir la carte Caraïbes</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌍</span><h3>Afrique</h3></div>
+        <div class="region-content">
+          <p class="region-desc">Océan Indien Sud + Côte ouest africaine (Cyclones)</p>
+          <div class="region-details">
+            <p><strong>Couverture:</strong> Madagascar, Mozambique, Tanzanie, Kenya</p>
+            <p><strong>Saison:</strong> Nov - Avr</p>
+            <p><strong>Sources:</strong> Météo-France, JTWC</p>
+          </div>
+          <a href="/fr/map" class="btn btn-outline btn-sm">Voir la carte Afrique</a>
+        </div>
+      </div>
+      <div class="region-card">
+        <div class="region-header"><span class="region-icon">🌍</span><h3>Europe</h3></div>
+        <div class="region-content">
+          <p class="region-desc">Territoires français d'outre-mer + Voyageurs</p>
+          <div class="region-details">
+            <p><strong>Couverture:</strong> Réunion, Mayotte, voyageurs</p>
+            <p><strong>Saison:</strong> Nov - Avr</p>
+            <p><strong>Sources:</strong> Météo-France, NOAA, JTWC</p>
+            <p><strong>Langues:</strong> Français · Anglais</p>
+          </div>
+          <a href="/fr/" class="btn btn-outline btn-sm">Version française</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Préparation -->
   <section class="section">
     <div class="section-header">
@@ -276,6 +362,19 @@ const categoryColors: Record<string, string> = {
     .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s ease-in-out infinite; }
     .loading-card { text-align: center; padding: 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; color: var(--color-text-secondary); }
     .loading-spinner-small { width: 32px; height: 32px; border: 3px solid var(--color-border); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    
+    .region-intro { color: var(--color-text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+    .region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .region-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; }
+    .region-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--color-primary); }
+    .region-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .region-icon { font-size: 2rem; }
+    .region-header h3 { font-size: 1.25rem; margin: 0; }
+    .region-desc { color: var(--color-primary); font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem; }
+    .region-details { margin-bottom: 1rem; }
+    .region-details p { font-size: 0.85rem; margin: 0.4rem 0; color: var(--color-text-secondary); }
+    .region-details strong { color: var(--color-text); }
+    
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>

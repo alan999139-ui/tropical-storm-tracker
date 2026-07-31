@@ -65,8 +65,8 @@ const stormCategories: Record<string, string> = {
 };
 
 const recentStorms = [
-  { name: 'Arthur', year: 2026, category: 'TS', maxWind: 45, formed: '2026-06-15', dissipated: '2026-06-17', damage: '$1B', fatalities: 4, landfall: 'Texas' },
-  { name: 'Bertha', year: 2026, category: 'TD', maxWind: 50, formed: '2026-07-21', dissipated: '2026-07-24', damage: 'TBD', fatalities: 0, landfall: 'Louisiana' },
+  { name: 'Arthur', year: 2026, category: 'TS', maxWind: 45, formed: '2026-06-15', dissipated: '2026-06-17', damage: '$1B', fatalities: 4, landfall: '德克萨斯州' },
+  { name: 'Bertha', year: 2026, category: 'TD', maxWind: 50, formed: '2026-07-21', dissipated: '2026-07-24', damage: '待定', fatalities: 0, landfall: '路易斯安那州' },
 ];
 
 const seasonOutlook = {
@@ -172,6 +172,9 @@ const categoryColors: Record<string, string> = {
       return storms;
     }
 
+    const stormNameMap = { 'Arthur':'阿瑟','Bertha':'伯莎','Cristobal':'克里斯托瓦尔','Dolly':'多莉','Edouard':'爱德华','Fay':'费伊','Gonzalo':'贡萨洛','Hanna':'汉娜','Isaias':'伊萨亚斯','Laura':'劳拉','Marco':'马可','Nana':'娜娜','Omar':'奥马尔','Paulette':'波莱特','Rene':'雷内','Sally':'萨莉','Teddy':'泰迪','Vicky':'维基','Wilfred':'威尔弗雷德','Dorian':'多里安','Michael':'迈克尔','Florence':'弗洛伦斯','Maria':'玛丽亚','Irma':'艾尔玛','Harvey':'哈维','Ian':'伊恩','Idalia':'伊达利亚','Hilary':'希拉里','Lee':'李','Franklin':'富兰克林','Nigel':'奈杰尔','Tammy':'塔米','Fiona':'菲奥娜','Ida':'艾达','Elsa':'埃尔莎','Eta':'伊塔','Iota':'约塔','Dolphin':'海豚','Fausto':'福斯托','Genevieve':'吉纳维芙','Noul':'诺尔' };
+    function localizeName(n) { return stormNameMap[n] || n; }
+
     function renderActiveStorms(storms) {
       const container = document.getElementById('active-storms-container');
       const heroBadge = document.getElementById('hero-storm-count');
@@ -186,7 +189,7 @@ const categoryColors: Record<string, string> = {
       const labels = { wind: '风速', pressure: '气压', movement: '移动方向', location: '位置', updated: '最后更新', details: '查看详情 →' };
       container.innerHTML = '<div class="grid grid-2">' + storms.map(function(s) {
         var color = getIntensityColor(s.windMph);
-        return '<div class="card storm-card"><div class="storm-header"><div><h3>' + s.name + '</h3><span class="storm-type">' + s.type + '</span></div><span class="badge" style="background:' + color + '33;color:' + color + ';">' + (s.windMph < 39 ? '减弱中' : '活跃') + '</span></div><div class="storm-stats"><div class="stat"><span class="stat-label">' + labels.wind + '</span><span class="stat-value">' + s.windMph + ' mph</span></div><div class="stat"><span class="stat-label">' + labels.pressure + '</span><span class="stat-value">' + (s.pressureMb > 0 ? s.pressureMb + ' mb' : '—') + '</span></div><div class="stat"><span class="stat-label">' + labels.movement + '</span><span class="stat-value">' + s.movement + '</span></div><div class="stat"><span class="stat-label">' + labels.location + '</span><span class="stat-value">' + Math.abs(s.lat).toFixed(1) + '°' + (s.lat>=0?'N':'S') + ', ' + Math.abs(s.lon).toFixed(1) + '°' + (s.lon>=0?'E':'W') + '</span></div></div>' + (s.headline ? '<div class="storm-alert">⚠️ ' + s.headline + '</div>' : '') + '<div class="storm-footer"><span class="update-time">' + (s.issuedAt ? labels.updated + ': ' + new Date(s.issuedAt).toLocaleString('zh-CN') : '') + '</span><a href="/zh/map" class="btn btn-outline btn-sm">' + labels.details + '</a></div></div>';
+        return '<div class="card storm-card"><div class="storm-header"><div><h3>' + localizeName(s.name) + '</h3><span class="storm-type">' + s.type + '</span></div><span class="badge" style="background:' + color + '33;color:' + color + ';">' + (s.windMph < 39 ? '减弱中' : '活跃') + '</span></div><div class="storm-stats"><div class="stat"><span class="stat-label">' + labels.wind + '</span><span class="stat-value">' + s.windMph + ' mph</span></div><div class="stat"><span class="stat-label">' + labels.pressure + '</span><span class="stat-value">' + (s.pressureMb > 0 ? s.pressureMb + ' mb' : '—') + '</span></div><div class="stat"><span class="stat-label">' + labels.movement + '</span><span class="stat-value">' + s.movement + '</span></div><div class="stat"><span class="stat-label">' + labels.location + '</span><span class="stat-value">' + Math.abs(s.lat).toFixed(1) + '°' + (s.lat>=0?'N':'S') + ', ' + Math.abs(s.lon).toFixed(1) + '°' + (s.lon>=0?'E':'W') + '</span></div></div>' + (s.headline ? '<div class="storm-alert">⚠️ ' + s.headline + '</div>' : '') + '<div class="storm-footer"><span class="update-time">' + (s.issuedAt ? labels.updated + ': ' + new Date(s.issuedAt).toLocaleString('zh-CN') : '') + '</span><a href="/zh/map" class="btn btn-outline btn-sm">' + labels.details + '</a></div></div>';
       }).join('') + '</div>';
     }
 
