@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 
-const siteName = 'Tropical Storm Tracker';
+const siteName = 'StormTracker';
 const siteDesc = 'Latest tropical storm updates, alerts, and tracking information.';
 
 export async function GET() {

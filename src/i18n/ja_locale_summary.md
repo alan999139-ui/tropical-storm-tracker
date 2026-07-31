@@ -1,6 +1,6 @@
 # Japanese Locale Pages — Task Summary
 
-**Project:** Tropical Storm Tracker  
+**Project:** StormTracker  
 **Date:** 2026-07-27  
 **Task:** Create 6 complete Japanese (ja) locale pages
 

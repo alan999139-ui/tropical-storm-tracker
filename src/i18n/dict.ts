@@ -45,7 +45,7 @@ export const dict = {
   'nav.signUp': { en: 'Get Started', zh: '免费注册', fr: 'S\'inscrire', ja: '登録' },
 
   // 品牌名
-  'brand.name': { en: 'Tropical Storm Tracker', zh: '热带风暴追踪', fr: 'Suivi des Tempêtes Tropicales', ja: '熱帯暴風追跡' },
+  'brand.name': { en: 'StormTracker', zh: '风暴追踪', fr: 'StormTracker', ja: 'ストームトラッカー' },
   'brand.tagline': {
     en: 'Real-Time Storm Tracking & Alerts',
     zh: '实时风暴追踪与预警',
@@ -279,9 +279,9 @@ export const dict = {
   'footer.account': { en: 'Account', zh: '账户', fr: 'Compte', ja: 'アカウント' },
   'footer.rss': { en: 'RSS Feed', zh: 'RSS 订阅', fr: 'Flux RSS', ja: 'RSSフィード' },
   'footer.copyright': {
-    en: 'Tropical Storm Tracker. Data sourced from NOAA/NHC. Not for life-safety decisions.',
-    zh: '热带风暴追踪。数据来自 NOAA/NHC。本网站不用于生命安全决策。',
-    fr: 'Suivi des Tempêtes Tropicales. Données NOAA/NHC. Non pour décisions de sécurité.',
+    en: 'StormTracker. Data sourced from NOAA/NHC. Not for life-safety decisions.',
+    zh: 'StormTracker。数据来自 NOAA/NHC。本网站不用于生命安全决策。',
+    fr: 'StormTracker. Données NOAA/NHC. Non pour décisions de sécurité.',
     ja: '熱帯暴風追跡。データはNOAA/NHC提供。生命安全の判断には使用不可。',
   },
 
@@ -331,7 +331,7 @@ export const dict = {
   'prepPage.dataSource': { en: 'Data Source', zh: '数据来源', fr: 'Source des Données', ja: 'データソース' },
 
   // About Page
-  'about.title': { en: 'About Tropical Storm Tracker', zh: '关于热带风暴追踪', fr: 'À propos', ja: '熱帯暴風追跡について' },
+  'about.title': { en: 'About StormTracker', zh: '关于 StormTracker', fr: 'À propos', ja: '熱帯暴風追跡について' },
   'about.mission': { en: 'Our Mission', zh: '我们的使命', fr: 'Notre Mission', ja: 'ミッション' },
 
   // Storm Detail
