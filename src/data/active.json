@@ -1,7 +1,7 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-07-31T13:06:12.410Z",
+  "fetchedAt": "2026-07-31T13:45:46.443Z",
   "activeStorms": 0,
   "basins": {
     "north_atlantic": 0,
@@ -28,5 +28,5 @@
     "JTWC RSS: fetch failed"
   ],
   "storms": [],
-  "_buildTime": "2026-07-31T13:06:12.410Z"
+  "_buildTime": "2026-07-31T13:45:46.443Z"
 }

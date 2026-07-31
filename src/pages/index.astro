@@ -52,14 +52,14 @@ const activeCount = activeStorms ?? 0;
           <span class="badge badge-safe"><span aria-hidden="true">☀️</span> No Active Storms</span>
         )}
       </div>
-      <h1 class="hero-title">Track Tropical Storms in Real-Time</h1>
+      <h1 class="hero-title">你知道你家的风暴风险吗？</h1>
       <p class="hero-desc">
-        Live tracking, alerts, and historical data for tropical storms, hurricanes, and cyclones worldwide.
-        Powered by <strong>NOAA NHC &amp; JTWC</strong> data.
+        3 秒查看实时威胁 + 免费预警通知。全球覆盖 8 大海域，多语言支持。
+        数据来源：<strong>NOAA NHC（北美）· JMA（日本）· JTWC（全球）</strong>
       </p>
       <div class="hero-ctas">
-        <a href="/map" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'en'})"><span aria-hidden="true">🗺️</span> View Live Map</a>
-        <a href="/alerts" class="btn btn-outline btn-light" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'en', ab_variant: 'control'})"><span aria-hidden="true">🔔</span> Get Free Alerts</a>
+        <a href="/alerts" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'en', ab_variant: 'control'})">立即设置免费预警</a>
+        <a href="/map" class="btn btn-outline btn-light" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'en'})">查看实时地图</a>
       </div>
       <p class="hero-source">
         <span class="source-dot"></span>
@@ -90,13 +90,13 @@ const activeCount = activeStorms ?? 0;
                 <span class="badge" style={`background: ${categoryColors[intensity] || '#e2e8f0'}33; color: ${categoryColors[intensity] || '#64748b'};`}>{intensity}</span>
               </div>
               <div class="storm-card-stats">
-                <div class="stat"><span class="stat-label">💨 Wind</span><span class="stat-value">{storm.windMph} mph</span></div>
-                <div class="stat"><span class="stat-label">📊 Pressure</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
-                <div class="stat"><span class="stat-label"><span aria-hidden="true">📍</span> Location</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
-                <div class="stat"><span class="stat-label">➡️ Movement</span><span class="stat-value">{storm.movement}</span></div>
+                <div class="stat"><span class="stat-label">风速</span><span class="stat-value">{storm.windMph} mph</span></div>
+                <div class="stat"><span class="stat-label">气压</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
+                <div class="stat"><span class="stat-label">位置</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
+                <div class="stat"><span class="stat-label">移动</span><span class="stat-value">{storm.movement}</span></div>
               </div>
               <div class="storm-card-footer">
-                <span class="view-details"><span aria-hidden="true">→</span> View on Map</span>
+                <span class="view-details"><span aria-hidden="true">→</span> 查看地图</span>
               </div>
             </a>
           );
@@ -171,6 +171,122 @@ const activeCount = activeStorms ?? 0;
             </>
           );
         })()}
+      </div>
+    </div>
+  </section>
+
+  <!-- 用户分类：你住在哪个地区？ -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">🌏 你住在哪个地区？</h2>
+    </div>
+    <p class="region-intro">选择你的地区，查看该海域的风暴情况和预警服务。全球覆盖 8 大海域，多语言支持。</p>
+    
+    <div class="region-grid">
+      <!-- 亚洲 -->
+      <div class="region-card">
+        <div class="region-header">
+          <span class="region-icon">🌏</span>
+          <h3>亚洲</h3>
+        </div>
+        <div class="region-content">
+          <p class="region-desc">西北太平洋（台风）+ 北印度洋（气旋）</p>
+          <div class="region-details">
+            <p><strong>覆盖地区：</strong>日本、菲律宾、中国沿海、越南、印度、孟加拉国</p>
+            <p><strong>风暴季：</strong>全年活跃（高峰 7-10月）</p>
+            <p><strong>数据源：</strong>JMA（日本气象厅）、JTWC、IMD（印度气象局）</p>
+            <p><strong>支持语言：</strong>日语 · 中文 · 英语</p>
+          </div>
+          <a href="/map" class="btn btn-outline btn-sm">查看亚洲风暴地图</a>
+        </div>
+      </div>
+      
+      <!-- 北美洲 -->
+      <div class="region-card">
+        <div class="region-header">
+          <span class="region-icon">🌎</span>
+          <h3>北美洲</h3>
+        </div>
+        <div class="region-content">
+          <p class="region-desc">北大西洋 + 东太平洋 + 中太平洋（飓风）</p>
+          <div class="region-details">
+            <p><strong>覆盖地区：</strong>美国（佛罗里达、德州、夏威夷）、加拿大、墨西哥</p>
+            <p><strong>风暴季：</strong>6月1日 - 11月30日（高峰 9月）</p>
+            <p><strong>数据源：</strong>NOAA NHC（美国国家飓风中心）</p>
+            <p><strong>支持语言：</strong>英语 · 中文 · 法语 · 日语</p>
+          </div>
+          <a href="/alerts" class="btn btn-primary btn-sm">设置免费预警</a>
+        </div>
+      </div>
+      
+      <!-- 大洋洲 -->
+      <div class="region-card">
+        <div class="region-header">
+          <span class="region-icon">🌏</span>
+          <h3>大洋洲</h3>
+        </div>
+        <div class="region-content">
+          <p class="region-desc">澳大利亚海域 + 南太平洋（气旋）</p>
+          <div class="region-details">
+            <p><strong>覆盖地区：</strong>澳大利亚（昆士兰、北领地）、斐济、新喀里多尼亚</p>
+            <p><strong>风暴季：</strong>11月 - 4月（南半球夏季）</p>
+            <p><strong>数据源：</strong>BOM（澳大利亚气象局）、FMS（斐济气象局）</p>
+          </div>
+          <a href="/map" class="btn btn-outline btn-sm">查看大洋洲风暴地图</a>
+        </div>
+      </div>
+      
+      <!-- 拉丁美洲 -->
+      <div class="region-card">
+        <div class="region-header">
+          <span class="region-icon">🌎</span>
+          <h3>拉丁美洲</h3>
+        </div>
+        <div class="region-content">
+          <p class="region-desc">加勒比海 + 中美洲 + 墨西哥（飓风）</p>
+          <div class="region-details">
+            <p><strong>覆盖地区：</strong>古巴、海地、多米尼加、波多黎各、墨西哥、中美洲</p>
+            <p><strong>风暴季：</strong>5月15日 - 11月30日</p>
+            <p><strong>数据源：</strong>NOAA NHC</p>
+            <p><strong>支持语言：</strong>英语 · 中文（西班牙语 Coming Soon）</p>
+          </div>
+          <a href="/map" class="btn btn-outline btn-sm">查看加勒比海风暴地图</a>
+        </div>
+      </div>
+      
+      <!-- 非洲 -->
+      <div class="region-card">
+        <div class="region-header">
+          <span class="region-icon">🌍</span>
+          <h3>非洲</h3>
+        </div>
+        <div class="region-content">
+          <p class="region-desc">南印度洋 + 西非沿海（气旋/热带风暴）</p>
+          <div class="region-details">
+            <p><strong>覆盖地区：</strong>马达加斯加、莫桑比克、坦桑尼亚、肯尼亚</p>
+            <p><strong>风暴季：</strong>11月 - 4月（南印度洋）</p>
+            <p><strong>数据源：</strong>Météo-France（法国气象局）、JTWC</p>
+          </div>
+          <a href="/map" class="btn btn-outline btn-sm">查看非洲风暴地图</a>
+        </div>
+      </div>
+      
+      <!-- 欧洲 -->
+      <div class="region-card">
+        <div class="region-header">
+          <span class="region-icon">🌍</span>
+          <h3>欧洲</h3>
+        </div>
+        <div class="region-content">
+          <p class="region-desc">法国海外省 + 全球度假游客</p>
+          <div class="region-details">
+            <p><strong>覆盖地区：</strong>法国留尼汪、马约特、度假游客</p>
+            <p><strong>风暴季：</strong>11月 - 4月（南印度洋）</p>
+            <p><strong>数据源：</strong>Météo-France、NOAA、JTWC</p>
+            <p><strong>支持语言：</strong>法语 · 英语</p>
+          </div>
+          <a href="/fr/" class="btn btn-outline btn-sm">查看法语版本</a>
+        </div>
       </div>
     </div>
   </section>
@@ -336,6 +452,21 @@ const activeCount = activeStorms ?? 0;
     .no-active-card h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
     .no-active-card p { color: var(--color-text-secondary); max-width: 540px; margin: 0 auto 1.5rem; line-height: 1.7; }
     .no-active-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    
+    /* 地区分类 */
+    .region-intro { color: var(--color-text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+    .region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .region-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; }
+    .region-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--color-primary); }
+    .region-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .region-icon { font-size: 2rem; }
+    .region-header h3 { font-size: 1.25rem; margin: 0; }
+    .region-desc { color: var(--color-primary); font-weight: 600; margin-bottom: 1rem; font-size: 0.95rem; }
+    .region-details { margin-bottom: 1rem; }
+    .region-details p { font-size: 0.85rem; margin: 0.4rem 0; color: var(--color-text-secondary); }
+    .region-details strong { color: var(--color-text); }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    
     /* CTA */
     .cta-section { margin-bottom: 2rem; }
     .cta-card { background: linear-gradient(135deg, #0ea5e9, #0284c7); border-radius: var(--radius); padding: 2.5rem; text-align: center; color: white; }
