@@ -52,14 +52,15 @@ const activeCount = activeStorms ?? 0;
           <span class="badge badge-safe"><span aria-hidden="true">☀️</span> No Active Storms</span>
         )}
       </div>
-      <h1 class="hero-title">你知道你家的风暴风险吗？</h1>
+      <h1 class="hero-title">{t('hero.title', lang)}</h1>
       <p class="hero-desc">
-        3 秒查看实时威胁 + 免费预警通知。全球覆盖 8 大海域，多语言支持。
-        数据来源：<strong>NOAA NHC（北美）· JMA（日本）· JTWC（全球）</strong>
+        {t('hero.description', lang)}
+        <br />
+        <span class="data-source">Data sources: <strong>NOAA NHC (North America) · JMA (Japan) · JTWC (Global)</strong></span>
       </p>
       <div class="hero-ctas">
-        <a href="/alerts" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'en', ab_variant: 'control'})">立即设置免费预警</a>
-        <a href="/map" class="btn btn-outline btn-light" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'en'})">查看实时地图</a>
+        <a href="/alerts" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'en', ab_variant: 'control'})">{t('hero.getAlerts', lang)}</a>
+        <a href="/map" class="btn btn-outline btn-light" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'en'})">{t('hero.viewMap', lang)}</a>
       </div>
       <p class="hero-source">
         <span class="source-dot"></span>
@@ -90,13 +91,13 @@ const activeCount = activeStorms ?? 0;
                 <span class="badge" style={`background: ${categoryColors[intensity] || '#e2e8f0'}33; color: ${categoryColors[intensity] || '#64748b'};`}>{intensity}</span>
               </div>
               <div class="storm-card-stats">
-                <div class="stat"><span class="stat-label">风速</span><span class="stat-value">{storm.windMph} mph</span></div>
-                <div class="stat"><span class="stat-label">气压</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
-                <div class="stat"><span class="stat-label">位置</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
-                <div class="stat"><span class="stat-label">移动</span><span class="stat-value">{storm.movement}</span></div>
+                <div class="stat"><span class="stat-label">Wind</span><span class="stat-value">{storm.windMph} mph</span></div>
+                <div class="stat"><span class="stat-label">Pressure</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
+                <div class="stat"><span class="stat-label">Location</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
+                <div class="stat"><span class="stat-label">Movement</span><span class="stat-value">{storm.movement}</span></div>
               </div>
               <div class="storm-card-footer">
-                <span class="view-details"><span aria-hidden="true">→</span> 查看地图</span>
+                <span class="view-details"><span aria-hidden="true">→</span> View on Map</span>
               </div>
             </a>
           );

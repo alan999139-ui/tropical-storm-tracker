@@ -57,13 +57,13 @@ export const dict = {
   'hero.badge.loading': { en: 'Loading...', zh: '加载中...', fr: 'Chargement...', ja: '読み込み中...' },
   'hero.badge.noStorms': { en: '☀️ No Active Storms', zh: '☀️ 暂无活跃风暴', fr: '☀️ Aucune tempête active', ja: '☀️ 活発な暴風なし' },
   'hero.title': {
-    en: '你知道你家的风暴风险吗？',
+    en: "Do You Know Your Home's Storm Risk?",
     zh: '你知道你家的风暴风险吗？',
     fr: 'Connaissez-vous le risque de tempête chez vous?',
     ja: 'あなたの家の暴風リスクを知っていますか？',
   },
-  'hero.desc': {
-    en: '3 秒查看实时威胁 + 免费预警通知。全球覆盖 8 大海域，多语言支持。',
+  'hero.description': {
+    en: 'See real-time threats in 3 seconds + free alert notifications. Global coverage across 8 ocean basins, multilingual support.',
     zh: '3 秒查看实时威胁 + 免费预警通知。全球覆盖 8 大海域，多语言支持。',
     fr: '3 secondes pour voir les menaces + alertes gratuites. Couverture mondiale.',
     ja: '3秒で脅威を確認 + 無料アラート。世界8海域カバー。',
