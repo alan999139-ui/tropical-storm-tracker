@@ -361,6 +361,58 @@ const categoryColors: Record<string, string> = {
     </div>
   </section>
 
+  <!-- StormTracker 能为你做什么？ -->
+  <section class="section scenario-section">
+    <div class="section-header">
+      <h2 class="section-title">💡 StormTracker 能为你做什么？</h2>
+    </div>
+    <p class="scenario-intro">StormTracker 为真实的人面对真实的风暴而建——不是给科学家或政府官员用的。</p>
+    <div class="region-grid">
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🏠</div>
+        <h3>沿海居民</h3>
+        <p>在风暴抵达你社区<strong>数小时前</strong>就收到通知——而不是只剩几分钟。设置免费的邮件预警，精准到你的邮政编码，安全撤离。</p>
+        <a href="/zh/alerts" class="btn btn-primary btn-sm">设置免费预警</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🚢</div>
+        <h3>海员与渔民</h3>
+        <p>根据实时台风位置规划航线。全球实时地图显示每个风暴的确切位置和8大海域的预测路径。</p>
+        <a href="/zh/map" class="btn btn-outline btn-sm">查看实时地图</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🏨</div>
+        <h3>房东与物业主</h3>
+        <p>保护你的资产。历史风暴数据显示哪些地区风险最高——这在买房、投保或管理沿海房产时至关重要。</p>
+        <a href="/zh/storms" class="btn btn-outline btn-sm">浏览历史数据</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🚑</div>
+        <h3>应急响应人员</h3>
+        <p>获取实时更新，提前部署资源和协调撤离。多语言支持，服务多元社区的团队。</p>
+        <a href="/zh/map" class="btn btn-outline btn-sm">用你的语言使用</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">📊</div>
+        <h3>保险与金融分析师</h3>
+        <p>基于17年+的ACE指数趋势、登陆历史和18场重大风暴的损失对比，做出数据驱动的风险评估。</p>
+        <a href="/zh/storms" class="btn btn-outline btn-sm">查看风暴数据库</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">📺</div>
+        <h3>媒体工作者</h3>
+        <p>嵌入实时风暴地图，下载历史轨迹数据，获取可分享的信息图——做准确风暴报道所需的一切。</p>
+        <a href="/zh/about" class="btn btn-outline btn-sm">了解更多</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">✈️</div>
+        <h3>旅行者与邮轮乘客</h3>
+        <p>订票或规划航线经过飓风易发区前，先查风暴风险。打包前就知道目的地是否安全。</p>
+        <a href="/zh/map" class="btn btn-outline btn-sm">查看当前状况</a>
+      </div>
+    </div>
+  </section>
+
   <!-- 防灾 -->
   <section class="section">
     <div class="section-header">
@@ -469,6 +521,15 @@ const categoryColors: Record<string, string> = {
     .region-details p { font-size: 0.85rem; margin: 0.4rem 0; color: var(--color-text-secondary); }
     .region-details strong { color: var(--color-text); }
     
+    /* 场景化区块 */
+    .scenario-section { background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%); }
+    .scenario-intro { color: var(--color-text-secondary); font-size: 1rem; margin-bottom: 1.5rem; max-width: 600px; }
+    .scenario-card { display: flex; flex-direction: column; }
+    .scenario-icon { font-size: 2.25rem; margin-bottom: 0.75rem; }
+    .scenario-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+    .scenario-card p { font-size: 0.88rem; line-height: 1.6; color: var(--color-text-secondary); flex: 1; margin-bottom: 1rem; }
+    .scenario-card .btn { align-self: flex-start; }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>

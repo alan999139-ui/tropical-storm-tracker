@@ -291,6 +291,58 @@ const activeCount = activeStorms ?? 0;
     </div>
   </section>
 
+  <!-- What Can StormTracker Do For You? -->
+  <section class="section scenario-section">
+    <div class="section-header">
+      <h2 class="section-title">💡 What Can StormTracker Do For You?</h2>
+    </div>
+    <p class="scenario-intro">StormTracker is built for real people facing real storms — not scientists or government agencies.</p>
+    <div class="region-grid">
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🏠</div>
+        <h3>Coastal Residents</h3>
+        <p>Know <strong>hours before</strong> a storm hits your neighborhood — not minutes. Set free email alerts for your exact ZIP code and evacuate safely.</p>
+        <a href="/alerts" class="btn btn-primary btn-sm">Set Free Alerts</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🚢</div>
+        <h3>Seafarers & Fishermen</h3>
+        <p>Plan routes around active typhoons. The live global map shows every storm's exact position and projected path across 8 ocean basins.</p>
+        <a href="/map" class="btn btn-outline btn-sm">View Live Map</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🏨</div>
+        <h3>Property Owners & Hosts</h3>
+        <p>Protect your investment. Historical storm data shows which areas have the highest risk — critical for buying, insuring, or managing coastal property.</p>
+        <a href="/storms" class="btn btn-outline btn-sm">Explore Historical Data</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🚑</div>
+        <h3>Emergency Responders</h3>
+        <p>Get real-time updates for pre-positioning resources and coordinating evacuations. Multiple language support for teams serving diverse communities.</p>
+        <a href="/zh/map" class="btn btn-outline btn-sm">Use in Your Language</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">📊</div>
+        <h3>Insurers & Analysts</h3>
+        <p>Make data-driven risk assessments with 17+ years of ACE index trends, landfall history, and damage cost comparisons across 18 major storms.</p>
+        <a href="/storms" class="btn btn-outline btn-sm">View Storm Database</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">📺</div>
+        <h3>Media Professionals</h3>
+        <p>Embed live storm maps, download historical track data, and access shareable infographics — everything you need for accurate storm coverage.</p>
+        <a href="/about" class="btn btn-outline btn-sm">Learn More</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">✈️</div>
+        <h3>Travelers & Cruisers</h3>
+        <p>Check storm risk before booking trips or routes through hurricane-prone regions. Know if your destination is safe before you pack your bags.</p>
+        <a href="/map" class="btn btn-outline btn-sm">Check Current Conditions</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Notable Historical Storms -->
   <section class="section">
     <div class="section-header">
@@ -472,6 +524,15 @@ const activeCount = activeStorms ?? 0;
     .cta-card { background: linear-gradient(135deg, #0ea5e9, #0284c7); border-radius: var(--radius); padding: 2.5rem; text-align: center; color: white; }
     .cta-card h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
     .cta-card p { opacity: 0.9; max-width: 480px; margin: 0 auto 1.5rem; }
+
+    /* Scenario section */
+    .scenario-section { background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%); }
+    .scenario-intro { color: var(--color-text-secondary); font-size: 1rem; margin-bottom: 1.5rem; max-width: 600px; }
+    .scenario-card { display: flex; flex-direction: column; }
+    .scenario-icon { font-size: 2.25rem; margin-bottom: 0.75rem; }
+    .scenario-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+    .scenario-card p { font-size: 0.88rem; line-height: 1.6; color: var(--color-text-secondary); flex: 1; margin-bottom: 1rem; }
+    .scenario-card .btn { align-self: flex-start; }
 
     /* Storm list card - cursor hint */
     .storm-list-card {

@@ -299,6 +299,58 @@ const categoryColors: Record<string, string> = {
     </div>
   </section>
 
+  <!-- Que peut faire StormTracker pour vous ? -->
+  <section class="section scenario-section">
+    <div class="section-header">
+      <h2 class="section-title">💡 Que peut faire StormTracker pour vous ?</h2>
+    </div>
+    <p class="scenario-intro">StormTracker est conçu pour des personnes réelles face à des tempêtes réelles — pas pour des scientifiques ni des agences gouvernementales.</p>
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <div class="scenario-icon">🏠</div>
+        <h3>Residents Côtiers</h3>
+        <p>Soyez informés <strong>des heures avant</strong> qu'une tempête n'atteigne votre quartier — pas quelques minutes. Configurez des alertes email gratuites pour votre code postal exact.</p>
+        <a href="/fr/alerts" class="btn btn-primary btn-sm">Configurer des alertes</a>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-icon">🚢</div>
+        <h3>Marins et Pecheurs</h3>
+        <p>Planifiez vos itinéraires autour des typhons actifs. La carte mondiale en direct affiche la position exacte de chaque tempête dans les 8 bassins océaniques.</p>
+        <a href="/fr/map" class="btn btn-outline btn-sm">Voir la carte en direct</a>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-icon">🏨</div>
+        <h3>Proprietaires et Hotes</h3>
+        <p>Protégez vos biens. Les données historiques montrent les zones à plus haut risque — essentiel pour acheter, assurer ou gérer une propriété côtière.</p>
+        <a href="/fr/storms" class="btn btn-outline btn-sm">Explorer les données historiques</a>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-icon">🚑</div>
+        <h3>Secouristes</h3>
+        <p>Recevez des mises à jour en temps réel pour pré-positionner les ressources et coordonner les évacuations. Support multilingue pour les équipes multiculturelles.</p>
+        <a href="/fr/map" class="btn btn-outline btn-sm">Utiliser dans votre langue</a>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-icon">📊</div>
+        <h3>Assureurs et Analystes</h3>
+        <p>Évaluez les risques avec plus de 17 ans de données : indice ACE, historique des débarquements, et coûts des dommages de 18 tempêtes majeures.</p>
+        <a href="/fr/storms" class="btn btn-outline btn-sm">Voir la base de données</a>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-icon">📺</div>
+        <h3>Professionnels des Médias</h3>
+        <p>Intégrez des cartes en direct, téléchargez les données historiques et accédez à des infographies partageables — tout pour un suivi précis des tempêtes.</p>
+        <a href="/fr/about" class="btn btn-outline btn-sm">En savoir plus</a>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-icon">✈️</div>
+        <h3>Voyageurs et Croisiéristes</h3>
+        <p>Vérifiez le risque tempête avant de réserver des voyages ou itinéraires à travers les régions à ouragans. Sachez si votre destination est sûre.</p>
+        <a href="/fr/map" class="btn btn-outline btn-sm">Conditions actuelles</a>
+      </div>
+    </div>
+  </section>
+
   <style>
     .hero { background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0369a1 100%); border-radius: var(--radius); padding: 3rem 2rem; margin-bottom: 2.5rem; color: white; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
@@ -375,6 +427,17 @@ const categoryColors: Record<string, string> = {
     .region-details p { font-size: 0.85rem; margin: 0.4rem 0; color: var(--color-text-secondary); }
     .region-details strong { color: var(--color-text); }
     
+    .scenario-section { background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%); }
+    .scenario-intro { color: var(--color-text-secondary); font-size: 1rem; margin-bottom: 1.5rem; max-width: 600px; }
+    .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .scenario-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; display: flex; flex-direction: column; }
+    .scenario-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--color-primary); }
+    .scenario-icon { font-size: 2.25rem; margin-bottom: 0.75rem; }
+    .scenario-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+    .scenario-card p { font-size: 0.88rem; line-height: 1.6; color: var(--color-text-secondary); flex: 1; margin-bottom: 1rem; }
+    .scenario-card .btn { align-self: flex-start; }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>

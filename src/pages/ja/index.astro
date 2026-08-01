@@ -299,6 +299,58 @@ const categoryColors: Record<string, string> = {
     </div>
   </section>
 
+  <!-- StormTracker でできること -->
+  <section class="section scenario-section">
+    <div class="section-header">
+      <h2 class="section-title">💡 StormTracker でできること</h2>
+    </div>
+    <p class="scenario-intro">StormTracker は、実際にハリケーンに直面する一般の方のために作られたサービス——科学者や政府機関向けではありません。</p>
+    <div class="region-grid">
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🏠</div>
+        <h3>沿岸住民</h3>
+        <p>风暴があなたの地域に到達する<strong>数時間前に</strong>通知を受け取る。無料のメールアラートを設定し、安全に避難しましょう。</p>
+        <a href="/ja/alerts" class="btn btn-primary btn-sm">無料アラート設定</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🚢</div>
+        <h3>船乗りと漁師</h3>
+        <p> 활동 중인台風を避けてルートを計画。世界のライブマップは8つの海域すべてで各风暴の位置と予測経路を表示します。</p>
+        <a href="/ja/map" class="btn btn-outline btn-sm">ライブマップを見る</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🏨</div>
+        <h3>家主と不動産所有者</h3>
+        <p>資産を守る。過去の风暴データはリスクの高い地域を示します——海岸不動産の購入、保険の加入、管理に不可欠です。</p>
+        <a href="/ja/storms" class="btn btn-outline btn-sm">過去データを見る</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">🚑</div>
+        <h3>应急対応要員</h3>
+        <p>リアルタイム更新でリソースの事前配置と避難の調整。多言語対応で多様なコミュニティにサービスを提供します。</p>
+        <a href="/ja/map" class="btn btn-outline btn-sm">母国語で使う</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">📊</div>
+        <h3>保険・金融アナリスト</h3>
+        <p>17年以上のACEインデックストレンド、上陸履歴、18の主要ハリケーンの被害額比較でデータに基づくリスク評価を行います。</p>
+        <a href="/ja/storms" class="btn btn-outline btn-sm">风暴データベースを見る</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">📺</div>
+        <h3>メディア関係者</h3>
+        <p>ライブハリケーンマップを埋め込み、過去の軌跡データをダウンロード、共有可能な情報グラフィックにアクセス——正確なハリケーン報道に必要なすべて。</p>
+        <a href="/ja/about" class="btn btn-outline btn-sm">詳しく見る</a>
+      </div>
+      <div class="region-card scenario-card">
+        <div class="scenario-icon">✈️</div>
+        <h3>旅行者とクルーズ客</h3>
+        <p>ハリケーンの影響を受けやすい地域を通過する旅行やルートの予約前にリスクを確認。荷造り前に目的地が安全かどうかわかります。</p>
+        <a href="/ja/map" class="btn btn-outline btn-sm">現在の状況を確認</a>
+      </div>
+    </div>
+  </section>
+
   <style>
     .hero { background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0369a1 100%); border-radius: var(--radius); padding: 3rem 2rem; margin-bottom: 2.5rem; color: white; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
@@ -375,6 +427,16 @@ const categoryColors: Record<string, string> = {
     .region-details p { font-size: 0.85rem; margin: 0.4rem 0; color: var(--color-text-secondary); }
     .region-details strong { color: var(--color-text); }
     
+    /* シナリオブロック */
+    .scenario-section { background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%); }
+    .scenario-intro { color: var(--color-text-secondary); font-size: 1rem; margin-bottom: 1.5rem; max-width: 600px; }
+    .scenario-card { display: flex; flex-direction: column; }
+    .scenario-icon { font-size: 2.25rem; margin-bottom: 0.75rem; }
+    .scenario-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+    .scenario-card p { font-size: 0.88rem; line-height: 1.6; color: var(--color-text-secondary); flex: 1; margin-bottom: 1rem; }
+    .scenario-card .btn { align-self: flex-start; }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>
