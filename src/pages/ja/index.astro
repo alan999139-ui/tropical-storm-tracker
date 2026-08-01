@@ -38,7 +38,7 @@ const categoryColors: Record<string, string> = {
     <div class="hero-content">
       <span class="badge badge-active" id="hero-storm-count">🌀 読み込み中...</span>
       <h1>{t('hero.title', lang)}</h1>
-      <p>{t('hero.desc', lang)}</p>
+      <p>{t('hero.description', lang)}</p>
       <div class="hero-actions">
         <a href="/ja/alerts" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'ja'})">無料アラート設定</a>
         <a href="/ja/map" class="btn btn-outline" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'ja'})">リアルタイムマップ</a>
