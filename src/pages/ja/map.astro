@@ -32,7 +32,7 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
     <div class="legend-title"><span aria-hidden="true">🌀</span> 凡例</div>
     <div class="legend-items">
       <span class="legend-item"><span class="legend-dot" style="background:#4dabf7;"></span> 熱帯低気圧</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#ffd43b;"></span> 热带暴風</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ffd43b;"></span> 熱帯暴風</span>
       <span class="legend-item"><span class="legend-dot" style="background:#ff8787;"></span> カテゴリ1</span>
       <span class="legend-item"><span class="legend-dot" style="background:#fa5252;"></span> カテゴリ2</span>
       <span class="legend-item"><span class="legend-dot" style="background:#e64980;"></span> カテゴリ3</span>
@@ -147,7 +147,7 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
 
         var popup = '<div style="min-width:220px;">' +
           '<h3 style="margin:0 0 4px;font-size:1.1em;">' + storm.name + (storm.designation ? ' (' + storm.designation + ')' : '') + '</h3>' +
-          '<p style="margin:0 0 6px;font-size:0.82em;color:#64748b;">' + (storm.type || '热带低気圧') + ' · ' + (storm.basinName || '') + '</p>' +
+          '<p style="margin:0 0 6px;font-size:0.82em;color:#64748b;">' + (storm.type || '熱帯低気圧') + ' · ' + (storm.basinName || '') + '</p>' +
           '<table style="width:100%;font-size:0.82em;border-collapse:collapse;">' +
           '<tr><td style="padding:2px 4px;font-weight:600;">風速</td><td style="padding:2px 4px;">' + storm.windMph + ' mph</td></tr>' +
           '<tr><td style="padding:2px 4px;font-weight:600;">気圧</td><td style="padding:2px 4px;">' + (storm.pressureMb > 0 ? storm.pressureMb + ' mb' : '—') + '</td></tr>' +
