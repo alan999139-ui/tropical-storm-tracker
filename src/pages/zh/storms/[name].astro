@@ -21,6 +21,23 @@ const categoryColors: Record<string, string> = {
 
 const catColor = categoryColors[storm.category] || '#64748b';
 
+// 这对你意味着什么 — 风速的人类可读解读
+const windMeaning: Record<string, string> = {
+  'TD': '风速低于 39 mph（63 km/h）。预计有强降雨和局部洪水——但风灾风险不大。低洼地区仍需警惕水位上涨。',
+  'TS': '风速 39–73 mph（63–118 km/h）。预计有断枝、零星停电和可能引发山洪的强降雨。',
+  'Cat-1': '风速 74–95 mph（119–153 km/h）。非常危险的风会损坏屋顶、折断树枝，并造成持续数天的停电。',
+  'Cat-2': '风速 96–110 mph（154–177 km/h）。极端危险的风。预计屋顶严重损坏、树木连根拔起，停电数天至数周。',
+  'Cat-3': '风速 111–129 mph（178–208 km/h）。毁灭性破坏。坚固的房屋也可能失去屋顶，水电可能中断数周。',
+  'Cat-4': '风速 130–156 mph（209–251 km/h）。灾难性破坏。大部分屋顶被毁、树木被连根拔起，受灾地区可能数周至数月无法居住。',
+  'Cat-5': '风速 157+ mph（252+ km/h）。灾难性破坏。大部分木结构房屋将被摧毁，屋顶完全坍塌、墙体倒塌。',
+};
+
+const damageContext = storm.damage === 'TBD' ? `关于 ${storm.name} 的官方损失统计仍在评估中。`
+  : `换个角度理解：${storm.damage} 的损失足以支撑数千个重建项目，或为一个沿海县支付多年的洪水保险。`;
+
+const fatalityContext = storm.fatalities === 0 ? `${storm.name} 未造成人员伤亡。`
+  : `${storm.fatalities} 人因此丧生——每一个数字背后都是一个家庭、一所房子，和一个需要重建的社区。`;
+
 const eventData = {
   "@context": "https://schema.org",
   "@type": "Event",
@@ -67,6 +84,35 @@ const eventData = {
   <section class="section">
     <h2>概述</h2>
     <p>{storm.description}</p>
+  </section>
+
+  <!-- 这对你意味着什么 -->
+  <section class="section">
+    <h2>🧭 这对你意味着什么</h2>
+    <div class="impact-grid">
+      <div class="impact-box">
+        <h3>💨 这样的风有多危险？</h3>
+        <p>{windMeaning[storm.category]}</p>
+        <p class="impact-note">对比一下：汽车在 70 mph（约 113 km/h）下碰撞已经非常猛烈——想象一下持续 {storm.maxWind} mph 的风力。</p>
+      </div>
+      <div class="impact-box">
+        <h3>💰 代价有多大？</h3>
+        <p>{damageContext}</p>
+        <p>{fatalityContext}</p>
+      </div>
+      <div class="impact-box impact-action">
+        <h3>✅ 你现在可以做什么</h3>
+        <ul>
+          <li>检查应急物资——水、食物、药品、电池</li>
+          <li>了解撤离路线和避难所位置</li>
+          <li>订阅免费预警，绝不打无准备之仗</li>
+        </ul>
+        <div class="impact-cta">
+          <a href="/zh/alerts" class="btn btn-primary">设置免费预警</a>
+          <a href="/zh/preparedness" class="btn btn-outline">阅读防灾指南</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="section">
@@ -132,6 +178,15 @@ const eventData = {
     .track-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
     .track-table tbody tr:hover { background: #f8fafc; }
     .track-map { width: 100%; height: 400px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); background: #e8eef4; }
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px) { .impact-grid { grid-template-columns: 1fr; } }
+    .impact-box { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem; }
+    .impact-box h3 { font-size: 1rem; margin: 0 0 0.75rem; }
+    .impact-box p, .impact-box li { font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary); }
+    .impact-box ul { padding-left: 1.25rem; margin: 0 0 1rem; }
+    .impact-note { font-size: 0.8rem !important; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); }
+    .impact-action { background: linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--color-primary) 6%, white)); }
+    .impact-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   </style>
 
   <script is:inline define:vars={{ trackPoints: storm.track }}>

@@ -25,6 +25,23 @@ const catName = storm.category === 'TD' ? 'Dépression Tropicale'
   : storm.category === 'TS' ? 'Tempête Tropicale'
   : storm.category.replace('Cat-', 'Ouragan Catégorie ');
 
+// Ce que cela signifie pour vous — impact du vent en langage humain
+const windMeaning: Record<string, string> = {
+  'TD': 'Vents sous 39 mph (63 km/h). Pluies fortes et inondations localisées possibles — mais les dégâts de vent sont peu probables.',
+  'TS': 'Vents de 39 à 73 mph (63–118 km/h). Branches cassées, coupures de courant ponctuelles et fortes pluies pouvant provoquer des crues soudaines.',
+  'Cat-1': 'Vents de 74 à 95 mph (119–153 km/h). Vents très dangereux : toitures endommagées, branches cassées, coupures de courant de plusieurs jours.',
+  'Cat-2': 'Vents de 96 à 110 mph (154–177 km/h). Vents extrêmement dangereux : dégâts majeurs aux toitures, arbres déracinés, coupures de courant quasi totales.',
+  'Cat-3': 'Vents de 111 à 129 mph (178–208 km/h). Dégâts dévastateurs. Les maisons solides peuvent perdre leur toit ; électricité et eau indisponibles pendant des semaines.',
+  'Cat-4': 'Vents de 130 à 156 mph (209–251 km/h). Dégâts catastrophiques. La plupart des toits détruits, arbres déracinés, zones inhabitables pendant des semaines.',
+  'Cat-5': 'Vents de 157+ mph (252+ km/h). Dégâts catastrophiques. Une grande partie des maisons à ossature bois seront détruites.',
+};
+
+const damageContext = storm.damage === 'TBD' ? `Les chiffres officiels des dégâts de ${storm.name} sont encore en cours d'évaluation.`
+  : `Pour mettre en perspective : ${storm.damage} de dégâts pourrait financer des milliers de projets de reconstruction, ou des années de primes d'assurance inondation pour tout un comté côtier.`;
+
+const fatalityContext = storm.fatalities === 0 ? `${storm.name} n'a causé aucun décès signalé.`
+  : `${storm.fatalities} personnes ont perdu la vie — derrière chaque chiffre, il y a une famille, un foyer et une communauté à reconstruire.`;
+
 const eventData = {
   "@context": "https://schema.org",
   "@type": "Event",
@@ -76,6 +93,35 @@ const eventData = {
   <section class="section">
     <h2>{t('detail.overview', lang)}</h2>
     <p>{storm.description}</p>
+  </section>
+
+  <!-- Ce que cela signifie pour vous -->
+  <section class="section">
+    <h2>🧭 Ce que cela signifie pour vous</h2>
+    <div class="impact-grid">
+      <div class="impact-box">
+        <h3>💨 À quel point ce vent est-il dangereux ?</h3>
+        <p>{windMeaning[storm.category]}</p>
+        <p class="impact-note">Pour comparer : une collision à 70 mph est déjà violente — imaginez des vents soutenus de {storm.maxWind} mph.</p>
+      </div>
+      <div class="impact-box">
+        <h3>💰 Quel a été le coût humain ?</h3>
+        <p>{damageContext}</p>
+        <p>{fatalityContext}</p>
+      </div>
+      <div class="impact-box impact-action">
+        <h3>✅ Ce que vous pouvez faire aujourd'hui</h3>
+        <ul>
+          <li>Vérifiez votre kit d'urgence — eau, nourriture, médicaments, piles</li>
+          <li>Connaissez votre itinéraire d'évacuation et les abris</li>
+          <li>Abonnez-vous aux alertes gratuites pour ne jamais être pris au dépourvu</li>
+        </ul>
+        <div class="impact-cta">
+          <a href="/fr/alerts" class="btn btn-primary">Configurer des alertes gratuites</a>
+          <a href="/fr/preparedness" class="btn btn-outline">Guide de préparation</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="section">
@@ -141,6 +187,15 @@ const eventData = {
     .track-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
     .track-table tbody tr:hover { background: #f8fafc; }
     .track-map { width: 100%; height: 400px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); background: #e8eef4; }
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px) { .impact-grid { grid-template-columns: 1fr; } }
+    .impact-box { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem; }
+    .impact-box h3 { font-size: 1rem; margin: 0 0 0.75rem; }
+    .impact-box p, .impact-box li { font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary); }
+    .impact-box ul { padding-left: 1.25rem; margin: 0 0 1rem; }
+    .impact-note { font-size: 0.8rem !important; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); }
+    .impact-action { background: linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--color-primary) 6%, white)); }
+    .impact-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   </style>
 
   <script is:inline define:vars={{ trackPoints: storm.track }}>

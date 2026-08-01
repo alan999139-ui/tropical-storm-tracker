@@ -22,6 +22,23 @@ const catName = storm.category === 'TD' ? 'Tropical Depression'
   : storm.category === 'TS' ? 'Tropical Storm'
   : storm.category.replace('Cat-', 'Category ');
 
+// What This Means For You — human-readable wind impact
+const windMeaning: Record<string, string> = {
+  'TD': 'Winds under 39 mph (63 km/h). Expect heavy rain and localized flooding — but wind damage is unlikely. Still, low-lying areas should watch for rising water.',
+  'TS': 'Winds 39–73 mph (63–118 km/h). Expect downed tree limbs, scattered power outages, and heavy rain that can cause flash flooding.',
+  'Cat-1': 'Winds 74–95 mph (119–153 km/h). Very dangerous winds will damage roofs, snap tree branches, and cause power outages lasting several days.',
+  'Cat-2': 'Winds 96–110 mph (154–177 km/h). Extremely dangerous winds. Expect major roof damage, uprooted trees, and near-total power loss for days to weeks.',
+  'Cat-3': 'Winds 111–129 mph (178–208 km/h). Devastating damage. Well-built homes may lose roofs, and electricity and water may be unavailable for weeks.',
+  'Cat-4': 'Winds 130–156 mph (209–251 km/h). Catastrophic damage. Most roofs destroyed, trees uprooted, and affected areas may be uninhabitable for weeks or months.',
+  'Cat-5': 'Winds 157+ mph (252+ km/h). Catastrophic damage. A high percentage of framed homes will be destroyed, with total roof failure and wall collapse.',
+};
+
+const damageContext = storm.damage === 'TBD' ? `Official damage totals for ${storm.name} are still being assessed.`
+  : `To put this in perspective: ${storm.damage} could fund thousands of rebuilding projects, or cover years of flood insurance premiums for an entire coastal county.`;
+
+const fatalityContext = storm.fatalities === 0 ? `${storm.name} caused no reported fatalities.`
+  : `${storm.fatalities} people lost their lives — behind every number is a family, a home, and a community that had to rebuild.`;
+
 const eventData = {
   "@context": "https://schema.org",
   "@type": "Event",
@@ -73,6 +90,35 @@ const eventData = {
   <section class="section">
     <h2>Overview</h2>
     <p>{storm.description}</p>
+  </section>
+
+  <!-- What This Means For You -->
+  <section class="section">
+    <h2>🧭 What This Means For You</h2>
+    <div class="impact-grid">
+      <div class="impact-box">
+        <h3>💨 How dangerous was this wind?</h3>
+        <p>{windMeaning[storm.category]}</p>
+        <p class="impact-note">Compare: a typical car crash at 70 mph feels violent — imagine {storm.maxWind} mph sustained winds.</p>
+      </div>
+      <div class="impact-box">
+        <h3>💰 What was the human cost?</h3>
+        <p>{damageContext}</p>
+        <p>{fatalityContext}</p>
+      </div>
+      <div class="impact-box impact-action">
+        <h3>✅ What you can do today</h3>
+        <ul>
+          <li>Check your emergency kit — water, food, medicine, batteries</li>
+          <li>Know your evacuation route and shelter locations</li>
+          <li>Sign up for free alerts so you are never caught off guard</li>
+        </ul>
+        <div class="impact-cta">
+          <a href="/alerts" class="btn btn-primary">Set Up Free Alerts</a>
+          <a href="/preparedness" class="btn btn-outline">Read Preparedness Guide</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="section">
@@ -138,6 +184,15 @@ const eventData = {
     .track-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
     .track-table tbody tr:hover { background: #f8fafc; }
     .track-map { width: 100%; height: 400px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); background: #e8eef4; }
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px) { .impact-grid { grid-template-columns: 1fr; } }
+    .impact-box { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem; }
+    .impact-box h3 { font-size: 1rem; margin: 0 0 0.75rem; }
+    .impact-box p, .impact-box li { font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary); }
+    .impact-box ul { padding-left: 1.25rem; margin: 0 0 1rem; }
+    .impact-note { font-size: 0.8rem !important; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); }
+    .impact-action { background: linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--color-primary) 6%, white)); }
+    .impact-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   </style>
 
   <script is:inline define:vars={{ trackPoints: storm.track }}>

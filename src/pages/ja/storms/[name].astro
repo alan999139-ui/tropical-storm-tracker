@@ -28,6 +28,23 @@ const catName = storm.category === 'TD' ? '熱帯低気圧'
   : storm.category === 'Cat-4' ? 'ハリケーン カテゴリ4'
   : 'ハリケーン カテゴリ5';
 
+// これはあなたにとって何を意味するか — 風速を人間の言葉で解説
+const windMeaning: Record<string, string> = {
+  'TD': '風速 39 mph（63 km/h）未満。大雨と局地的な洪水に注意——ただし風による被害の可能性は低いです。',
+  'TS': '風速 39–73 mph（63–118 km/h）。枝の落下、散発的な停電、鉄砲水を引き起こす可能性のある大雨に注意。',
+  'Cat-1': '風速 74–95 mph（119–153 km/h）。非常に危険な風で、屋根の損傷、枝の折損、数日間の停電が発生します。',
+  'Cat-2': '風速 96–110 mph（154–177 km/h）。極めて危険な風。屋根の大きな損傷、樹木の倒壊、数日から数週間のほぼ全域停電。',
+  'Cat-3': '風速 111–129 mph（178–208 km/h）。壊滅的な被害。頑丈な家屋でも屋根を失う可能性があり、電気と水道が数週間止まります。',
+  'Cat-4': '風速 130–156 mph（209–251 km/h）。壊滅的な被害。ほとんどの屋根が破壊され、樹木が倒れ、数週間から数ヶ月居住不能になります。',
+  'Cat-5': '風速 157+ mph（252+ km/h）。壊滅的な被害。木造住宅の大部分が倒壊し、屋根が完全に崩落します。',
+};
+
+const damageContext = storm.damage === 'TBD' ? `${storm.name} の公式被害額は現在も評価中です。`
+  : `比較の参考：${storm.damage} の被害は、数千件の復興プロジェクト、または沿岸の郡全体の数年間の洪水保険料に相当します。`;
+
+const fatalityContext = storm.fatalities === 0 ? `${storm.name} による犠牲者の報告はありません。`
+  : `${storm.fatalities} 人が命を落としました——それぞれの数字の背後には、家族、家、そして再建を余儀なくされたコミュニティがあります。`;
+
 const eventData = {
   "@context": "https://schema.org",
   "@type": "Event",
@@ -79,6 +96,35 @@ const eventData = {
   <section class="section">
     <h2>{t('detail.overview', lang)}</h2>
     <p>{storm.description}</p>
+  </section>
+
+  <!-- これはあなたにとって何を意味するか -->
+  <section class="section">
+    <h2>🧭 これはあなたにとって何を意味するか</h2>
+    <div class="impact-grid">
+      <div class="impact-box">
+        <h3>💨 この風はどれほど危険？</h3>
+        <p>{windMeaning[storm.category]}</p>
+        <p class="impact-note">比較：時速 70 mph の車の衝突はすでに衝撃的——{storm.maxWind} mph の持続風を想像してみてください。</p>
+      </div>
+      <div class="impact-box">
+        <h3>💰 人的コストは？</h3>
+        <p>{damageContext}</p>
+        <p>{fatalityContext}</p>
+      </div>
+      <div class="impact-box impact-action">
+        <h3>✅ 今すぐできること</h3>
+        <ul>
+          <li>非常用キットを確認——水、食料、薬、電池</li>
+          <li>避難経路と避難所の場所を把握</li>
+          <li>無料アラートに登録して、不意を突かれないように</li>
+        </ul>
+        <div class="impact-cta">
+          <a href="/ja/alerts" class="btn btn-primary">無料アラート設定</a>
+          <a href="/ja/preparedness" class="btn btn-outline">防災ガイド</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="section">
@@ -144,6 +190,15 @@ const eventData = {
     .track-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
     .track-table tbody tr:hover { background: #f8fafc; }
     .track-map { width: 100%; height: 400px; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); background: #e8eef4; }
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px) { .impact-grid { grid-template-columns: 1fr; } }
+    .impact-box { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.25rem; }
+    .impact-box h3 { font-size: 1rem; margin: 0 0 0.75rem; }
+    .impact-box p, .impact-box li { font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary); }
+    .impact-box ul { padding-left: 1.25rem; margin: 0 0 1rem; }
+    .impact-note { font-size: 0.8rem !important; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); }
+    .impact-action { background: linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--color-primary) 6%, white)); }
+    .impact-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   </style>
 
   <script is:inline define:vars={{ trackPoints: storm.track }}>

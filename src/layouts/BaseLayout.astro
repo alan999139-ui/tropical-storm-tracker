@@ -122,15 +122,16 @@ const langSwitchLinks = Object.values(languages).map(l => ({
     };
     
     // Track language switches
-    document.addEventListener('click', function(e) {
-      const langLink = e.target.closest('.lang-link');
-      if (langLink) {
-        const targetLang = langLink.getAttribute('href').match(/\/(zh|fr|ja)(\/|$)/)?.[1] || 'en';
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.id === 'lang-select') {
+        const url = e.target.value;
+        const targetLang = url.match(/\/(zh|fr|ja)(\/|$)/)?.[1] || 'en';
         trackEvent('language_switch', {
           from_language: document.documentElement.lang,
           to_language: targetLang,
           page_path: window.location.pathname
         });
+        window.location.href = url;
       }
     });
   </script>
@@ -153,15 +154,11 @@ const langSwitchLinks = Object.values(languages).map(l => ({
       <!-- Auth + Language -->
       <div class="nav-actions">
         <div class="lang-switcher">
-          {langSwitchLinks.map((l, i) => (
-            <>
-              {i > 0 && <span class="lang-sep">|</span>}
-              <a href={l.url} class:list={["lang-link", { active: l.active }]} title={l.name}>
-                <span class="lang-flag">{l.flag}</span>
-                <span class="lang-code">{l.code.toUpperCase()}</span>
-              </a>
-            </>
-          ))}
+          <select id="lang-select" class="lang-select" aria-label="Language / 语言 / Langue / 言語">
+            {langSwitchLinks.map(l => (
+              <option value={l.url} selected={l.active}>{l.flag} {l.name}</option>
+            ))}
+          </select>
         </div>
         <div class="auth-buttons" id="nav-auth">
           <a href="/signin" class="nav-signin">{t('nav.signIn', lang)}</a>
@@ -365,27 +362,29 @@ const langSwitchLinks = Object.values(languages).map(l => ({
       align-items: center;
     }
 
-    /* Language Switcher */
-    .lang-switcher {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+    /* Language Switcher (dropdown) */
+    .lang-switcher { display: flex; align-items: center; }
+    .lang-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      font-family: inherit;
       font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.35rem 1.6rem 0.35rem 0.6rem;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
     }
-    .lang-sep { color: var(--color-border); }
-    .lang-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      text-decoration: none;
-      color: var(--color-text-secondary);
-      padding: 0.25rem 0.5rem;
-      border-radius: 6px;
-      transition: all 0.15s;
-    }
-    .lang-link:hover { background: var(--color-bg); color: var(--color-text); }
-    .lang-link.active { background: var(--color-primary); color: white; }
-    .lang-flag { font-size: 1rem; }
+    .lang-select:hover { border-color: var(--color-primary); }
+    .lang-select:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent); }
+    .lang-select option { font-weight: 400; }
 
     /* Footer */
     .site-footer {
@@ -422,7 +421,7 @@ const langSwitchLinks = Object.values(languages).map(l => ({
     @media (max-width: 768px) {
       .nav-links { gap: 0.75rem; font-size: 0.85rem; }
       .nav-logo .logo-text { display: none; }
-      .lang-link .lang-code { display: none; }
+      .lang-select { max-width: 9.5rem; padding-right: 1.4rem; font-size: 0.78rem; }
       .nav-signin { display: none; }
       .nav-actions { gap: 0.5rem; }
       .footer-content { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
