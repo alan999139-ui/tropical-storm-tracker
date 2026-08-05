@@ -1,13 +1,13 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-08-01T11:16:54.463Z",
-  "activeStorms": 0,
+  "fetchedAt": "2026-08-05T13:32:09.262Z",
+  "activeStorms": 2,
   "basins": {
     "north_atlantic": 0,
     "east_pacific": 0,
     "central_pacific": 0,
-    "northwest_pacific": 0,
+    "northwest_pacific": 2,
     "north_indian": 0,
     "south_indian": 0,
     "australia": 0,
@@ -23,10 +23,190 @@
     "australia": "BOM (via JTWC)",
     "south_pacific": "FMS (via JTWC)"
   },
-  "degraded": true,
-  "errors": [
-    "JTWC RSS: fetch failed"
+  "degraded": false,
+  "storms": [
+    {
+      "id": "jtwc-northwest_pacific-13W",
+      "name": "Kujira",
+      "designation": "13W",
+      "type": "Typhoon",
+      "category": 0,
+      "windMph": 39,
+      "pressureMb": 0,
+      "lat": 17.8,
+      "lon": 119,
+      "movement": "See JTWC product",
+      "status": "Active",
+      "basin": "northwest_pacific",
+      "basinName": "Northwest Pacific",
+      "agency": "JMA",
+      "source": "JTWC",
+      "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1326web.txt",
+      "issuedAt": "2026-08-05T13:32:09.248Z",
+      "names": {
+        "en": "Kujira",
+        "zh": "Kujira"
+      },
+      "basinNames": {
+        "en": "Northwest Pacific",
+        "zh": "西北太平洋",
+        "fr": "Pacifique Nord-Ouest",
+        "ja": "北西太平洋"
+      },
+      "windDescription": {
+        "en": "Gusty winds, up to 73 mph. Trees may sway, minor flooding possible.",
+        "zh": "阵风可达 73 mph。树木摇动，可能有轻微洪涝。",
+        "fr": "Rafales jusqu'à 73 mph. Arbres agités, inondations mineures possibles.",
+        "ja": "突風最大73mph。木が揺れ、軽度の洪水の可能性。"
+      },
+      "affectedRegions": {
+        "en": [
+          "Japan",
+          "Philippines",
+          "Taiwan",
+          "China",
+          "South Korea",
+          "Vietnam",
+          "Hong Kong",
+          "Guam"
+        ],
+        "zh": [
+          "日本",
+          "菲律宾",
+          "台湾",
+          "中国",
+          "韩国",
+          "越南",
+          "香港",
+          "关岛"
+        ],
+        "fr": [
+          "Japon",
+          "Philippines",
+          "Taïwan",
+          "Chine",
+          "Corée du Sud",
+          "Vietnam",
+          "Hong Kong",
+          "Guam"
+        ],
+        "ja": [
+          "日本",
+          "フィリピン",
+          "台湾",
+          "中国",
+          "韓国",
+          "ベトナム",
+          "香港",
+          "グアム"
+        ]
+      },
+      "distanceToLand": "Taiwan",
+      "distanceMiles": 321,
+      "locationText": {
+        "en": "17.8°N, 119.0°E",
+        "zh": "17.8°北纬 119.0°东经",
+        "fr": "17.8°N, 119.0°E",
+        "ja": "17.8°N 119.0°E"
+      },
+      "dataSource": {
+        "en": "Joint Typhoon Warning Center (JTWC)",
+        "zh": "联合台风警报中心（JTWC）",
+        "fr": "JTWC",
+        "ja": "聯合台風警報センター（JTWC）"
+      }
+    },
+    {
+      "id": "jtwc-northwest_pacific-12W",
+      "name": "Dolphin",
+      "designation": "12W",
+      "type": "Typhoon",
+      "category": 0,
+      "windMph": 39,
+      "pressureMb": 0,
+      "lat": 17.8,
+      "lon": 119,
+      "movement": "See JTWC product",
+      "status": "Active",
+      "basin": "northwest_pacific",
+      "basinName": "Northwest Pacific",
+      "agency": "JMA",
+      "source": "JTWC",
+      "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1326web.txt",
+      "issuedAt": "2026-08-05T13:32:09.259Z",
+      "names": {
+        "en": "Dolphin",
+        "zh": "Dolphin"
+      },
+      "basinNames": {
+        "en": "Northwest Pacific",
+        "zh": "西北太平洋",
+        "fr": "Pacifique Nord-Ouest",
+        "ja": "北西太平洋"
+      },
+      "windDescription": {
+        "en": "Gusty winds, up to 73 mph. Trees may sway, minor flooding possible.",
+        "zh": "阵风可达 73 mph。树木摇动，可能有轻微洪涝。",
+        "fr": "Rafales jusqu'à 73 mph. Arbres agités, inondations mineures possibles.",
+        "ja": "突風最大73mph。木が揺れ、軽度の洪水の可能性。"
+      },
+      "affectedRegions": {
+        "en": [
+          "Japan",
+          "Philippines",
+          "Taiwan",
+          "China",
+          "South Korea",
+          "Vietnam",
+          "Hong Kong",
+          "Guam"
+        ],
+        "zh": [
+          "日本",
+          "菲律宾",
+          "台湾",
+          "中国",
+          "韩国",
+          "越南",
+          "香港",
+          "关岛"
+        ],
+        "fr": [
+          "Japon",
+          "Philippines",
+          "Taïwan",
+          "Chine",
+          "Corée du Sud",
+          "Vietnam",
+          "Hong Kong",
+          "Guam"
+        ],
+        "ja": [
+          "日本",
+          "フィリピン",
+          "台湾",
+          "中国",
+          "韓国",
+          "ベトナム",
+          "香港",
+          "グアム"
+        ]
+      },
+      "distanceToLand": "Taiwan",
+      "distanceMiles": 321,
+      "locationText": {
+        "en": "17.8°N, 119.0°E",
+        "zh": "17.8°北纬 119.0°东经",
+        "fr": "17.8°N, 119.0°E",
+        "ja": "17.8°N 119.0°E"
+      },
+      "dataSource": {
+        "en": "Joint Typhoon Warning Center (JTWC)",
+        "zh": "联合台风警报中心（JTWC）",
+        "fr": "JTWC",
+        "ja": "聯合台風警報センター（JTWC）"
+      }
+    }
   ],
-  "storms": [],
-  "_buildTime": "2026-08-01T11:16:54.463Z"
+  "_buildTime": "2026-08-05T13:32:09.268Z"
 }

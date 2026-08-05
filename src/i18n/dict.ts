@@ -344,15 +344,7 @@ export const dict = {
   'detail.damage': { en: 'Damage', zh: '损失', fr: 'Dégâts', ja: '被害' },
   'detail.fatalities': { en: 'Fatalities', zh: '伤亡', fr: 'Victimes', ja: '死者' },
   'detail.formed': { en: 'Formed', zh: '形成时间', fr: 'Formée', ja: '発生' },
-  'detail.overview': { en: 'Overview', zh: '概述', fr: 'Aperçu', ja: '概要' },
-  'detail.stormPath': { en: 'Storm Path', zh: '风暴路径', fr: 'Trajectoire', ja: '暴風軌道' },
-  'detail.trackData': { en: 'Storm Track Data', zh: '路径数据', fr: 'Données de Trajectoire', ja: '軌道データ' },
-  'detail.time': { en: 'Time (UTC)', zh: '时间 (UTC)', fr: 'Temps (UTC)', ja: '時間 (UTC)' },
-  'detail.latitude': { en: 'Latitude', zh: '纬度', fr: 'Latitude', ja: '緯度' },
-  'detail.longitude': { en: 'Longitude', zh: '经度', fr: 'Longitude', ja: '経度' },
-  'detail.wind': { en: 'Wind (mph)', zh: '风速 (mph)', fr: 'Vent (mph)', ja: '風速 (mph)' },
-  'detail.pressure': { en: 'Pressure (mb)', zh: '气压 (mb)', fr: 'Pression (mb)', ja: '気圧 (mb)' },
-  'detail.season': { en: 'Atlantic Hurricane Season', zh: '大西洋飓风季', fr: 'Saison des Ouragans', ja: '大西洋ハリケーンシーズン' },
+  'detail.overview': { en: 'What Happened', zh: '事件概述', fr: 'Aperçu', ja: '概要' },
 
   // 风暴等级中文化
   'storm.category.TD': { en: 'Tropical Depression', zh: '热带低压', fr: 'Dépression Tropicale', ja: '熱帯低気圧' },
@@ -362,6 +354,17 @@ export const dict = {
   'storm.category.Cat3': { en: 'Category 3 Hurricane', zh: '3级飓风', fr: 'Ouragan Catégorie 3', ja: 'カテゴリー3ハリケーン' },
   'storm.category.Cat4': { en: 'Category 4 Hurricane', zh: '4级飓风', fr: 'Ouragan Catégorie 4', ja: 'カテゴリー4ハリケーン' },
   'storm.category.Cat5': { en: 'Category 5 Hurricane', zh: '5级飓风', fr: 'Ouragan Catégorie 5', ja: 'カテゴリー5ハリケーン' },
+
+  // 用户分类模块（6大洲）
+  'storm.distanceToLand': { en: 'Distance to Land', zh: '距最近陆地', fr: 'Distance au Littoral', ja: '最寄り陸地からの距離' },
+  'storm.affectedAreas': { en: 'Areas at Risk', zh: '受影响区域', fr: 'Zones à Risque', ja: '影響が予想される地域' },
+  'storm.dataSource': { en: 'Data Source', zh: '数据来源', fr: 'Source des Données', ja: 'データソース' },
+  'storm.milesFrom': { en: 'miles from', zh: '英里，距', fr: 'milles de', ja: 'マイル，陸地から' },
+  'active.seeOnMap': { en: 'See on Map →', zh: '在地图上查看 →', fr: 'Voir sur la Carte →', ja: 'マップで見る →' },
+  'detail.whatHappened': { en: 'What Happened', zh: '事件概述', fr: 'Aperçu', ja: '概要' },
+  'detail.windImpact': { en: 'What the Wind Means For You', zh: '这场风对你意味着什么', fr: 'Impact du Vent', ja: '風の影響' },
+  'detail.affectedAreas': { en: 'Who Was Affected', zh: '谁受影响', fr: 'Personnes Touchées', ja: '影響を受けた地域' },
+  'detail.whatYouCanDo': { en: 'What You Can Do Today', zh: '你现在可以做什么', fr: 'Ce Que Vous Pouvez Faire', ja: '今すぐできること' },
 
   // 用户分类模块（6大洲）
   'region.title': { en: '🌏 你住在哪个地区？', zh: '🌏 你住在哪个地区？', fr: '🌏 Où habitez-vous?', ja: '🌏 どこに住んでいますか？' },
