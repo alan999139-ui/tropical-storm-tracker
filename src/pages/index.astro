@@ -38,7 +38,7 @@ const activeCount = activeStorms ?? 0;
   <!-- 数据来源 & 更新状态横幅 -->
   {(_fallback) && (
     <div class="warning-banner">
-      ⚠️ Data update delayed — showing cached data. Last successful fetch: {buildTime}. Please refresh shortly.
+      data-i18n="home.warning.banner" data-i18n-attrs="text"
     </div>
   )}
 
@@ -47,9 +47,9 @@ const activeCount = activeStorms ?? 0;
     <div class="hero-content">
       <div class="active-badge" id="hero-badge">
         {activeCount > 0 ? (
-          <span class="badge badge-active">🌪️ {activeCount} Active</span>
+          <span class="badge badge-active" data-i18n="home.activeCount" data-i18n-attrs="text">🌪️ {activeCount} Active</span>
         ) : (
-          <span class="badge badge-safe"><span aria-hidden="true">☀️</span> No Active Storms</span>
+          <span class="badge badge-safe" data-i18n="home.noActive.title" data-i18n-attrs="text"><span aria-hidden="true">☀️</span> No Active Storms</span>
         )}
       </div>
       <h1 class="hero-title">{t('hero.title', lang)}</h1>
@@ -64,7 +64,7 @@ const activeCount = activeStorms ?? 0;
       </div>
       <p class="hero-source">
         <span class="source-dot"></span>
-        Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> &amp; <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
+        Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener"><span data-i18n="home.region.noaa">NOAA NHC</span></a> &amp; <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
         · Updated {buildTime}
       </p>
     </div>
@@ -74,8 +74,8 @@ const activeCount = activeStorms ?? 0;
   {activeCount > 0 ? (
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title"><span aria-hidden="true">⚡</span> Active Storms</h2>
-        <span class="live-dot">🟢 Live</span>
+        <h2 class="section-title"><span aria-hidden="true">⚡</span> <span data-i18n="home.activeStorms">Active Storms</span></h2>
+        <span class="live-dot" data-i18n="home.live" data-i18n-attrs="text">🟢 Live</span>
       </div>
       <div class="grid grid-2">
         {liveStorms.map((storm: any) => {
@@ -91,13 +91,13 @@ const activeCount = activeStorms ?? 0;
                 <span class="badge" style={`background: ${categoryColors[intensity] || '#e2e8f0'}33; color: ${categoryColors[intensity] || '#64748b'};`}>{intensity}</span>
               </div>
               <div class="storm-card-stats">
-                <div class="stat"><span class="stat-label">Wind</span><span class="stat-value">{storm.windMph} mph</span></div>
-                <div class="stat"><span class="stat-label">Pressure</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
-                <div class="stat"><span class="stat-label">Location</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
-                <div class="stat"><span class="stat-label">Movement</span><span class="stat-value">{storm.movement}</span></div>
+                <div class="stat"><span class="stat-label" data-i18n="home.storm.wind">Wind</span><span class="stat-value">{storm.windMph} mph</span></div>
+                <div class="stat"><span class="stat-label" data-i18n="home.storm.pressure">Pressure</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
+                <div class="stat"><span class="stat-label" data-i18n="home.storm.location">Location</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
+                <div class="stat"><span class="stat-label" data-i18n="home.storm.movement">Movement</span><span class="stat-value">{storm.movement}</span></div>
               </div>
               <div class="storm-card-footer">
-                <span class="view-details"><span aria-hidden="true">→</span> View on Map</span>
+                <span class="view-details" data-i18n="home.storm.viewMap"><span aria-hidden="true">→</span> View on Map</span>
               </div>
             </a>
           );
@@ -112,15 +112,15 @@ const activeCount = activeStorms ?? 0;
       </div>
       <div class="no-active-card">
         <div class="no-active-icon" aria-hidden="true">☀️</div>
-        <h3>No Active Tropical Storms</h3>
+        <h3 data-i18n="home.noActive.title">No Active Tropical Storms</h3>
         <p>
-          Good news — all monitored ocean basins are currently quiet. Tropical cyclone seasons vary by region:
+          <span data-i18n="home.noActive.desc">Good news — all monitored ocean basins are currently quiet. Tropical cyclone seasons vary by region:
           the Atlantic &amp; East Pacific peak <strong>June 1 – November 30</strong>, while the Northwest Pacific
-          stays active nearly year-round.
+          stays active nearly year-round.</span>
         </p>
         <div class="no-active-ctas">
-          <a href="/storms" class="btn btn-outline">📊 Browse Historical Storms</a>
-          <a href="/preparedness" class="btn btn-primary"><span aria-hidden="true">🛡️</span> Preparedness Guide</a>
+          <a href="/storms" class="btn btn-outline">data-i18n="home.noActive.browse"</a>
+          <a href="/preparedness" class="btn btn-primary"><span aria-hidden="true">🛡️</span> <span data-i18n="home.prepare.title">Preparedness Guide</span></a>
         </div>
         <p class="hero-source">
           <span class="source-dot"></span>
@@ -133,16 +133,16 @@ const activeCount = activeStorms ?? 0;
   <!-- Season Outlook -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title"><span aria-hidden="true">📊</span> {year} Season Outlook</h2>
-      <a href="/storms" class="see-all">Full Database →</a>
+      <h2 class="section-title"><span aria-hidden="true">📊</span> <span data-i18n="home.seasonOutlook">{year} Season Outlook</span></h2>
+      <a href="/storms" class="see-all"> <span data-i18n="home.viewAll"> <span data-i18n="home.viewAll">Full Database →</span> </span> </a>
     </div>
     <div class="season-card">
       <div class="season-header">
         <div class="season-badge">
-          <span class="badge badge-safe">Below Normal</span>
-          <span class="season-note">El Niño developing — increases wind shear at peak season</span>
+          <span class="badge badge-safe"><span data-i18n="home.season.belowNormal">Below Normal</span></span>
+          <span class="season-note"><span data-i18n="home.season.elnino">El Niño developing — increases wind shear at peak season</span></span>
         </div>
-        <p class="season-dates">Season: June 1 – November 30 · Peak: September 10</p>
+        <p class="season-dates"><span data-i18n="home.season.jun1nov30">Season: June 1 – November 30 · Peak: September 10</span></p>
       </div>
       <div class="season-stats">
         {seasonStats.slice(-1)[0] && (() => {
@@ -151,23 +151,23 @@ const activeCount = activeStorms ?? 0;
             <>
               <div class="season-stat">
                 <span class="season-num">{latest.namedStorms || '8–14'}</span>
-                <span class="season-label">Named Storms</span>
-                <span class="season-avg">avg: 14.4</span>
+                <span class="season-label"><span data-i18n="home.season.namedStorms">Named Storms</span></span>
+                <span class="season-avg"><span data-i18n="home.season.avg">avg: 14.4</span></span>
               </div>
               <div class="season-stat">
                 <span class="season-num">{latest.hurricanes || '3–6'}</span>
-                <span class="season-label">Hurricanes</span>
-                <span class="season-avg">avg: 7.2</span>
+                <span class="season-label"><span data-i18n="home.season.hurricanes">Hurricanes</span></span>
+                <span class="season-avg"><span data-i18n="home.season.avg">avg: 7.2</span></span>
               </div>
               <div class="season-stat">
                 <span class="season-num">{latest.majorHurricanes || '1–2'}</span>
-                <span class="season-label">Major Hurricanes</span>
-                <span class="season-avg">avg: 3.2</span>
+                <span class="season-label"><span data-i18n="home.season.major">Major Hurricanes</span></span>
+                <span class="season-avg"><span data-i18n="home.season.avg">avg: 3.2</span></span>
               </div>
               <div class="season-stat">
                 <span class="season-num">{latest.ace || '~50'}</span>
-                <span class="season-label">ACE Index</span>
-                <span class="season-avg">avg: 123</span>
+                <span class="season-label"><span data-i18n="home.season.ace">ACE Index</span></span>
+                <span class="season-avg"><span data-i18n="home.season.avg">avg: 123</span></span>
               </div>
             </>
           );
@@ -179,26 +179,26 @@ const activeCount = activeStorms ?? 0;
   <!-- Region Selector -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title">🌏 Which Region Are You In?</h2>
+      <h2 class="section-title">🌏 <span data-i18n="home.selectRegion">Which Region Are You In?</span></h2>
     </div>
-    <p class="region-intro">Select your region to see storm activity and alert services for your area. Global coverage across 8 basins, multilingual support.</p>
+    <p class="region-intro"><span data-i18n="home.selectRegionIntro">Select your region to see storm activity and alert services for your area. Global coverage across 8 basins, multilingual support.</span></p>
     
     <div class="region-grid">
       <!-- Asia -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌏</span>
-          <h3>Asia</h3>
+          <h3 data-i18n="home.region.asia">Asia</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">Northwest Pacific (Typhoons) + North Indian Ocean (Cyclones)</p>
+          <p class="region-desc"><span data-i18n="home.region.asiaDesc">Northwest Pacific (Typhoons) + North Indian Ocean (Cyclones)</span></p>
           <div class="region-details">
-            <p><strong>Coverage:</strong> Japan, Philippines, coastal China, Vietnam, India, Bangladesh</p>
-            <p><strong>Storm Season:</strong> Year-round (peak Jul-Oct)</p>
-            <p><strong>Data Sources:</strong> JMA, JTWC, IMD</p>
-            <p><strong>Languages:</strong> Japanese · Chinese · English</p>
+            <p><strong><span data-i18n="home.region.coverage">Coverage:</span></strong> Japan, Philippines, coastal China, Vietnam, India, Bangladesh</p>
+            <p><strong><span data-i18n="home.region.stormSeason">Storm Season:</span></strong> Year-round (peak Jul-Oct)</p>
+            <p><strong><span data-i18n="home.region.dataSources">Data Sources:</span></strong> JMA, JTWC, IMD</p>
+            <p><strong><span data-i18n="home.region.languages">Languages:</span></strong> Japanese · Chinese · English</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">View Asia Storm Map</a>
+          <a href="/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.asiaBtn">View Asia Storm Map</span></a>
         </div>
       </div>
       
@@ -206,17 +206,17 @@ const activeCount = activeStorms ?? 0;
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌎</span>
-          <h3>North America</h3>
+          <h3 data-i18n="home.region.na">North America</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">North Atlantic + Eastern Pacific + Central Pacific (Hurricanes)</p>
+          <p class="region-desc"><span data-i18n="home.region.naDesc">North Atlantic + Eastern Pacific + Central Pacific (Hurricanes)</span></p>
           <div class="region-details">
             <p><strong>Coverage:</strong> US (Florida, Texas, Hawaii), Canada, Mexico</p>
             <p><strong>Storm Season:</strong> Jun 1 - Nov 30 (peak Sep)</p>
             <p><strong>Data Sources:</strong> NOAA NHC</p>
             <p><strong>Languages:</strong> English · Chinese · French · Japanese</p>
           </div>
-          <a href="/alerts" class="btn btn-primary btn-sm">Set Up Free Alerts</a>
+          <a href="/alerts" class="btn btn-primary btn-sm"><span data-i18n="home.region.naBtn">Set Up Free Alerts</span></a>
         </div>
       </div>
       
@@ -224,16 +224,16 @@ const activeCount = activeStorms ?? 0;
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌏</span>
-          <h3>Oceania</h3>
+          <h3 data-i18n="home.region.oceania">Oceania</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">Australian Region + South Pacific (Cyclones)</p>
+          <p class="region-desc"><span data-i18n="home.region.oceaniaDesc">Australian Region + South Pacific (Cyclones)</span></p>
           <div class="region-details">
             <p><strong>Coverage:</strong> Australia (Queensland, Northern Territory), Fiji, New Caledonia</p>
             <p><strong>Storm Season:</strong> Nov - Apr (Southern Hemisphere summer)</p>
             <p><strong>Data Sources:</strong> BOM, FMS</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">View Oceania Storm Map</a>
+          <a href="/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.oceaniaBtn">View Oceania Storm Map</span></a>
         </div>
       </div>
       
@@ -241,17 +241,17 @@ const activeCount = activeStorms ?? 0;
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌎</span>
-          <h3>Latin America</h3>
+          <h3 data-i18n="home.region.latam">Latin America</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">Caribbean + Central America + Mexico (Hurricanes)</p>
+          <p class="region-desc"><span data-i18n="home.region.latamDesc">Caribbean + Central America + Mexico (Hurricanes)</span></p>
           <div class="region-details">
             <p><strong>Coverage:</strong> Cuba, Haiti, Dominican Republic, Puerto Rico, Mexico, Central America</p>
             <p><strong>Storm Season:</strong> May 15 - Nov 30</p>
             <p><strong>Data Sources:</strong> NOAA NHC</p>
             <p><strong>Languages:</strong> English · Chinese (Spanish Coming Soon)</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">View Caribbean Storm Map</a>
+          <a href="/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.latamBtn">View Caribbean Storm Map</span></a>
         </div>
       </div>
       
@@ -259,16 +259,16 @@ const activeCount = activeStorms ?? 0;
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌍</span>
-          <h3>Africa</h3>
+          <h3 data-i18n="home.region.africa">Africa</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">South Indian Ocean + West African Coast (Cyclones/Tropical Storms)</p>
+          <p class="region-desc"><span data-i18n="home.region.africaDesc">South Indian Ocean + West African Coast (Cyclones/Tropical Storms)</span></p>
           <div class="region-details">
             <p><strong>Coverage:</strong> Madagascar, Mozambique, Tanzania, Kenya</p>
             <p><strong>Storm Season:</strong> Nov - Apr (South Indian Ocean)</p>
             <p><strong>Data Sources:</strong> Météo-France, JTWC</p>
           </div>
-          <a href="/map" class="btn btn-outline btn-sm">View Africa Storm Map</a>
+          <a href="/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.africaBtn">View Africa Storm Map</span></a>
         </div>
       </div>
       
@@ -276,17 +276,17 @@ const activeCount = activeStorms ?? 0;
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌍</span>
-          <h3>Europe</h3>
+          <h3 data-i18n="home.region.europe">Europe</h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">French Overseas Territories + Global Travelers</p>
+          <p class="region-desc"><span data-i18n="home.region.europeDesc">French Overseas Territories + Global Travelers</span></p>
           <div class="region-details">
             <p><strong>Coverage:</strong> Réunion, Mayotte, vacation travelers</p>
             <p><strong>Storm Season:</strong> Nov - Apr (South Indian Ocean)</p>
             <p><strong>Data Sources:</strong> Météo-France, NOAA, JTWC</p>
             <p><strong>Languages:</strong> French · English</p>
           </div>
-          <a href="/fr/" class="btn btn-outline btn-sm">View French Version</a>
+          <a href="/fr/" class="btn btn-outline btn-sm"><span data-i18n="home.region.europeBtn">View French Version</span></a>
         </div>
       </div>
     </div>
@@ -295,51 +295,51 @@ const activeCount = activeStorms ?? 0;
   <!-- What Can StormTracker Do For You? -->
   <section class="section scenario-section">
     <div class="section-header">
-      <h2 class="section-title">💡 What Can StormTracker Do For You?</h2>
+      <h2 class="section-title">💡 <span data-i18n="home.scenario.title">What Can StormTracker Do For You?</span></h2>
     </div>
-    <p class="scenario-intro">StormTracker is built for real people facing real storms — not scientists or government agencies.</p>
+    <p class="scenario-intro"><span data-i18n="home.scenario.intro">StormTracker is built for real people facing real storms — not scientists or government agencies.</span>/p>
     <div class="region-grid">
       <div class="region-card scenario-card">
         <div class="scenario-icon">🏠</div>
-        <h3>Coastal Residents</h3>
-        <p>Know <strong>hours before</strong> a storm hits your neighborhood — not minutes. Set free email alerts for your exact ZIP code and evacuate safely.</p>
-        <a href="/alerts" class="btn btn-primary btn-sm">Set Free Alerts</a>
+        <h3 data-i18n="home.scenario.coastal">Coastal Residents</h3>
+        <p><span data-i18n="home.scenario.coastalDesc">Know <strong>hours before</strong> a storm hits your neighborhood — not minutes. Set free email alerts for your exact ZIP code and evacuate safely.</span>/p>
+        <a href="/alerts" class="btn btn-primary btn-sm"><span data-i18n="home.scenario.coastalBtn">Set Free Alerts</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">🚢</div>
-        <h3>Seafarers & Fishermen</h3>
-        <p>Plan routes around active typhoons. The live global map shows every storm's exact position and projected path across 8 ocean basins.</p>
-        <a href="/map" class="btn btn-outline btn-sm">View Live Map</a>
+        <h3 data-i18n="home.scenario.seafarer">Seafarers & Fishermen</h3>
+        <p><span data-i18n="home.scenario.seafarerDesc">Plan routes around active typhoons. The live global map shows every storm's exact position and projected path across 8 ocean basins.</span>/p>
+        <a href="/map" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.seafarerBtn">View Live Map</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">🏨</div>
-        <h3>Property Owners & Hosts</h3>
-        <p>Protect your investment. Historical storm data shows which areas have the highest risk — critical for buying, insuring, or managing coastal property.</p>
-        <a href="/storms" class="btn btn-outline btn-sm">Explore Historical Data</a>
+        <h3 data-i18n="home.scenario.property">Property Owners & Hosts</h3>
+        <p><span data-i18n="home.scenario.propertyDesc">Protect your investment. Historical storm data shows which areas have the highest risk — critical for buying, insuring, or managing coastal property.</span>/p>
+        <a href="/storms" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.propertyBtn">Explore Historical Data</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">🚑</div>
-        <h3>Emergency Responders</h3>
-        <p>Get real-time updates for pre-positioning resources and coordinating evacuations. Multiple language support for teams serving diverse communities.</p>
-        <a href="/zh/map" class="btn btn-outline btn-sm">Use in Your Language</a>
+        <h3 data-i18n="home.scenario.emergency">Emergency Responders</h3>
+        <p><span data-i18n="home.scenario.emergencyDesc">Get real-time updates for pre-positioning resources and coordinating evacuations. Multiple language support for teams serving diverse communities.</span>/p>
+        <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.emergencyBtn">Use in Your Language</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">📊</div>
-        <h3>Insurers & Analysts</h3>
-        <p>Make data-driven risk assessments with 17+ years of ACE index trends, landfall history, and damage cost comparisons across 18 major storms.</p>
-        <a href="/storms" class="btn btn-outline btn-sm">View Storm Database</a>
+        <h3 data-i18n="home.scenario.insurer">Insurers & Analysts</h3>
+        <p><span data-i18n="home.scenario.insurerDesc">Make data-driven risk assessments with 17+ years of ACE index trends, landfall history, and damage cost comparisons across 18 major storms.</span>/p>
+        <a href="/storms" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.insurerBtn">View Storm Database</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">📺</div>
-        <h3>Media Professionals</h3>
-        <p>Embed live storm maps, download historical track data, and access shareable infographics — everything you need for accurate storm coverage.</p>
-        <a href="/about" class="btn btn-outline btn-sm">Learn More</a>
+        <h3 data-i18n="home.scenario.media">Media Professionals</h3>
+        <p><span data-i18n="home.scenario.mediaDesc">Embed live storm maps, download historical track data, and access shareable infographics — everything you need for accurate storm coverage.</span>/p>
+        <a href="/about" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.mediaBtn">Learn More</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">✈️</div>
-        <h3>Travelers & Cruisers</h3>
-        <p>Check storm risk before booking trips or routes through hurricane-prone regions. Know if your destination is safe before you pack your bags.</p>
-        <a href="/map" class="btn btn-outline btn-sm">Check Current Conditions</a>
+        <h3 data-i18n="home.scenario.traveler">Travelers & Cruisers</h3>
+        <p><span data-i18n="home.scenario.travelerDesc">Check storm risk before booking trips or routes through hurricane-prone regions. Know if your destination is safe before you pack your bags.</span>/p>
+        <a href="/map" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.travelerBtn">Check Current Conditions</span></a>
       </div>
     </div>
   </section>
@@ -347,7 +347,7 @@ const activeCount = activeStorms ?? 0;
   <!-- Notable Historical Storms -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title">📈 Notable Historical Storms</h2>
+      <h2 class="section-title">📈 <span data-i18n="home.historical.title">Notable Historical Storms</span></h2>
       <a href="/storms" class="see-all">Full Database →</a>
     </div>
     <div class="grid grid-3">
@@ -371,9 +371,9 @@ const activeCount = activeStorms ?? 0;
   <!-- Preparedness CTA -->
   <section class="section cta-section">
     <div class="cta-card">
-      <h2><span aria-hidden="true">🛡️</span> Storm Preparedness</h2>
-      <p>Know what to do before, during, and after a tropical storm. Get checklists, evacuation plans, and emergency kit guides.</p>
-      <a href="/preparedness" class="btn btn-primary">Read Preparedness Guide →</a>
+      <h2><span aria-hidden="true">🛡️</span> <span data-i18n="home.prepare.title">Storm Preparedness</span></h2>
+      <p><span data-i18n="home.prepare.desc">Know what to do before, during, and after a tropical storm. Get checklists, evacuation plans, and emergency kit guides.</span>/p>
+      <a href="/preparedness" class="btn btn-primary"><span data-i18n="home.prepare.btn">Read Preparedness Guide →</span></a>
     </div>
   </section>
 
@@ -382,7 +382,7 @@ const activeCount = activeStorms ?? 0;
     <div class="pricing-teaser">
       <div class="teaser-content">
         <h2><span aria-hidden="true">⭐</span> Go Pro for Ultimate Protection</h2>
-        <p>SMS alerts, 5 custom regions, 7-day forecast tracks, storm surge maps, and ad-free experience.</p>
+        <p><span data-i18n="home.pricing.desc">SMS alerts, 5 custom regions, 7-day forecast tracks, storm surge maps, and ad-free experience.</span>/p>
         <ul class="teaser-features">
           <li><span aria-hidden="true">📱</span> Instant SMS notifications</li>
           <li><span aria-hidden="true">🎯</span> Up to 5 alert regions</li>
@@ -390,10 +390,10 @@ const activeCount = activeStorms ?? 0;
           <li><span aria-hidden="true">🌊</span> Storm surge maps</li>
         </ul>
         <div class="teaser-ctas">
-          <a href="/pricing" class="btn btn-primary" onclick="trackEvent('pricing_cta_click', {button: 'view_plans', page_section: 'pricing_teaser', language: 'en'})">View Plans →</a>
-          <a href="/signup?plan=pro" class="btn btn-outline" onclick="trackEvent('pricing_cta_click', {button: 'free_trial', page_section: 'pricing_teaser', language: 'en', plan: 'pro'})">Start 14-Day Free Trial</a>
+          <a href="/pricing" class="btn btn-primary" onclick="trackEvent('pricing_cta_click', {button: 'view_plans', page_section: 'pricing_teaser', language: 'en'})"><span data-i18n="home.pricing.view">View Plans →</span></a>
+          <a href="/signup?plan=pro" class="btn btn-outline" onclick="trackEvent('pricing_cta_click', {button: 'free_trial', page_section: 'pricing_teaser', language: 'en', plan: 'pro'})"><span data-i18n="home.pricing.trial">Start 14-Day Free Trial</span></a>
         </div>
-        <p class="teaser-price">From just <strong>$4.99/month</strong> · Cancel anytime</p>
+        <p class="teaser-price"><span data-i18n="home.pricing.price">From just <strong>$4.99/month</strong></span> · <span data-i18n="home.pricing.cancel">Cancel anytime</span></p>
       </div>
     </div>
   </section>

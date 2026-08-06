@@ -1,7 +1,7 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-08-05T13:32:09.262Z",
+  "fetchedAt": "2026-08-06T12:31:30.830Z",
   "activeStorms": 2,
   "basins": {
     "north_atlantic": 0,
@@ -30,11 +30,11 @@
       "name": "Kujira",
       "designation": "13W",
       "type": "Typhoon",
-      "category": 0,
-      "windMph": 39,
+      "category": -1,
+      "windMph": 0,
       "pressureMb": 0,
-      "lat": 17.8,
-      "lon": 119,
+      "lat": 17,
+      "lon": 121.7,
       "movement": "See JTWC product",
       "status": "Active",
       "basin": "northwest_pacific",
@@ -42,7 +42,7 @@
       "agency": "JMA",
       "source": "JTWC",
       "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1326web.txt",
-      "issuedAt": "2026-08-05T13:32:09.248Z",
+      "issuedAt": "2026-08-06T12:31:30.829Z",
       "names": {
         "en": "Kujira",
         "zh": "Kujira"
@@ -54,10 +54,10 @@
         "ja": "北西太平洋"
       },
       "windDescription": {
-        "en": "Gusty winds, up to 73 mph. Trees may sway, minor flooding possible.",
-        "zh": "阵风可达 73 mph。树木摇动，可能有轻微洪涝。",
-        "fr": "Rafales jusqu'à 73 mph. Arbres agités, inondations mineures possibles.",
-        "ja": "突風最大73mph。木が揺れ、軽度の洪水の可能性。"
+        "en": "Very light winds, mostly rain.",
+        "zh": "风速很弱，以降雨为主。",
+        "fr": "Vents très légers, mostly pluie.",
+        "ja": "風速は非常に弱く、雨为主体。"
       },
       "affectedRegions": {
         "en": [
@@ -101,13 +101,13 @@
           "グアム"
         ]
       },
-      "distanceToLand": "Taiwan",
-      "distanceMiles": 321,
+      "distanceToLand": "Philippines",
+      "distanceMiles": 277,
       "locationText": {
-        "en": "17.8°N, 119.0°E",
-        "zh": "17.8°北纬 119.0°东经",
-        "fr": "17.8°N, 119.0°E",
-        "ja": "17.8°N 119.0°E"
+        "en": "17.0°N, 121.7°E",
+        "zh": "17.0°北纬 121.7°东经",
+        "fr": "17.0°N, 121.7°E",
+        "ja": "17.0°N 121.7°E"
       },
       "dataSource": {
         "en": "Joint Typhoon Warning Center (JTWC)",
@@ -121,11 +121,11 @@
       "name": "Dolphin",
       "designation": "12W",
       "type": "Typhoon",
-      "category": 0,
-      "windMph": 39,
+      "category": -1,
+      "windMph": 0,
       "pressureMb": 0,
-      "lat": 17.8,
-      "lon": 119,
+      "lat": 17,
+      "lon": 121.7,
       "movement": "See JTWC product",
       "status": "Active",
       "basin": "northwest_pacific",
@@ -133,7 +133,7 @@
       "agency": "JMA",
       "source": "JTWC",
       "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1326web.txt",
-      "issuedAt": "2026-08-05T13:32:09.259Z",
+      "issuedAt": "2026-08-06T12:31:30.823Z",
       "names": {
         "en": "Dolphin",
         "zh": "Dolphin"
@@ -145,10 +145,10 @@
         "ja": "北西太平洋"
       },
       "windDescription": {
-        "en": "Gusty winds, up to 73 mph. Trees may sway, minor flooding possible.",
-        "zh": "阵风可达 73 mph。树木摇动，可能有轻微洪涝。",
-        "fr": "Rafales jusqu'à 73 mph. Arbres agités, inondations mineures possibles.",
-        "ja": "突風最大73mph。木が揺れ、軽度の洪水の可能性。"
+        "en": "Very light winds, mostly rain.",
+        "zh": "风速很弱，以降雨为主。",
+        "fr": "Vents très légers, mostly pluie.",
+        "ja": "風速は非常に弱く、雨为主体。"
       },
       "affectedRegions": {
         "en": [
@@ -192,13 +192,13 @@
           "グアム"
         ]
       },
-      "distanceToLand": "Taiwan",
-      "distanceMiles": 321,
+      "distanceToLand": "Philippines",
+      "distanceMiles": 277,
       "locationText": {
-        "en": "17.8°N, 119.0°E",
-        "zh": "17.8°北纬 119.0°东经",
-        "fr": "17.8°N, 119.0°E",
-        "ja": "17.8°N 119.0°E"
+        "en": "17.0°N, 121.7°E",
+        "zh": "17.0°北纬 121.7°东经",
+        "fr": "17.0°N, 121.7°E",
+        "ja": "17.0°N 121.7°E"
       },
       "dataSource": {
         "en": "Joint Typhoon Warning Center (JTWC)",
@@ -208,5 +208,5 @@
       }
     }
   ],
-  "_buildTime": "2026-08-05T13:32:09.268Z"
+  "_buildTime": "2026-08-06T12:31:30.835Z"
 }

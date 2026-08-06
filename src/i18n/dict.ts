@@ -375,6 +375,111 @@ export const dict = {
   'region.latinAmerica': { en: '拉丁美洲', zh: '拉丁美洲', fr: 'Amérique Latine', ja: 'ラテンアメリカ' },
   'region.africa': { en: '非洲', zh: '非洲', fr: 'Afrique', ja: 'アフリカ' },
   'region.europe': { en: '欧洲', zh: '欧洲', fr: 'Europe', ja: 'ヨーロッパ' },
+
+  // ============ 首页文字 i18n ============
+  // 首页 Active Storms 区块
+  'home.activeStorms': { en: 'Active Storms', zh: '活跃风暴', fr: 'Tempêtes Actives', ja: '有効な风暴' },
+  'home.seasonOutlook': { en: 'Season Outlook', zh: '季节展望', fr: 'Perspectives de la Saison', ja: 'シーズン展望' },
+  'home.viewAll': { en: 'Full Database →', zh: '查看全部 →', fr: 'Base Complete →', ja: '全データベース →' },
+  // 首页无风暴时
+  'home.noActive.title': { en: 'No Active Tropical Storms', zh: '暂无活跃热带风暴', fr: 'Aucune Tempete Tropicale Active', ja: '有効な热带风暴なし' },
+  'home.noActive.desc': { en: 'All monitored ocean basins are currently quiet.', zh: '当前所有监测海域均无风暴活动。', fr: 'Tous les bassins sont actuellement calmes.', ja: 'すべての監視海域は現在は静穏です。' },
+  'home.noActive.browse': { en: 'Browse Historical Storms', zh: '浏览历史数据', fr: 'Parcourir les Tempetes Historiques', ja: '履歴データを探索' },
+  // 季节展望
+  'home.season.belowNormal': { en: 'Below Normal', zh: '低于正常', fr: 'Inferieur a la Normale', ja: '平年以下' },
+  'home.season.elnino': { en: 'El Nino developing — increases wind shear at peak season', zh: '厄尔尼诺正在发展——高峰季风切变增强', fr: 'El Nino en developpement — augmente le cisaillement du vent', ja: 'エルニーニョ发展中——ピーク時に風シアーが増加' },
+  'home.season.season': { en: 'Season', zh: '风暴季', fr: 'Saison', ja: 'シーズン' },
+  'home.season.peak': { en: 'Peak', zh: '高峰', fr: 'Pic', ja: 'ピーク' },
+  'home.season.namedStorms': { en: 'Named Storms', zh: '命名风暴', fr: 'Tempetes Nommees', ja: '命名风暴' },
+  'home.season.hurricanes': { en: 'Hurricanes', zh: '飓风', fr: 'Ouragans', ja: 'ハリケーン' },
+  'home.season.major': { en: 'Major Hurricanes', zh: '大型飓风', fr: 'Ouragans Majeurs', ja: '大型ハリケーン' },
+  'home.season.ace': { en: 'ACE Index', zh: 'ACE指数', fr: 'Indice ACE', ja: 'ACE指数' },
+  'home.season.avg': { en: 'avg', zh: '平均', fr: 'moy', ja: '平均' },
+  'home.season.jun1nov30': { en: 'Jun 1 - Nov 30 (peak Sep)', zh: '6月1日 - 11月30日（高峰 9月）', fr: '1er Juin - 30 Nov (pic Sep)', ja: '6月1日 - 11月30日（ピーク 9月）' },
+  'home.season.may15nov30': { en: 'May 15 - Nov 30', zh: '5月15日 - 11月30日', fr: '15 Mai - 30 Nov', ja: '5月15日 - 11月30日' },
+  'home.season.novapr': { en: 'Nov - Apr (Southern Hemisphere summer)', zh: '11月 - 4月（南半球夏季）', fr: 'Nov - Avr (ete Sud)', ja: '11月 - 4月（南半球夏）' },
+  'home.season.novaprSO': { en: 'Nov - Apr (South Indian Ocean)', zh: '11月 - 4月（南印度洋）', fr: 'Nov - Avr (Ocean Indien Sud)', ja: '11月 - 4月（南インド洋）' },
+  'home.season.yearround': { en: 'Year-round (peak Jul-Oct)', zh: '全年活跃（高峰 7-10月）', fr: 'Toute lannee (pic Jul-Oct)', ja: '通年（ピーク 7-10月）' },
+  // 地区选择区块
+  'home.selectRegion': { en: '🌏 Which Region Are You In?', zh: '🌏 你住在哪个地区？', fr: '🌏 Quelle Region Vous Interesse?', ja: '🌏 どの地域にいますか？' },
+  'home.selectRegionIntro': { en: 'Select your region to see storm activity and alert services for your area.', zh: '选择你的地区，查看该海域的风暴情况和预警服务。', fr: 'Selectionnez votre region.', ja: '地域を選んでください。' },
+  // 地区卡片 — 亚洲
+  'home.region.asia': { en: 'Asia', zh: '亚洲', fr: 'Asie', ja: 'アジア' },
+  'home.region.asiaDesc': { en: 'Northwest Pacific (Typhoons) + North Indian Ocean (Cyclones)', zh: '西北太平洋（台风）+ 北印度洋（气旋）', fr: 'Pacifique Nord-Ouest + Ocean Indien Nord', ja: '北西太平洋（台風）+ 北インド洋（サイクロン）' },
+  'home.region.asiaCoverage': { en: 'Coverage', zh: '覆盖地区', fr: 'Couverture', ja: '対応地域' },
+  'home.region.asiaLang': { en: 'Languages', zh: '支持语言', fr: 'Langues', ja: '対応言語' },
+  'home.region.asiaBtn': { en: 'View Asia Storm Map', zh: '查看亚洲风暴地图', fr: 'Voir la Carte de Asie', ja: 'アジアの风暴マップを見る' },
+  // 地区卡片 — 北美
+  'home.region.na': { en: 'North America', zh: '北美洲', fr: 'Amerique du Nord', ja: '北米' },
+  'home.region.naDesc': { en: 'North Atlantic + Eastern Pacific + Central Pacific (Hurricanes)', zh: '北大西洋 + 东太平洋 + 中太平洋（飓风）', fr: 'Atlantique Nord + Pacifique Est + Central', ja: '北大西洋 + 東太平洋 + 中太平洋（ハリケーン）' },
+  'home.region.naBtn': { en: 'Set Up Free Alerts', zh: '设置免费预警', fr: "S'inscrire aux Alertes", ja: '無料アラートを設定' },
+  // 地区卡片 — 大洋洲
+  'home.region.oceania': { en: 'Oceania', zh: '大洋洲', fr: 'Oceanie', ja: 'オセアニア' },
+  'home.region.oceaniaDesc': { en: 'Australian Region + South Pacific (Cyclones)', zh: '澳大利亚海域 + 南太平洋（气旋）', fr: 'Australie + Pacifique Sud', ja: 'オーストラリア + 南太平洋（サイクロン）' },
+  'home.region.oceaniaBtn': { en: 'View Oceania Storm Map', zh: '查看大洋洲风暴地图', fr: "Voir la Carte d'Oceanie", ja: 'オセアニアの风暴マップを見る' },
+  // 地区卡片 — 拉美
+  'home.region.latam': { en: 'Latin America', zh: '拉丁美洲', fr: 'Amerique Latine', ja: 'ラテンアメリカ' },
+  'home.region.latamDesc': { en: 'Caribbean + Central America + Mexico (Hurricanes)', zh: '加勒比海 + 中美洲 + 墨西哥（飓风）', fr: 'Caraibes + Amerique Centrale', ja: 'カリブ海 + 中米 + メキシコ（ハリケーン）' },
+  'home.region.latamBtn': { en: 'View Caribbean Storm Map', zh: '查看加勒比海风暴地图', fr: 'Voir la Carte des Caraibes', ja: 'カリブ海の风暴マップを見る' },
+  // 地区卡片 — 非洲
+  'home.region.africa': { en: 'Africa', zh: '非洲', fr: 'Afrique', ja: 'アフリカ' },
+  'home.region.africaDesc': { en: 'South Indian Ocean + West African Coast (Cyclones)', zh: '南印度洋 + 西非沿海（气旋/热带风暴）', fr: 'Ocean Indien Sud + Afrique de Ouest', ja: '南インド洋 + 西アフリカ海岸（サイクロン）' },
+  'home.region.africaBtn': { en: 'View Africa Storm Map', zh: '查看非洲风暴地图', fr: 'Voir la Carte de Afrique', ja: 'アフリカの风暴マップを見る' },
+  // 地区卡片 — 欧洲
+  'home.region.europe': { en: 'Europe', zh: '欧洲', fr: 'Europe', ja: 'ヨーロッパ' },
+  'home.region.europeDesc': { en: 'French Overseas Territories + Global Travelers', zh: '法国海外省 + 全球度假游客', fr: 'DOM-TOM Francais + Voyageurs Mondiaux', ja: 'フランス海外領土 + 世界的な旅行者' },
+  'home.region.europeBtn': { en: 'View French Version', zh: '查看法语版本', fr: 'Voir la Version Francaise', ja: 'フランス語版を見る' },
+  // 场景卡片
+  'home.scenario.title': { en: '💡 What Can StormTracker Do For You?', zh: '💡 StormTracker 能为你做什么？', fr: '💡 Que Peut Faire StormTracker Pour Vous?', ja: '💡 StormTrackerできること' },
+  'home.scenario.intro': { en: 'StormTracker is built for real people facing real storms.', zh: 'StormTracker 为真实的人面对真实的风暴而建。', fr: 'StormTracker est concu pour les personnes confrontees aux tempetes reelles.', ja: 'StormTrackerはリアルな风暴に備える人々のために作られました。' },
+  'home.scenario.coastal': { en: 'Coastal Residents', zh: '沿海居民', fr: 'Habitants du Littoral', ja: '沿岸住民' },
+  'home.scenario.coastalDesc': { en: 'Know hours before a storm hits your neighborhood.', zh: '在风暴抵达你社区数小时前就收到通知。', fr: 'Soyez informe des heures avant larrivee de la tempete.', ja: '风暴が近づく数時間前に通知を受け取れます。' },
+  'home.scenario.coastalBtn': { en: 'Set Free Alerts', zh: '设置免费预警', fr: "S'inscrire aux Alertes", ja: '無料アラートを設定' },
+  'home.scenario.seafarer': { en: 'Seafarers & Fishermen', zh: '海员与渔民', fr: 'Marins & Pecheurs', ja: '船乗りと渔民' },
+  'home.scenario.seafarerDesc': { en: 'Plan routes around active typhoons.', zh: '根据实时台风位置规划航线。', fr: 'Planifiez vos itinéraires autour des typhons actifs.', ja: '活動 중인台風を中心にルートを計画。' },
+  'home.scenario.seafarerBtn': { en: 'View Live Map', zh: '查看实时地图', fr: 'Voir la Carte en Direct', ja: 'ライブマップを見る' },
+  'home.scenario.property': { en: 'Property Owners & Hosts', zh: '房东与物业主', fr: 'Proprietaires', ja: '不動産所有者' },
+  'home.scenario.propertyDesc': { en: 'Protect your investment with historical storm risk data.', zh: '用历史风暴风险数据保护你的资产。', fr: 'Protegez vos biens avec les donnees historiques des tempetes.', ja: '歴史的暴風リスクデータで資産を守る。' },
+  'home.scenario.propertyBtn': { en: 'Explore Historical Data', zh: '浏览历史数据', fr: 'Explorer les Donnees Historiques', ja: '履歴データを探索' },
+  'home.scenario.emergency': { en: 'Emergency Responders', zh: '应急响应人员', fr: 'Intervenants dUrgence', ja: '緊急対応要員' },
+  'home.scenario.emergencyDesc': { en: 'Real-time updates for pre-positioning resources.', zh: '获取实时更新，提前部署资源。', fr: 'Mises a jour en temps reel pour le pre-positionnement.', ja: 'リソース事前配置のためのリアルタイム更新。' },
+  'home.scenario.emergencyBtn': { en: 'Use in Your Language', zh: '用你的语言使用', fr: 'Utiliser dans Votre Langue', ja: 'あなたの言語で使用' },
+  'home.scenario.insurer': { en: 'Insurers & Analysts', zh: '保险与金融分析师', fr: 'Assureurs & Analystes', ja: '保険・金融アナリスト' },
+  'home.scenario.insurerDesc': { en: 'Data-driven risk assessments with 17+ years of data.', zh: '基于17年+数据的风险评估。', fr: 'Evaluations des risques fondees sur 17+ annees de donnees.', ja: '17年以上のデータに基づくリスク評価。' },
+  'home.scenario.insurerBtn': { en: 'View Storm Database', zh: '查看风暴数据库', fr: 'Voir la Base de Donnees', ja: '风暴データベースを見る' },
+  'home.scenario.media': { en: 'Media Professionals', zh: '媒体工作者', fr: 'Professionnels des Medias', ja: 'メディア専門家' },
+  'home.scenario.mediaDesc': { en: 'Embed live storm maps and shareable infographics.', zh: '嵌入实时风暴地图和可分享信息图。', fr: 'Integrez des cartes de tempetes en direct.', ja: 'ライブ风暴マップと共有可能地图を埋め込み。' },
+  'home.scenario.mediaBtn': { en: 'Learn More', zh: '了解更多', fr: 'En Savoir Plus', ja: '詳細を見る' },
+  'home.scenario.traveler': { en: 'Travelers & Cruisers', zh: '旅行者与邮轮乘客', fr: 'Voyageurs & Croisiéristes', ja: '旅行者とクルーズ乘客' },
+  'home.scenario.travelerDesc': { en: 'Check storm risk before booking trips through hurricane zones.', zh: '订票或规划经过飓风易发区前，先查风暴风险。', fr: 'Verifiez le risque de tempete avant de reserver.', ja: 'ハリケーン通過前に风暴リスクを確認。' },
+  'home.scenario.travelerBtn': { en: 'Check Current Conditions', zh: '查看当前状况', fr: 'Verifier les Conditions Actuelles', ja: '現在の状況を確認' },
+  // 风暴卡片标签
+  'home.storm.wind': { en: 'Wind', zh: '风速', fr: 'Vent', ja: '風速' },
+  'home.storm.pressure': { en: 'Pressure', zh: '气压', fr: 'Pression', ja: '気圧' },
+  'home.storm.location': { en: 'Location', zh: '位置', fr: 'Position', ja: '位置' },
+  'home.storm.movement': { en: 'Movement', zh: '移动方向', fr: 'Deplacement', ja: '移動' },
+  'home.storm.viewMap': { en: 'View on Map', zh: '在地图上查看', fr: 'Voir sur la Carte', ja: 'マップで見る' },
+  // 防灾 CTA
+  'home.prepare.title': { en: 'Storm Preparedness', zh: '风暴防备', fr: 'Preparation aux Tempetes', ja: '暴風への備え' },
+  'home.prepare.desc': { en: 'Know what to do before, during, and after a tropical storm.', zh: '了解热带风暴前、中、后的应对方法。', fr: 'Que faire avant, pendant et apres une tempete tropicale.', ja: '热带风暴の前後で何をすればいいか確認。' },
+  'home.prepare.btn': { en: 'Read Preparedness Guide →', zh: '阅读防灾指南 →', fr: 'Lire le Guide de Preparation →', ja: '防災ガイドを読む →' },
+  // 定价 teaser
+  'home.pricing.title': { en: 'Go Pro for Ultimate Protection', zh: '升级专业版获得最强保护', fr: 'Passez a Pro pour une Protection Ultime', ja: 'プロ版で究極の保护を' },
+  'home.pricing.desc': { en: 'SMS alerts, 5 custom regions, 7-day forecast tracks, storm surge maps, ad-free.', zh: '短信预警、5个自定义区域、7天预报轨迹、风暴潮地图、无广告体验。', fr: 'Alertes SMS, 5 regions personnalisees, previsions 7 jours, cartes de surcote, sans pub.', ja: 'SMSアラート、5つのカスタム地域、7日間予報トラック、风暴高潮マップ、广告なし。' },
+  'home.pricing.sms': { en: 'Instant SMS notifications', zh: '即时短信通知', fr: 'Notifications SMS instantanees', ja: 'リアルタイムSMS通知' },
+  'home.pricing.regions': { en: 'Up to 5 alert regions', zh: '最多5个预警区域', fr: 'Jusqua 5 regions dalerte', ja: '最大5つのアラート地域' },
+  'home.pricing.forecast': { en: '7-day forecast tracks', zh: '7天预报轨迹', fr: 'Previsions a 7 jours', ja: '7日間の予報トラック' },
+  'home.pricing.surge': { en: 'Storm surge maps', zh: '风暴潮地图', fr: 'Cartes de surcote marine', ja: '风暴高潮マップ' },
+  'home.pricing.view': { en: 'View Plans →', zh: '查看方案 →', fr: 'Voir les Plans →', ja: 'プランを見る →' },
+  'home.pricing.trial': { en: 'Start 14-Day Free Trial', zh: '开始14天免费试用', fr: 'Essai Gratuit de 14 Jours', ja: '14日間無料トライアルを開始' },
+  'home.pricing.price': { en: 'From just', zh: '起价', fr: 'A partir de', ja: '価格' },
+  'home.pricing.month': { en: '/month', zh: '/月', fr: '/mois', ja: '/月' },
+  'home.pricing.cancel': { en: 'Cancel anytime', zh: '随时取消', fr: 'Annulation a tout moment', ja: 'いつでもキャンセル可' },
+  // 语言标签
+  'home.langJP': { en: 'Japanese · Chinese · English', zh: '日语 · 中文 · 英语', fr: 'Japonais · Chinois · Anglais', ja: '日本語 · 中文 · 英語' },
+  'home.langEN': { en: 'English · Chinese · French · Japanese', zh: '英语 · 中文 · 法语 · 日语', fr: 'Anglais · Chinois · Francais · Japonais', ja: '英語 · 中文 · フランス語 · 日本語' },
+  'home.langFR': { en: 'French · English', zh: '法语 · 英语', fr: 'Francais · Anglais', ja: 'フランス語 · 英語' },
+  // ============ END 首页文字 i18n ============
 };
 
 // 翻译函数

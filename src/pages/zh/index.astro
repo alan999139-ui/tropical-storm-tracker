@@ -101,7 +101,7 @@ const categoryColors: Record<string, string> = {
       <p>{t('hero.description', lang)}</p>
       <div class="hero-actions">
         <a href="/zh/alerts" class="btn btn-primary" onclick="trackEvent('hero_cta_click', {button: 'get_alerts', page_section: 'hero', language: 'zh'})">立即设置免费预警</a>
-        <a href="/zh/map" class="btn btn-outline" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'zh'})">查看实时地图</a>
+        <a href="/zh/map" class="btn btn-outline" onclick="trackEvent('hero_cta_click', {button: 'view_map', page_section: 'hero', language: 'zh'})"><span data-i18n="home.scenario.seafarerBtn">查看实时地图</span></a>
       </div>
     </div>
   </section>
@@ -183,7 +183,7 @@ const categoryColors: Record<string, string> = {
         else { heroBadge.textContent = '🌀 ' + storms.length + ' 个活跃风暴'; }
       }
       if (storms.length === 0) {
-        container.innerHTML = '<div class="card empty-state"><span class="empty-icon">☀️</span><p>当前无活跃热带风暴。</p><a href="/zh/storms" class="btn btn-outline">浏览历史数据</a></div>';
+        container.innerHTML = '<div class="card empty-state"><span class="empty-icon">☀️</span><p>当前无活跃热带风暴。</p><a href="/zh/storms" class="btn btn-outline"><span data-i18n="home.scenario.propertyBtn">浏览历史数据</span></a></div>';
         return;
       }
       const labels = { wind: '风速', pressure: '气压', movement: '移动方向', location: '位置', updated: '最后更新', details: '查看详情 →' };
@@ -248,26 +248,26 @@ const categoryColors: Record<string, string> = {
   <!-- 用户分类：你住在哪个地区？ -->
   <section class="section">
     <div class="section-header">
-      <h2 class="section-title">🌏 你住在哪个地区？</h2>
+      <h2 class="section-title">🌏 <span data-i18n="home.selectRegion">你住在哪个地区？</span></h2>
     </div>
-    <p class="region-intro">选择你的地区，查看该海域的风暴情况和预警服务。全球覆盖 8 大海域，多语言支持。</p>
+    <p class="region-intro"><span data-i18n="home.selectRegionIntro">选择你的地区，查看该海域的风暴情况和预警服务</span>。全球覆盖 8 大海域，多语言支持。</p>
     
     <div class="region-grid">
       <!-- 亚洲 -->
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌏</span>
-          <h3>亚洲</h3>
+          <h3><span data-i18n="home.region.asia">亚洲</span></h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">西北太平洋（台风）+ 北印度洋（气旋）</p>
+          <p class="region-desc"><span data-i18n="home.region.asiaDesc">西北太平洋（台风）+ 北印度洋（气旋）</span></p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>日本、菲律宾、中国沿海、越南、印度、孟加拉国</p>
-            <p><strong>风暴季：</strong>全年活跃（高峰 7-10月）</p>
+            <p><strong><span data-i18n="home.region.coverage">覆盖地区：</span></strong>日本、菲律宾、中国沿海、越南、印度、孟加拉国</p>
+            <p><strong><span data-i18n="home.region.stormSeason">风暴季：</span></strong><span data-i18n="home.season.yearround">全年活跃（高峰 7-10月）</span></p>
             <p><strong>数据源：</strong>JMA（日本气象厅）、JTWC、IMD（印度气象局）</p>
-            <p><strong>支持语言：</strong>日语 · 中文 · 英语</p>
+            <p><strong><span data-i18n="home.region.languages">支持语言：</span></strong><span data-i18n="home.langJP">日语 · 中文 · 英语</span></p>
           </div>
-          <a href="/zh/map" class="btn btn-outline btn-sm">查看亚洲风暴地图</a>
+          <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.asiaBtn">查看亚洲风暴地图</span></a>
         </div>
       </div>
       
@@ -275,17 +275,17 @@ const categoryColors: Record<string, string> = {
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌎</span>
-          <h3>北美洲</h3>
+          <h3><span data-i18n="home.region.na">北美洲</span></h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">北大西洋 + 东太平洋 + 中太平洋（飓风）</p>
+          <p class="region-desc"><span data-i18n="home.region.naDesc">北大西洋 + 东太平洋 + 中太平洋（飓风）</span></p>
           <div class="region-details">
             <p><strong>覆盖地区：</strong>美国（佛罗里达、德州、夏威夷）、加拿大、墨西哥</p>
-            <p><strong>风暴季：</strong>6月1日 - 11月30日（高峰 9月）</p>
+            <p><strong>风暴季：</strong><span data-i18n="home.season.jun1nov30">6月1日 - 11月30日（高峰 9月）</span></p>
             <p><strong>数据源：</strong>NOAA NHC（美国国家飓风中心）</p>
-            <p><strong>支持语言：</strong>英语 · 中文 · 法语 · 日语</p>
+            <p><strong>支持语言：</strong><span data-i18n="home.langEN">英语 · 中文 · 法语 · 日语</span></p>
           </div>
-          <a href="/zh/alerts" class="btn btn-primary btn-sm">设置免费预警</a>
+          <a href="/zh/alerts" class="btn btn-primary btn-sm"><span data-i18n="home.region.naBtn"><span data-i18n="home.scenario.coastalBtn">设置免费预警</span></span></a>
         </div>
       </div>
       
@@ -293,16 +293,16 @@ const categoryColors: Record<string, string> = {
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌏</span>
-          <h3>大洋洲</h3>
+          <h3><span data-i18n="home.region.oceania">大洋洲</span></h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">澳大利亚海域 + 南太平洋（气旋）</p>
+          <p class="region-desc"><span data-i18n="home.region.oceaniaDesc">澳大利亚海域 + 南太平洋（气旋）</span></p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>澳大利亚（昆士兰、北领地）、斐济、新喀里多尼亚</p>
-            <p><strong>风暴季：</strong>11月 - 4月（南半球夏季）</p>
+            <p><strong>覆盖地区：</strong><span data-i18n="home.region.oceaniaCoverage">澳大利亚（昆士兰、北领地）、斐济、新喀里多尼亚</span></p>
+            <p><strong>风暴季：</strong><span data-i18n="home.season.novapr">11月 - 4月（南半球夏季）</span></p>
             <p><strong>数据源：</strong>BOM（澳大利亚气象局）、FMS（斐济气象局）</p>
           </div>
-          <a href="/zh/map" class="btn btn-outline btn-sm">查看大洋洲风暴地图</a>
+          <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.oceaniaBtn">查看大洋洲风暴地图</span></a>
         </div>
       </div>
       
@@ -310,17 +310,17 @@ const categoryColors: Record<string, string> = {
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌎</span>
-          <h3>拉丁美洲</h3>
+          <h3><span data-i18n="home.region.latam">拉丁美洲</span></h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">加勒比海 + 中美洲 + 墨西哥（飓风）</p>
+          <p class="region-desc"><span data-i18n="home.region.latamDesc">加勒比海 + 中美洲 + 墨西哥（飓风）</span></p>
           <div class="region-details">
             <p><strong>覆盖地区：</strong>古巴、海地、多米尼加、波多黎各、墨西哥、中美洲</p>
-            <p><strong>风暴季：</strong>5月15日 - 11月30日</p>
+            <p><strong>风暴季：</strong><span data-i18n="home.season.may15nov30">5月15日 - 11月30日</span></p>
             <p><strong>数据源：</strong>NOAA NHC</p>
             <p><strong>支持语言：</strong>英语 · 中文（西班牙语 Coming Soon）</p>
           </div>
-          <a href="/zh/map" class="btn btn-outline btn-sm">查看加勒比海风暴地图</a>
+          <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.latamBtn">查看加勒比海风暴地图</span></a>
         </div>
       </div>
       
@@ -328,16 +328,16 @@ const categoryColors: Record<string, string> = {
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌍</span>
-          <h3>非洲</h3>
+          <h3><span data-i18n="home.region.africa">非洲</span></h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">南印度洋 + 西非沿海（气旋/热带风暴）</p>
+          <p class="region-desc"><span data-i18n="home.region.africaDesc">南印度洋 + 西非沿海（气旋/热带风暴）</span></p>
           <div class="region-details">
-            <p><strong>覆盖地区：</strong>马达加斯加、莫桑比克、坦桑尼亚、肯尼亚</p>
+            <p><strong>覆盖地区：</strong><span data-i18n="home.region.africaCoverage">马达加斯加、莫桑比克、坦桑尼亚、肯尼亚</span></p>
             <p><strong>风暴季：</strong>11月 - 4月（南印度洋）</p>
             <p><strong>数据源：</strong>Météo-France（法国气象局）、JTWC</p>
           </div>
-          <a href="/zh/map" class="btn btn-outline btn-sm">查看非洲风暴地图</a>
+          <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.region.africaBtn">查看非洲风暴地图</span></a>
         </div>
       </div>
       
@@ -345,17 +345,17 @@ const categoryColors: Record<string, string> = {
       <div class="region-card">
         <div class="region-header">
           <span class="region-icon">🌍</span>
-          <h3>欧洲</h3>
+          <h3><span data-i18n="home.region.europe">欧洲</span></h3>
         </div>
         <div class="region-content">
-          <p class="region-desc">法国海外省 + 全球度假游客</p>
+          <p class="region-desc"><span data-i18n="home.region.europeDesc">法国海外省 + 全球度假游客</span></p>
           <div class="region-details">
             <p><strong>覆盖地区：</strong>法国留尼汪、马约特、度假游客</p>
             <p><strong>风暴季：</strong>11月 - 4月（南印度洋）</p>
             <p><strong>数据源：</strong>Météo-France、NOAA、JTWC</p>
-            <p><strong>支持语言：</strong>法语 · 英语</p>
+            <p><strong>支持语言：</strong><span data-i18n="home.langFR">法语 · 英语</span></p>
           </div>
-          <a href="/fr/" class="btn btn-outline btn-sm">查看法语版本</a>
+          <a href="/fr/" class="btn btn-outline btn-sm"><span data-i18n="home.region.europeBtn">查看法语版本</span></a>
         </div>
       </div>
     </div>
@@ -364,51 +364,51 @@ const categoryColors: Record<string, string> = {
   <!-- StormTracker 能为你做什么？ -->
   <section class="section scenario-section">
     <div class="section-header">
-      <h2 class="section-title">💡 StormTracker 能为你做什么？</h2>
+      <h2 class="section-title">💡 <span data-i18n="home.scenario.title">StormTracker 能为你做什么？</span></h2>
     </div>
     <p class="scenario-intro">StormTracker 为真实的人面对真实的风暴而建——不是给科学家或政府官员用的。</p>
     <div class="region-grid">
       <div class="region-card scenario-card">
         <div class="scenario-icon">🏠</div>
-        <h3>沿海居民</h3>
+        <h3><span data-i18n="home.scenario.coastal">沿海居民</span></h3>
         <p>在风暴抵达你社区<strong>数小时前</strong>就收到通知——而不是只剩几分钟。设置免费的邮件预警，精准到你的邮政编码，安全撤离。</p>
         <a href="/zh/alerts" class="btn btn-primary btn-sm">设置免费预警</a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">🚢</div>
-        <h3>海员与渔民</h3>
+        <h3><span data-i18n="home.scenario.seafarer">海员与渔民</span></h3>
         <p>根据实时台风位置规划航线。全球实时地图显示每个风暴的确切位置和8大海域的预测路径。</p>
         <a href="/zh/map" class="btn btn-outline btn-sm">查看实时地图</a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">🏨</div>
-        <h3>房东与物业主</h3>
+        <h3><span data-i18n="home.scenario.property">房东与物业主</span></h3>
         <p>保护你的资产。历史风暴数据显示哪些地区风险最高——这在买房、投保或管理沿海房产时至关重要。</p>
         <a href="/zh/storms" class="btn btn-outline btn-sm">浏览历史数据</a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">🚑</div>
-        <h3>应急响应人员</h3>
+        <h3><span data-i18n="home.scenario.emergency">应急响应人员</span></h3>
         <p>获取实时更新，提前部署资源和协调撤离。多语言支持，服务多元社区的团队。</p>
-        <a href="/zh/map" class="btn btn-outline btn-sm">用你的语言使用</a>
+        <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.emergencyBtn">用你的语言使用</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">📊</div>
-        <h3>保险与金融分析师</h3>
+        <h3><span data-i18n="home.scenario.insurer">保险与金融分析师</span></h3>
         <p>基于17年+的ACE指数趋势、登陆历史和18场重大风暴的损失对比，做出数据驱动的风险评估。</p>
-        <a href="/zh/storms" class="btn btn-outline btn-sm">查看风暴数据库</a>
+        <a href="/zh/storms" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.insurerBtn">查看风暴数据库</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">📺</div>
-        <h3>媒体工作者</h3>
+        <h3><span data-i18n="home.scenario.media">媒体工作者</span></h3>
         <p>嵌入实时风暴地图，下载历史轨迹数据，获取可分享的信息图——做准确风暴报道所需的一切。</p>
-        <a href="/zh/about" class="btn btn-outline btn-sm">了解更多</a>
+        <a href="/zh/about" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.mediaBtn">了解更多</span></a>
       </div>
       <div class="region-card scenario-card">
         <div class="scenario-icon">✈️</div>
-        <h3>旅行者与邮轮乘客</h3>
+        <h3><span data-i18n="home.scenario.traveler">旅行者与邮轮乘客</span></h3>
         <p>订票或规划航线经过飓风易发区前，先查风暴风险。打包前就知道目的地是否安全。</p>
-        <a href="/zh/map" class="btn btn-outline btn-sm">查看当前状况</a>
+        <a href="/zh/map" class="btn btn-outline btn-sm"><span data-i18n="home.scenario.travelerBtn">查看当前状况</span></a>
       </div>
     </div>
   </section>
