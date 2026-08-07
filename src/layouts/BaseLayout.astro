@@ -147,6 +147,67 @@ const langSwitchLinks = Object.values(languages).map(l => ({
       localStorage.setItem('storm_lang', lang);
       trackEvent('language_switch', { from_language: window.__I18N_LANG__, to_language: lang, page_path: location.pathname });
       window.__I18N_LANG__ = lang;
+            // ── 风暴卡片实时换文 ───────────────────────────
+      var storms = window.__STORM_DATA__;
+      if (storms) {
+        var I18N = window.__I18N__ || {};
+        var sl = lang || window.__STORM_LANG__ || 'en';
+
+        // Hero 计数徽章
+        var heroBadge = document.getElementById('hero-badge');
+        if (heroBadge) {
+          heroBadge.innerHTML = storms.length === 0
+            ? '<span class="badge badge-safe"><span aria-hidden="true">☀️</span> ' + ((I18N['storm.noActive'] && I18N['storm.noActive'][sl]) || 'No Active Storms') + '</span>'
+            : '<span class="badge badge-active">🌪️ ' + storms.length + ' ' + ((I18N['storm.activeCount'] && I18N['storm.activeCount'][sl]) || 'Active') + '</span>';
+        }
+
+        // 风暴卡片容器
+        var container = document.getElementById('active-storms-container');
+        if (container) {
+          if (storms.length === 0) {
+            container.innerHTML = '<div class="no-active-card"><div class="no-active-icon" aria-hidden="true">☀️</div>' +
+              '<h3>' + ((I18N['storm.noActive'] && I18N['storm.noActive'][sl]) || 'No Active Storms') + '</h3>' +
+              '<p>' + ((I18N['storm.currentlyQuiet'] && I18N['storm.currentlyQuiet'][sl]) || 'All monitored basins are currently quiet') + '</p>' +
+              '<div class="no-active-ctas"><a href="/storms" class="btn btn-outline">' + ((I18N['storm.browseHistory'] && I18N['storm.browseHistory'][sl]) || 'Browse Historical Storms') + '</a>' +
+              '<a href="/preparedness" class="btn btn-primary"><span aria-hidden="true">🛡️</span> ' + ((I18N['storm.preparednessGuide'] && I18N['storm.preparednessGuide'][sl]) || 'Preparedness Guide') + '</a></div></div>';
+          } else {
+            var wind = (I18N['home.storm.wind'] && I18N['home.storm.wind'][sl]) || 'Wind';
+            var pressure = (I18N['home.storm.pressure'] && I18N['home.storm.pressure'][sl]) || 'Pressure';
+            var location = (I18N['home.storm.location'] && I18N['home.storm.location'][sl]) || 'Location';
+            var movement = (I18N['home.storm.movement'] && I18N['home.storm.movement'][sl]) || 'Movement';
+            var viewMap = (I18N['home.storm.viewMap'] && I18N['home.storm.viewMap'][sl]) || 'View on Map';
+            var statusA = (I18N['storm.active'] && I18N['storm.active'][sl]) || 'Active';
+            var statusW = (I18N['storm.weakening'] && I18N['storm.weakening'][sl]) || 'Weakening';
+            var areaLbl = (I18N['storm.affectedArea'] && I18N['storm.affectedArea'][sl]) || 'Areas at Risk';
+            var catColors = { 'TD':'#4dabf7','TS':'#ffd43b','Cat-1':'#ff8787','Cat-2':'#fa5252','Cat-3':'#e64980','Cat-4':'#cc5de8','Cat-5':'#845ef7' };
+            var cards = storms.map(function(s) {
+              var c = catColors[s.intensity] || '#e2e8f0';
+              var st = s.windMph < 39 ? statusW : statusA;
+              var basin = (s.basinNames && s.basinNames[sl]) ? s.basinNames[sl] : (s.basinName || s.basin || '');
+              var wd = (s.windDescription && s.windDescription[sl]) ? '<div class="storm-wind-desc">' + s.windDescription[sl] + '</div>' : '';
+              var aff = '';
+              if (s.affectedRegions && s.affectedRegions.length) {
+                var tags = s.affectedRegions.map(function(a) { return '<a href="/map?region=' + encodeURIComponent(a) + '" class="affected-tag">' + a + '</a>'; }).join('');
+                aff = '<div class="storm-affected">' + areaLbl + ': ' + tags + '</div>';
+              }
+              return '<a href="/map" class="card storm-card">' +
+                '<div class="storm-card-header"><div><h3>' + (s.localizedName || s.name) + '</h3>' +
+                '<span class="storm-type">' + (s.type || s.stormType || '') + (basin ? ' · ' + basin : '') + '</span></div>' +
+                '<span class="badge" style="background:' + c + '33;color:' + c + ';">' + st + '</span></div>' +
+                '<div class="storm-card-stats">' +
+                '<div class="stat"><span class="stat-label">' + wind + '</span><span class="stat-value">' + s.windMph + ' mph</span></div>' +
+                '<div class="stat"><span class="stat-label">' + pressure + '</span><span class="stat-value">' + (s.pressureMb > 0 ? s.pressureMb + ' mb' : '—') + '</span></div>' +
+                '<div class="stat"><span class="stat-label">' + location + '</span><span class="stat-value">' +
+                Math.abs(s.lat).toFixed(1) + '°' + (s.lat>=0?'N':'S') + ', ' + Math.abs(s.lon).toFixed(1) + '°' + (s.lon>=0?'E':'W') + '</span></div>' +
+                '<div class="stat"><span class="stat-label">' + movement + '</span><span class="stat-value">' + (s.movement || s.movementDirection || '—') + '</span></div></div>' +
+                wd + aff +
+                '<div class="storm-card-footer"><span class="view-details"><span aria-hidden="true">→</span> ' + viewMap + '</span></div></a>';
+            }).join('');
+            container.innerHTML = '<div class="grid grid-2">' + cards + '</div>';
+          }
+        }
+      }
+
       window.dispatchEvent(new CustomEvent('i18n:langchange', { detail: { lang: lang } }));
     }
 

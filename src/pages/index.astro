@@ -70,65 +70,16 @@ const activeCount = activeStorms ?? 0;
     </div>
   </section>
 
-  <!-- Active Storms -->
-  {activeCount > 0 ? (
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title"><span aria-hidden="true">⚡</span> <span data-i18n="home.activeStorms">Active Storms</span></h2>
-        <span class="live-dot" data-i18n="home.live" data-i18n-attrs="text">🟢 Live</span>
-      </div>
-      <div class="grid grid-2">
-        {liveStorms.map((storm: any) => {
-          const intensity = getCategory(storm.windMph);
-          return (
-            <a href="/map" class="card storm-card">
-              <div class="storm-card-header">
-                <div>
-                  <h3>{storm.name}{storm.designation ? ` (${storm.designation})` : ''}</h3>
-                  <span class="storm-type">{storm.type}</span>
-                  <span class="storm-source">{storm.agency || storm.source} · {storm.basinName}</span>
-                </div>
-                <span class="badge" style={`background: ${categoryColors[intensity] || '#e2e8f0'}33; color: ${categoryColors[intensity] || '#64748b'};`}>{intensity}</span>
-              </div>
-              <div class="storm-card-stats">
-                <div class="stat"><span class="stat-label" data-i18n="home.storm.wind">Wind</span><span class="stat-value">{storm.windMph} mph</span></div>
-                <div class="stat"><span class="stat-label" data-i18n="home.storm.pressure">Pressure</span><span class="stat-value">{storm.pressureMb > 0 ? `${storm.pressureMb} mb` : '—'}</span></div>
-                <div class="stat"><span class="stat-label" data-i18n="home.storm.location">Location</span><span class="stat-value">{Math.abs(storm.lat).toFixed(1)}°{storm.lat>=0?'N':'S'}, {Math.abs(storm.lon).toFixed(1)}°{storm.lon>=0?'E':'W'}</span></div>
-                <div class="stat"><span class="stat-label" data-i18n="home.storm.movement">Movement</span><span class="stat-value">{storm.movement}</span></div>
-              </div>
-              <div class="storm-card-footer">
-                <span class="view-details" data-i18n="home.storm.viewMap"><span aria-hidden="true">→</span> View on Map</span>
-              </div>
-            </a>
-          );
-        })}
-      </div>
-    </section>
-  ) : (
-    <!-- Non-Storm Season / No Active -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title"><span aria-hidden="true">⚡</span> Active Storms</h2>
-      </div>
-      <div class="no-active-card">
-        <div class="no-active-icon" aria-hidden="true">☀️</div>
-        <h3 data-i18n="home.noActive.title">No Active Tropical Storms</h3>
-        <p>
-          <span data-i18n="home.noActive.desc">Good news — all monitored ocean basins are currently quiet. Tropical cyclone seasons vary by region:
-          the Atlantic &amp; East Pacific peak <strong>June 1 – November 30</strong>, while the Northwest Pacific
-          stays active nearly year-round.</span>
-        </p>
-        <div class="no-active-ctas">
-          <a href="/storms" class="btn btn-outline">data-i18n="home.noActive.browse"</a>
-          <a href="/preparedness" class="btn btn-primary"><span aria-hidden="true">🛡️</span> <span data-i18n="home.prepare.title">Preparedness Guide</span></a>
-        </div>
-        <p class="hero-source">
-          <span class="source-dot"></span>
-          Last checked: {buildTime} · Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> &amp; <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
-        </p>
-      </div>
-    </section>
-  )}
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title"><span aria-hidden="true">⚡</span> <span data-i18n="home.activeStorms">Active Storms</span></h2>
+      <span class="live-dot" data-i18n="home.live" data-i18n-attrs="text">🟢 Live</span>
+    </div>
+    <div id="active-storms-container" data-storm-container="true">
+      <!-- 风暴卡片由 BaseLayout rehydrateStorms() 渲染 -->
+      <!-- __STORM_DATA__ 由 enIndexClientFetch() 填充 -->
+    </div>
+  </section>
 
   <!-- Season Outlook -->
   <section class="section">
@@ -415,6 +366,25 @@ const activeCount = activeStorms ?? 0;
       }
     }
     enhanceActiveStorms();
+  
+    // ── 英文首页：客户端从 API 抓取风暴数据 ──────────────────
+    async function enIndexClientFetch() {
+      try {
+        const resp = await fetch('/api/global-storms', { cache: 'no-store' });
+        if (!resp.ok) throw new Error('API error');
+        const data = await resp.json();
+        const storms = data.activeStorms || data.storms || [];
+        window.__STORM_DATA__ = storms;
+        window.__STORM_LANG__ = window.__STORM_LANG__ || 'en';
+        rehydrateStorms(window.__STORM_LANG__);
+      } catch(e) {
+        // 安静失败，显示空状态
+        window.__STORM_DATA__ = [];
+        rehydrateStorms(window.__STORM_LANG__ || 'en');
+      }
+    }
+    enIndexClientFetch();
+
   </script>
 
   <style>
