@@ -1,7 +1,7 @@
 {
   "source": "NOAA NHC + JTWC",
   "global": true,
-  "fetchedAt": "2026-08-07T14:13:33.738Z",
+  "fetchedAt": "2026-08-07T14:18:15.780Z",
   "activeStorms": 2,
   "basins": {
     "north_atlantic": 0,
@@ -42,7 +42,7 @@
       "agency": "JMA",
       "source": "JTWC",
       "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1426web.txt",
-      "issuedAt": "2026-08-07T14:13:33.738Z",
+      "issuedAt": "2026-08-07T14:18:15.777Z",
       "names": {
         "en": "Chan-hom",
         "zh": "Chan-hom"
@@ -133,7 +133,7 @@
       "agency": "JMA",
       "source": "JTWC",
       "warningUrl": "https://www.metoc.navy.mil/jtwc/products/wp1426web.txt",
-      "issuedAt": "2026-08-07T14:13:33.726Z",
+      "issuedAt": "2026-08-07T14:18:15.780Z",
       "names": {
         "en": "Dolphin",
         "zh": "Dolphin"
@@ -208,5 +208,5 @@
       }
     }
   ],
-  "_buildTime": "2026-08-07T14:13:33.740Z"
+  "_buildTime": "2026-08-07T14:18:15.781Z"
 }

@@ -126,30 +126,8 @@ const categoryColors: Record<string, string> = {
     const HOME_REFRESH = 5 * 60 * 1000;
     const LANG = 'zh';
 
-    // 响应 BaseLayout 语言切换（i18n:langchange 事件）
-    function handleLangChange(e) {
-      const newLang = e.detail?.lang || 'zh';
-      window.__STORM_LANG__ = newLang;
-      // 风暴名称映射（中文）
-      if (newLang === 'zh') {
-        if (window.__STORM_DATA__) {
-          window.__STORM_DATA__ = window.__STORM_DATA__.map(function(s) {
-            var localized = Object.assign({}, s);
-            localized.localizedName = localizeName(s.name);
-            localized.localizedType = s.windMph < 39 ? '热带低压' : '热带风暴';
-            return localized;
-          });
-          renderActiveStorms(window.__STORM_DATA__);
-        }
-      } else {
-        // 其他语言：使用原始名称，重新 fetch
-        fetchStorms().then(function(storms) {
-          if (storms) { window.__STORM_DATA__ = storms; renderActiveStorms(storms);
-      window.__STORM_DATA__ = storms; }
-        });
-      }
-    }
-    document.addEventListener('i18n:langchange', handleLangChange);
+        // handleLangChange removed: BaseLayout rehydrateStorms() handles all storm card rendering
+    // window.__STORM_DATA__ is set after renderActiveStorms() call
     window.__STORM_LANG__ = 'zh';
 
 
@@ -233,6 +211,7 @@ const categoryColors: Record<string, string> = {
       const storms = await fetchStorms();
       if (!storms) { document.getElementById('active-storms-container').innerHTML = '<div class="card empty-state"><span class="empty-icon">📡</span><p>暂时无法连接 NOAA。<a href="/zh/storms">浏览风暴数据库 →</a></p></div>'; return; }
       renderActiveStorms(storms);
+      window.__STORM_DATA__ = storms;
     }
     loadHomeStorms();
     setInterval(loadHomeStorms, HOME_REFRESH);
