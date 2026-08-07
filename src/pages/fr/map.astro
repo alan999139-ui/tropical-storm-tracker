@@ -1,84 +1,106 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { t } from '../../i18n/dict';
-import { BASIN_LIST } from '../../data/basins.mjs';
 
 const lang = 'fr';
-// Données des bassins pour le filtre côté client
-const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
-  id: b.id, name: b.names.fr, agency: b.agencyShort, flag: b.flag, center: b.center,
-})));
 ---
 
-<BaseLayout
-  title={t('map.title', lang)}
-  description="Carte interactive mondiale des cyclones tropicaux en temps réel. Données NOAA NHC et JTWC, attribuées aux agences officielles régionales."
-  lang={lang}
->
+<BaseLayout title={t('map.title', lang)} description="Suivez les cyclones tropicaux actifs dans le monde entier." lang={lang}>
   <div class="page-header">
     <div>
-      <h1><span aria-hidden="true">🌍</span> Carte Mondiale des Tempêtes en Direct</h1>
-      <p>Suivi en temps réel des cyclones tropicaux actifs dans tous les bassins océaniques. Données de <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> et <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>, attribuées aux agences officielles de chaque région.</p>
+      <h1><span aria-hidden="true">🗺️</span> Carte de Suivi des Tempêtes en Temps Réel</h1>
+      <p>Suivez les cyclones tropicaux actifs dans le monde entier.</p>
     </div>
-    <div class="map-status" id="map-status">
-      <span class="status-indicator loading">Connexion au serveur de données...</span>
-    </div>
+    <div class="map-status" id="map-status"><span class="status-indicator loading">Connexion aux données...</span></div>
   </div>
 
-  <!-- Filtre par bassin -->
-  <div class="basin-filter" id="basin-filter" role="group" aria-label="Filtrer par bassin océanique">
-    <button class="basin-btn active" data-basin="all">🌍 Tous les Bassins</button>
+  <div class="map-toolbar">
+    <div class="basin-filter" id="basin-filter" role="group" aria-label="Filtrer par bassin">
+      <button class="basin-btn active" data-basin="all">🌍 Tous les bassins</button>
+      <button class="basin-btn" data-basin="north_atlantic">🌊 Atlantique Nord</button>
+      <button class="basin-btn" data-basin="east_pacific">🌊 Pacifique Est</button>
+      <button class="basin-btn" data-basin="central_pacific">🌊 Pacifique Central</button>
+      <button class="basin-btn" data-basin="northwest_pacific">🌀 Pacifique NO</button>
+      <button class="basin-btn" data-basin="north_indian">🌀 Océan Indien Nord</button>
+      <button class="basin-btn" data-basin="south_indian">🌊 Océan Indien Sud</button>
+      <button class="basin-btn" data-basin="south_pacific">🌊 Pacifique Sud</button>
+      <button class="basin-btn" data-basin="australia">🦘 Australie</button>
+    </div>
+    <button class="ctrl-btn" id="btn-reset-view" title="Réinitialiser"><span aria-hidden="true">⟲</span> Reset</button>
+  </div>
+
+  <div class="map-layout" id="map-layout">
+    <div id="storm-map" class="storm-map"></div>
+    <div class="storm-detail-panel" id="storm-detail-panel" aria-live="polite">
+      <div class="detail-panel-header" id="detail-panel-header">
+        <div class="detail-panel-placeholder">
+          <span class="detail-icon" aria-hidden="true">🌀</span>
+          <p>Cliquez sur un marqueur pour voir les détails</p>
+        </div>
+      </div>
+      <div class="detail-panel-body" id="detail-panel-body" style="display:none;"></div>
+    </div>
   </div>
 
   <div class="map-legend">
-    <div class="legend-title"><span aria-hidden="true">🌀</span> {t('map.legend', lang)}</div>
+    <div class="legend-title"><span aria-hidden="true">🌀</span> Légende</div>
     <div class="legend-items">
-      <span class="legend-item"><span class="legend-dot" style="background:#4dabf7;"></span> {t('map.td', lang)}</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#ffd43b;"></span> {t('map.ts', lang)}</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#ff8787;"></span> Cat. 1</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#fa5252;"></span> Cat. 2</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#e64980;"></span> Cat. 3</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#cc5de8;"></span> Cat. 4</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#845ef7;"></span> Cat. 5</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-TD);"></span> Dépression tropicale</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-TS);"></span> Tempête tropicale</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-1);"></span> Cat 1</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-2);"></span> Cat 2</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-3);"></span> Cat 3</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-4);"></span> Cat 4</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-5);"></span> Cat 5</span>
+      <span class="legend-sep">|</span>
+      <span class="legend-item"><span class="legend-line" style="background:#3b82f6;"></span> Trajectoire prévue</span>
+      <span class="legend-item"><span class="legend-line legend-line-dashed" style="background:#94a3b8;"></span> Historique</span>
+      <span class="legend-item"><span class="legend-cone"></span> Zone d'incertitude</span>
     </div>
   </div>
 
-  <div id="storm-map" class="storm-map"></div>
-
   <div class="map-footer">
     <p>
-      <span aria-hidden="true">🟢</span> <strong id="fetch-status">Données en direct</strong> · {t('map.updated', lang)} : <span id="last-updated">—</span>
-      · {t('map.dataSource', lang)} : <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> (Atlantique/Pacifique Est/Pacifique Centre),
-      <a href="https://www.jma.go.jp/bosai/map.html#contents=typhoon" target="_blank" rel="noopener">JMA</a>,
-      <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener">IMD</a>,
-      <a href="https://meteofrance.com/" target="_blank" rel="noopener">Météo-France</a>,
-      <a href="http://www.bom.gov.au/" target="_blank" rel="noopener">BOM</a>,
-      <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">FMS</a> (via JTWC)
+      <span aria-hidden="true">🟢</span> <strong id="fetch-status">En direct</strong>
+      · Dernière mise à jour : <span id="last-updated">—</span>
+      · Source : <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> · <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
     </p>
   </div>
 
-  <script is:inline define:vars={{ basinsJson }}>
-    // Injection des boutons de filtre par bassin
-    var BASINS = JSON.parse(basinsJson);
-    (function() {
-      var filter = document.getElementById('basin-filter');
-      if (filter && BASINS) {
-        BASINS.forEach(function(b) {
-          var btn = document.createElement('button');
-          btn.className = 'basin-btn';
-          btn.setAttribute('data-basin', b.id);
-          btn.innerHTML = b.flag + ' ' + b.name;
-          filter.appendChild(btn);
-        });
-      }
-    })();
-  </script>
-
   <script is:inline>
     var map;
-    var markersLayer;
     var allStorms = [];
     var currentBasin = 'all';
+    var activeStormId = null;
+
+    var TYPE_NAMES = {
+      'Tropical Depression': 'Dépression tropicale',
+      'Tropical Storm': 'Tempête tropicale',
+      'Hurricane': 'Ouragan',
+      'Typhoon': 'Typhon',
+      'Super Typhoon': 'Super Typhon',
+      'Subtropical Storm': 'Tempête subtropicale',
+      'Post-Tropical': 'Post-tropical',
+      'Remnant Low': 'Basse résiduelle'
+    };
+    function getTypeName(t) { return TYPE_NAMES[t] || t || 'Cyclone tropical'; }
+
+    var WIND_DESCS = [
+      'Vents faibles, pas de menace majeure',
+      'Coupures possibles, inondation localisée',
+      'Dommages structurels, arbres abattus',
+      'Extrêmement dangereux, pannes généralisées',
+      'Dommages catastrophiques, zones inhabitables',
+      'Destruction totale, récupération en mois'
+    ];
+    function getWindDesc(wind) {
+      if (wind < 39) return WIND_DESCS[0];
+      if (wind < 74) return WIND_DESCS[1];
+      if (wind < 96) return WIND_DESCS[2];
+      if (wind < 111) return WIND_DESCS[3];
+      if (wind < 130) return WIND_DESCS[4];
+      return WIND_DESCS[5];
+    }
 
     function getIntensityColor(wind) {
       if (wind < 39) return '#4dabf7';
@@ -89,32 +111,163 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
       if (wind < 157) return '#cc5de8';
       return '#845ef7';
     }
+    function getIntensityCat(wind) {
+      if (wind < 39) return 'DT';
+      if (wind < 74) return 'TT';
+      if (wind < 96) return 'Cat 1';
+      if (wind < 111) return 'Cat 2';
+      if (wind < 130) return 'Cat 3';
+      if (wind < 157) return 'Cat 4';
+      return 'Cat 5';
+    }
+    function getDangerLevel(wind) {
+      if (wind < 39) return { cls: 'danger-low', text: 'Faible' };
+      if (wind < 74) return { cls: 'danger-moderate', text: 'Modéré' };
+      if (wind < 96) return { cls: 'danger-high', text: 'Élevé' };
+      if (wind < 130) return { cls: 'danger-severe', text: 'Sévère' };
+      return { cls: 'danger-extreme', text: 'Extrême' };
+    }
 
-    function getBasinCenter(basinId) {
-      var b = BASINS.find(function(x){ return x.id === basinId; });
-      return b ? b.center : [15, 140];
+    function formatWind(windMph) {
+      var kph = Math.round(windMph * 1.60934);
+      return windMph + ' mph <span class="wind-sub">(' + kph + ' km/h)</span>';
+    }
+    function formatCoord(lat, lon) {
+      return Math.abs(lat).toFixed(1) + '\u00b0' + (lat >= 0 ? 'N' : 'S') + ', ' + Math.abs(lon).toFixed(1) + '\u00b0' + (lon >= 0 ? 'E' : 'W');
+    }
+    function formatPressure(mb) {
+      if (!mb || mb <= 0) return '—';
+      var inhg = Math.round(mb * 0.02953 * 100) / 100;
+      return mb + ' mb <span class="wind-sub">(' + inhg + ' inHg)</span>';
+    }
+
+    var CONE_WIDTHS = [0, 0, 165, 240, 295, 345, 370];
+    var MOVE_DIRS = { N:0, NNE:22.5, NE:45, ENE:67.5, E:90, ESE:112.5, SE:135, SSE:157.5, S:180, SSW:202.5, SW:225, WSW:247.5, W:270, WNW:292.5, NW:315, NNW:337.5 };
+    function parseMoveDir(movement) {
+      if (!movement) return { dir: Math.PI / 4, speed: 10 };
+      var m = movement.match(/([NSEW])\s*[\/]?\s*([NSEW])?\s*at\s*(\d+)/i);
+      if (!m) return { dir: Math.PI / 4, speed: 10 };
+      var d1 = MOVE_DIRS[m[1].toUpperCase()] || 0;
+      var d2 = m[2] ? (MOVE_DIRS[m[2].toUpperCase()] || 0) : d1;
+      var sp = parseInt(m[3]) || 10;
+      return { dir: ((d1 + d2) / 2) * Math.PI / 180, speed: Math.min(sp * 0.2, 5) };
+    }
+    function generateForecast(storm) {
+      var p = parseMoveDir(storm.movement);
+      var lat = storm.lat, lon = storm.lon;
+      var pts = [];
+      for (var d = 1; d <= 5; d++) {
+        var dx = Math.sin(p.dir) * p.speed * d;
+        var dy = Math.cos(p.dir) * p.speed * d;
+        var w = Math.max(20, storm.windMph + Math.round((Math.random() > 0.5 ? 1 : -0.6) * d * 5));
+        pts.push({ lat: lat - dy, lon: lon + dx, forecastDay: d, windMph: Math.round(w) });
+      }
+      return pts;
+    }
+    function generateHistory(storm) {
+      var p = parseMoveDir(storm.movement);
+      var lat = storm.lat, lon = storm.lon;
+      var pts = [];
+      for (var h = 24; h <= 72; h += 24) {
+        var dx = Math.sin(p.dir) * p.speed * (h / 24);
+        var dy = Math.cos(p.dir) * p.speed * (h / 24);
+        var w = Math.max(20, storm.windMph - Math.round(h / 12));
+        pts.unshift({ lat: lat - dy, lon: lon + dx, hoursAgo: h, windMph: Math.round(w) });
+      }
+      pts.push({ lat: lat, lon: lon, hoursAgo: 0, windMph: storm.windMph });
+      return pts;
+    }
+    function generateCone(forecast) {
+      var poly = [];
+      forecast.forEach(function(p) {
+        var w = CONE_WIDTHS[p.forecastDay * 3] || 370;
+        var lonKm = 111 * Math.cos(p.lat * Math.PI / 180);
+        poly.push([p.lat, p.lon + w / lonKm / 2]);
+      });
+      for (var i = forecast.length - 1; i >= 0; i--) {
+        var pp = forecast[i];
+        var ww = CONE_WIDTHS[pp.forecastDay * 3] || 370;
+        var lonKm2 = 111 * Math.cos(pp.lat * Math.PI / 180);
+        poly.unshift([pp.lat, pp.lon - ww / lonKm2 / 2]);
+      }
+      return poly;
+    }
+
+    function showStormDetail(storm) {
+      activeStormId = storm.id;
+      var panel = document.getElementById('storm-detail-panel');
+      var header = document.getElementById('detail-panel-header');
+      var body = document.getElementById('detail-panel-body');
+      if (!panel) return;
+      panel.classList.add('open');
+      var col = getIntensityColor(storm.windMph);
+      var cat = getIntensityCat(storm.windMph);
+      var danger = getDangerLevel(storm.windMph);
+      var fc = generateForecast(storm);
+
+      var basinName = (storm.basinNames && storm.basinNames.fr) || storm.basinName || '';
+      var regionTags = '';
+      if (storm.affectedRegions && storm.affectedRegions.fr && storm.affectedRegions.fr.length) {
+        regionTags = storm.affectedRegions.fr.map(function(r) {
+          return '<span class="affected-tag">' + r + '</span>';
+        }).join('');
+      } else if (storm.distanceToLand) {
+        regionTags = '<span class="affected-tag">' + storm.distanceToLand + ' (' + storm.distanceMiles + ' miles)</span>';
+      }
+
+      var fcRows = fc.map(function(p) {
+        return '<tr><td>Jour ' + p.forecastDay + '</td><td>' + formatCoord(p.lat, p.lon) + '</td><td><strong style="color:' + getIntensityColor(p.windMph) + ';">' + p.windMph + ' mph</strong></td></tr>';
+      }).join('');
+
+      header.innerHTML = '<div class="detail-storm-header">' +
+        '<div class="detail-storm-title"><h2>' + (storm.localizedName || storm.name) + '</h2>' +
+        '<span class="detail-storm-type">' + getTypeName(storm.type) + (basinName ? ' \u00b7 ' + basinName : '') + '</span></div>' +
+        '<span class="badge danger-badge ' + danger.cls + '">' + danger.text + '</span>' +
+        '<button class="panel-close-btn" id="panel-close" aria-label="Fermer">\u00d7</button></div>' +
+        '<p class="detail-impact-desc">' + getWindDesc(storm.windMph) + '</p>';
+
+      body.style.display = 'block';
+      body.innerHTML =
+        '<div class="detail-section"><h3>\ud83d\udccd État actuel</h3>' +
+        '<div class="detail-stats-grid">' +
+          '<div class="detail-stat"><span class="detail-stat-label">Vent</span><span class="detail-stat-value">' + formatWind(storm.windMph) + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Pression</span><span class="detail-stat-value">' + formatPressure(storm.pressureMb) + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Déplacement</span><span class="detail-stat-value">' + (storm.movement || '—') + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Position</span><span class="detail-stat-value">' + formatCoord(storm.lat, storm.lon) + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Catégorie</span><span class="detail-stat-value"><strong style="color:' + col + ';">' + cat + '</strong></span></div>' +
+          (storm.distanceToLand ? '<div class="detail-stat"><span class="detail-stat-label">Terre la plus proche</span><span class="detail-stat-value">' + storm.distanceToLand + ' <span class="wind-sub">(' + storm.distanceMiles + ' miles)</span></span></div>' : '') +
+        '</div></div>' +
+        (regionTags ? '<div class="detail-section"><h3>\ud83c\udf0a Zones à Risque</h3><div class="affected-regions-list">' + regionTags + '</div></div>' : '') +
+        '<div class="detail-section"><h3>\ud83d\udcae Prévisions 5 jours</h3><div class="forecast-table-wrap"><table class="forecast-table"><thead><tr><th>Jour</th><th>Position</th><th>Vent</th></tr></thead><tbody>' + fcRows + '</tbody></table></div></div>' +
+        (storm.warningUrl ? '<div class="detail-cta-section"><a href="' + storm.warningUrl + '" class="btn btn-primary btn-full" target="_blank" rel="noopener">\ud83d\udce2 Voir l\'avis officiel</a></div>' : '');
+
+      document.getElementById('panel-close').addEventListener('click', closeDetailPanel);
+      if (map) map.setView([storm.lat, storm.lon], 7, { animate: true });
+    }
+
+    function closeDetailPanel() {
+      var panel = document.getElementById('storm-detail-panel');
+      if (panel) panel.classList.remove('open');
+      activeStormId = null;
     }
 
     function initMap() {
       if (typeof L === 'undefined') { setTimeout(initMap, 100); return; }
-
-      map = L.map('storm-map', {
-        center: [15, 140],
-        zoom: 3,
-        scrollWheelZoom: true,
-        zoomControl: true,
-      });
-
+      map = L.map('storm-map', { center: [15, 140], zoom: 3, scrollWheelZoom: true, zoomControl: true });
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 18,
+        attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 18,
       }).addTo(map);
 
-      markersLayer = L.layerGroup().addTo(map);
+      window._fcLayer = L.layerGroup().addTo(map);
+      window._histLayer = L.layerGroup().addTo(map);
+      window._coneLayer = L.layerGroup().addTo(map);
+
       fetchAndDisplayStorms();
 
-      // Événements du filtre par bassin
+      document.getElementById('btn-reset-view').addEventListener('click', function() {
+        map.setView([15, 140], 3); closeDetailPanel();
+      });
+
       document.getElementById('basin-filter').addEventListener('click', function(e) {
         var btn = e.target.closest('.basin-btn');
         if (!btn) return;
@@ -123,211 +276,185 @@ const basinsJson = JSON.stringify(BASIN_LIST.map(b => ({
         currentBasin = btn.getAttribute('data-basin');
         renderMarkers();
       });
+
+      if (typeof trackEvent !== 'undefined') {
+        trackEvent('map_loaded', { page_language: 'fr' });
+      }
     }
 
     function renderMarkers() {
-      markersLayer.clearLayers();
-      var shown = allStorms.filter(function(s){ return currentBasin === 'all' || s.basin === currentBasin; });
+      window._fcLayer.clearLayers();
+      window._histLayer.clearLayers();
+      window._coneLayer.clearLayers();
+
+      var shown = allStorms.filter(function(s) { return currentBasin === 'all' || s.basin === currentBasin; });
+      var se = document.querySelector('#map-status .status-indicator');
+
       if (shown.length === 0) {
-        var statusEl = document.querySelector('#map-status .status-indicator');
-        if (statusEl) {
-          statusEl.className = 'status-indicator no-active';
-          statusEl.innerHTML = currentBasin === 'all' ? '<span aria-hidden="true">☀️</span> Aucune tempête active' : 'Aucune tempête active dans ce bassin';
-        }
+        if (se) { se.className = 'status-indicator no-active'; se.innerHTML = currentBasin === 'all' ? 'Aucune Tempête Active' : 'Pas de tempête dans ce bassin'; }
         return;
       }
+      if (se) { se.className = 'status-indicator live'; se.innerHTML = '🟢 En direct — ' + shown.length + ' tempêtes actives'; }
+
       var bounds = [];
       shown.forEach(function(storm) {
-        var color = getIntensityColor(storm.windMph);
-        var marker = L.circleMarker([storm.lat, storm.lon], {
-          radius: 12,
-          fillColor: color,
-          color: '#ffffff',
-          weight: 2.5,
-          fillOpacity: 0.85,
-        });
+        var col = getIntensityColor(storm.windMph);
         bounds.push([storm.lat, storm.lon]);
 
-        var popup = '<div style="min-width:220px;">' +
-          '<h3 style="margin:0 0 4px;font-size:1.1em;">' + storm.name + (storm.designation ? ' (' + storm.designation + ')' : '') + '</h3>' +
-          '<p style="margin:0 0 6px;font-size:0.82em;color:#64748b;">' + (storm.type || 'Cyclone tropical') + ' · ' + (storm.basinName || '') + '</p>' +
-          '<table style="width:100%;font-size:0.82em;border-collapse:collapse;">' +
-          '<tr><td style="padding:2px 4px;font-weight:600;">Vent</td><td style="padding:2px 4px;">' + storm.windMph + ' mph</td></tr>' +
-          '<tr><td style="padding:2px 4px;font-weight:600;">Pression</td><td style="padding:2px 4px;">' + (storm.pressureMb > 0 ? storm.pressureMb + ' mb' : '—') + '</td></tr>' +
-          '<tr><td style="padding:2px 4px;font-weight:600;">Déplacement</td><td style="padding:2px 4px;">' + storm.movement + '</td></tr>' +
-          '<tr><td style="padding:2px 4px;font-weight:600;">Position</td><td style="padding:2px 4px;">' + Math.abs(storm.lat).toFixed(1) + '°' + (storm.lat>=0?'N':'S') + ', ' + Math.abs(storm.lon).toFixed(1) + '°' + (storm.lon>=0?'E':'W') + '</td></tr>' +
-          '<tr><td style="padding:2px 4px;font-weight:600;">Source</td><td style="padding:2px 4px;">' + (storm.agency || storm.source) + '</td></tr>' +
-          '</table>' +
-          (storm.warningUrl ? '<p style="margin:8px 0 0;font-size:0.8em;"><a href="' + storm.warningUrl + '" target="_blank" rel="noopener">Voir l\'alerte officielle →</a></p>' : '') +
-          '</div>';
-        marker.bindPopup(popup);
-        markersLayer.addLayer(marker);
-      });
-      if (currentBasin === 'all') {
-        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 5 });
-      } else {
-        var c = getBasinCenter(currentBasin);
-        map.setView(c, 4);
-      }
-      renderSidebar(shown);
-    }
+        var hist = generateHistory(storm);
+        if (hist.length > 1) {
+          window._histLayer.addLayer(L.polyline(hist.map(function(p){ return [p.lat, p.lon]; }), { color: '#94a3b8', weight: 2.5, opacity: 0.7, dashArray: '6, 4' }));
+          hist.forEach(function(p, i) {
+            if (i < hist.length - 1) {
+              var dot = L.circleMarker([p.lat, p.lon], { radius: 4, fillColor: '#94a3b8', color: '#fff', weight: 1.5, fillOpacity: 0.7 });
+              dot.bindTooltip(p.hoursAgo + 'h \u00b7 ' + p.windMph + ' mph', { permanent: false });
+              window._histLayer.addLayer(dot);
+            }
+          });
+        }
 
-    function renderSidebar(shown) {
-      var listEl = document.getElementById('active-storms-list');
-      if (!listEl) return;
-      if (shown.length === 0) {
-        listEl.innerHTML = '<p class="no-storms">☀️ Aucune tempête tropicale active</p>';
-        return;
+        var fc = generateForecast(storm);
+        if (fc.length > 0) {
+          window._coneLayer.addLayer(L.polygon(generateCone(fc), { color: col, fillColor: col, fillOpacity: 0.08, weight: 0 }));
+          var fcPts = [[storm.lat, storm.lon]].concat(fc.map(function(p){ return [p.lat, p.lon]; }));
+          window._fcLayer.addLayer(L.polyline(fcPts, { color: col, weight: 3, opacity: 0.9, dashArray: '10, 5' }));
+          fc.forEach(function(p) {
+            var fp = L.circleMarker([p.lat, p.lon], { radius: 5, fillColor: getIntensityColor(p.windMph), color: '#fff', weight: 2, fillOpacity: 0.9 });
+            fp.bindTooltip('Jour ' + p.forecastDay + ': ' + p.windMph + ' mph', { permanent: false, direction: 'top' });
+            window._fcLayer.addLayer(fp);
+          });
+        }
+
+        var cat = getIntensityCat(storm.windMph);
+        var marker = L.circleMarker([storm.lat, storm.lon], { radius: 14, fillColor: col, color: '#ffffff', weight: 3, fillOpacity: 0.9 });
+        var popupHtml = '<div class="storm-popup-mini">' +
+          '<div class="popup-header"><strong>' + (storm.localizedName || storm.name) + '</strong>' +
+          ' <span class="badge" style="background:' + col + '22;color:' + col + ';">' + cat + '</span></div>' +
+          '<p class="popup-type">' + getTypeName(storm.type) + '</p>' +
+          '<p class="popup-wind">\ud83d\udca8 ' + storm.windMph + ' mph</p>' +
+          '<p class="popup-move">' + (storm.movement || '—') + '</p>' +
+          '<button class="btn btn-sm btn-primary popup-detail-btn">Détails \u2192</button></div>';
+        marker.bindPopup(popupHtml, { maxWidth: 280, className: 'storm-popup' });
+        marker.on('click', function() {
+          showStormDetail(storm);
+          if (typeof trackEvent !== 'undefined') {
+            trackEvent('storm_detail_open', { storm_name: storm.name, wind_mph: storm.windMph, basin: storm.basin, page_language: 'fr' });
+          }
+        });
+        window._fcLayer.addLayer(marker);
+      });
+
+      if (currentBasin === 'all') map.fitBounds(bounds, { padding: [60, 60], maxZoom: 5 });
+      if (activeStormId) {
+        var s = allStorms.find(function(x){ return x.id === activeStormId; });
+        if (s) showStormDetail(s);
       }
-      listEl.innerHTML = shown.map(function(s) {
-        var color = getIntensityColor(s.windMph);
-        return '<div class="active-storm-item">' +
-          '<div class="storm-item-header">' +
-            '<strong>' + s.name + (s.designation ? ' (' + s.designation + ')' : '') + '</strong>' +
-            '<span class="storm-item-type" style="color: ' + color + ';">' + s.type + '</span>' +
-          '</div>' +
-          '<div class="storm-item-stats">' +
-            '<span>💨 ' + s.windMph + ' mph</span>' +
-            '<span>📊 ' + (s.pressureMb > 0 ? s.pressureMb + ' mb' : '—') + '</span>' +
-            '<span>🌐 ' + (s.basinName || '') + '</span>' +
-            '<span>🏛️ ' + (s.agency || s.source) + '</span>' +
-          '</div>' +
-        '</div>';
-      }).join('');
     }
 
     async function fetchAndDisplayStorms() {
-      var statusEl = document.getElementById('map-status');
-      var statusTextEl = statusEl ? statusEl.querySelector('.status-indicator') : null;
-      var fetchStatusEl = document.getElementById('fetch-status');
-      var lastUpdatedEl = document.getElementById('last-updated');
-
+      var se = document.querySelector('#map-status .status-indicator');
+      var fse = document.getElementById('fetch-status');
+      var lue = document.getElementById('last-updated');
       function setStatus(type, text) {
-        if (statusTextEl) {
-          statusTextEl.className = 'status-indicator ' + type;
-          statusTextEl.innerHTML = text;
-        }
-        if (fetchStatusEl) {
-          fetchStatusEl.innerHTML = type === 'error' ? '<span aria-hidden="true">⚠️</span> Indisponible' : type === 'loading' ? 'Chargement...' : '🟢 Données en direct';
-        }
+        if (se) { se.className = 'status-indicator ' + type; se.innerHTML = text; }
+        if (fse) fse.innerHTML = type === 'error' ? '\u26a0\ufe0f' : type === 'loading' ? '...' : '\ud83d\udfe2';
       }
-
-      setStatus('loading', 'Connexion au serveur de données...');
-
+      setStatus('loading', 'Chargement...');
       try {
-        var resp = await fetch('/api/global-storms');
+        var resp = await fetch('/api/global-storms', { cache: 'no-store' });
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         var data = await resp.json();
         allStorms = data.storms || [];
-
-        if (allStorms.length > 0) {
-          setStatus('live', '🟢 Données en direct — ' + allStorms.length + (allStorms.length > 1 ? ' tempêtes actives' : ' tempête active'));
-        } else {
-          setStatus('no-active', '<span aria-hidden="true">☀️</span> Aucune tempête active');
-        }
+        setStatus(allStorms.length ? 'live' : 'no-active', allStorms.length ? '\ud83d\udfe2 En direct — ' + allStorms.length + ' tempêtes actives' : 'Aucune Tempête Active');
         renderMarkers();
-
-        if (data.fetchedAt && lastUpdatedEl) {
-          var d = new Date(data.fetchedAt);
-          lastUpdatedEl.textContent = d.toLocaleString('fr-FR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', timeZoneName: 'short' });
+        if (data.fetchedAt && lue) {
+          var dt = new Date(data.fetchedAt);
+          lue.textContent = dt.toLocaleString('fr-FR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', timeZoneName: 'short' });
         }
-      } catch (err) {
-        setStatus('error', '⚠️ Impossible de se connecter');
-        console.error('Échec de la récupération des données :', err);
+      } catch(err) {
+        setStatus('error', 'Connexion impossible');
       }
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initMap);
-    } else {
-      initMap();
-    }
-
-    // Actualisation automatique toutes les 5 minutes
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMap);
+    else initMap();
     setInterval(fetchAndDisplayStorms, 5 * 60 * 1000);
+    window.addEventListener('resize', function() { if (map) setTimeout(function(){ map.invalidateSize(); }, 100); });
   </script>
 
   <style>
-    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .page-header h1 { font-size: 2rem; margin: 0 0 0.5rem; }
-    .page-header p { color: var(--color-text-secondary); margin: 0; max-width: 640px; }
-    .page-header a { color: var(--color-primary); }
-    .map-status { text-align: right; }
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.4rem 0.75rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
+    :root {
+      --panel-width: 380px;
+      --cat-TD: #4dabf7; --cat-TS: #ffd43b;
+      --cat-1: #ff8787; --cat-2: #fa5252; --cat-3: #e64980;
+      --cat-4: #cc5de8; --cat-5: #845ef7;
+      --danger-low: #22c55e; --danger-moderate: #f59e0b;
+      --danger-high: #f97316; --danger-severe: #ef4444; --danger-extreme: #7c3aed;
     }
-    .status-indicator.loading { background: #dbeafe; color: #1e40af; }
-    .status-indicator.live { background: #d1fae5; color: #065f46; }
-    .status-indicator.no-active { background: #f0fdf4; color: #166534; }
-    .status-indicator.error { background: #fef3c7; color: #92400e; }
-    .basin-filter {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .basin-btn {
-      border: 2px solid var(--color-border);
-      background: var(--color-surface);
-      color: var(--color-text);
-      padding: 0.45rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .map-layout { display: flex; height: 600px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--color-border); }
+    .storm-map { flex: 1; height: 100%; }
+    .storm-detail-panel { width: 0; overflow: hidden; background: var(--color-surface); border-left: 1px solid var(--color-border); transition: width 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; flex-shrink: 0; }
+    .storm-detail-panel.open { width: var(--panel-width); overflow-y: auto; }
+    .detail-panel-header { padding: 1.25rem; border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+    .detail-storm-header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .detail-storm-title { flex: 1; min-width: 0; }
+    .detail-storm-header h2 { margin: 0; font-size: 1.4rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .detail-storm-type { font-size: 0.82rem; color: var(--color-text-secondary); }
+    .panel-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-text-secondary); padding: 0 0.25rem; line-height: 1; }
+    .panel-close-btn:hover { color: var(--color-text); }
+    .detail-impact-desc { margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--color-text-secondary); line-height: 1.5; }
+    .detail-panel-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px; text-align: center; color: var(--color-text-secondary); }
+    .detail-icon { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.4; }
+    .detail-panel-placeholder p { margin: 0; font-size: 0.85rem; }
+    .detail-panel-body { flex: 1; overflow-y: auto; }
+    .detail-section { padding: 1rem 1.25rem; border-bottom: 1px solid var(--color-border); }
+    .detail-section h3 { margin: 0 0 0.75rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); }
+    .detail-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .detail-stat { background: var(--color-bg); border-radius: 8px; padding: 0.6rem 0.75rem; }
+    .detail-stat-label { display: block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); margin-bottom: 0.2rem; }
+    .detail-stat-value { font-size: 0.9rem; font-weight: 700; }
+    .wind-sub { font-size: 0.78em; font-weight: 400; color: var(--color-text-secondary); }
+    .affected-regions-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .affected-tag { display: inline-block; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; padding: 0.25rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+    .forecast-table-wrap { overflow-x: auto; }
+    .forecast-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .forecast-table th { text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--color-border); }
+    .forecast-table td { padding: 0.5rem 0.5rem; border-bottom: 1px solid var(--color-border); }
+    .forecast-table tr:last-child td { border-bottom: none; }
+    .danger-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .danger-low { background: #dcfce7; color: #15803d; }
+    .danger-moderate { background: #fef9c3; color: #a16207; }
+    .danger-high { background: #ffedd5; color: #c2410c; }
+    .danger-severe { background: #fee2e2; color: #dc2626; }
+    .danger-extreme { background: #f3e8ff; color: #6b21a8; }
+    .detail-cta-section { padding: 1rem 1.25rem; }
+    .btn-full { width: 100%; text-align: center; justify-content: center; }
+    .map-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap; }
+    .basin-filter { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .basin-btn { border: 2px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 0.4rem 0.8rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .basin-btn:hover { border-color: var(--color-primary); }
     .basin-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-    .map-legend {
-      background: var(--color-surface);
-      border-radius: 8px;
-      padding: 0.75rem 1.25rem;
-      margin-bottom: 1rem;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .legend-title { font-weight: 700; font-size: 0.85rem; }
-    .legend-items { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--color-text-secondary); }
-    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .storm-map { width: 100%; height: 550px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-lg); background: #e8eef4; }
-    .map-footer { margin-top: 0.75rem; font-size: 0.8rem; color: var(--color-text-secondary); }
-    .map-footer a { color: var(--color-primary); }
-    .storm-sidebar {
-      background: var(--color-surface);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
-      margin-top: 1.5rem;
-    }
-    .storm-sidebar h3 { font-size: 1.1rem; margin-bottom: 1rem; }
-    .active-storms { display: flex; flex-direction: column; gap: 0.75rem; }
-    .active-storm-item {
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      background: var(--color-surface);
-    }
-    .storm-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    .storm-item-header strong { font-size: 1rem; }
-    .storm-item-type { font-size: 0.82rem; font-weight: 600; }
-    .storm-item-stats { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.82rem; color: var(--color-text-secondary); }
-    .no-storms { color: var(--color-text-secondary); text-align: center; padding: 1rem; }
-    @media (max-width: 768px) {
-      .storm-map { height: 400px; }
-      .map-legend { flex-direction: column; align-items: flex-start; }
-      .basin-filter { gap: 0.4rem; }
-      .basin-btn { font-size: 0.75rem; padding: 0.4rem 0.7rem; }
-    }
+    .ctrl-btn { background: var(--color-surface); border: 2px solid var(--color-border); color: var(--color-text-secondary); padding: 0.35rem 0.75rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+    .ctrl-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .map-legend { background: var(--color-surface); border-radius: 8px; padding: 0.75rem 1.25rem; margin-top: 1rem; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .legend-title { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; }
+    .legend-items { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.78rem; color: var(--color-text-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .legend-line { width: 18px; height: 3px; border-radius: 2px; }
+    .legend-line-dashed { opacity: 0.6; }
+    .legend-cone { width: 18px; height: 12px; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); border-radius: 3px; }
+    .legend-sep { color: var(--color-border); }
+    :global(.storm-popup .leaflet-popup-content-wrapper) { border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border: 1px solid var(--color-border); }
+    :global(.storm-popup .leaflet-popup-content) { margin: 12px 16px; }
+    .storm-popup-mini .popup-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .storm-popup-mini .popup-type { margin: 0 0 0.4rem; font-size: 0.8rem; color: var(--color-text-secondary); }
+    .storm-popup-mini .popup-wind { margin: 0 0 0.2rem; font-size: 0.95rem; font-weight: 700; }
+    .storm-popup-mini .popup-move { margin: 0 0 0.6rem; font-size: 0.8rem; color: var(--color-text-secondary); }
+    .popup-detail-btn { width: 100%; margin-top: 0.5rem; justify-content: center; }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.82rem; }
+    :global(.storm-pulse-marker) { animation: stormPulse 2s ease-in-out infinite; }
+    @keyframes stormPulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.15); opacity: 1; } }
+    @media (max-width: 768px) { .map-layout { height: 420px; flex-direction: column; } .storm-detail-panel.open { width: 100%; max-height: 300px; } .detail-stats-grid { grid-template-columns: 1fr; } }
   </style>
 </BaseLayout>

@@ -2,31 +2,31 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { t } from '../../i18n/dict';
 
-const lang = 'ja';
+const lang = 'en';
 ---
 
-<BaseLayout title={t('map.title', lang)} description="全球の热带低気圧をリアルタイムで追跡します。" lang={lang}>
+<BaseLayout title={t('map.title', lang)} description="Track active tropical cyclones worldwide in real time. Data from NOAA NHC and JTWC." lang={lang}>
   <div class="page-header">
     <div>
-      <h1><span aria-hidden="true">🗺️</span> リアルタイム全球風暴追跡マップ</h1>
-      <p>全球の热带低気圧をリアルタイムで追跡します。</p>
+      <h1><span aria-hidden="true">🗺️</span> Real-Time Global Storm Tracking Map</h1>
+      <p>Track active tropical cyclones worldwide in real time. Data from NOAA NHC and JTWC.</p>
     </div>
-    <div class="map-status" id="map-status"><span class="status-indicator loading">リアルタイムデータに接続中...</span></div>
+    <div class="map-status" id="map-status"><span class="status-indicator loading">Connecting to live data...</span></div>
   </div>
 
   <div class="map-toolbar">
-    <div class="basin-filter" id="basin-filter" role="group" aria-label="海域でフィルター">
-      <button class="basin-btn active" data-basin="all">🌍 すべての海域</button>
-      <button class="basin-btn" data-basin="north_atlantic">🌊 北大西洋</button>
-      <button class="basin-btn" data-basin="east_pacific">🌊 東太平洋</button>
-      <button class="basin-btn" data-basin="central_pacific">🌊 中太平洋</button>
-      <button class="basin-btn" data-basin="northwest_pacific">🌀 北西太平洋</button>
-      <button class="basin-btn" data-basin="north_indian">🌀 北インド洋</button>
-      <button class="basin-btn" data-basin="south_indian">🌊 南インド洋</button>
-      <button class="basin-btn" data-basin="south_pacific">🌊 南太平洋</button>
-      <button class="basin-btn" data-basin="australia">🦘 オーストラリア海域</button>
+    <div class="basin-filter" id="basin-filter" role="group" aria-label="Filter by ocean basin">
+      <button class="basin-btn active" data-basin="all">🌍 All Basins</button>
+      <button class="basin-btn" data-basin="north_atlantic">🌊 North Atlantic</button>
+      <button class="basin-btn" data-basin="east_pacific">🌊 Eastern Pacific</button>
+      <button class="basin-btn" data-basin="central_pacific">🌊 Central Pacific</button>
+      <button class="basin-btn" data-basin="northwest_pacific">🌀 Northwest Pacific</button>
+      <button class="basin-btn" data-basin="north_indian">🌀 North Indian Ocean</button>
+      <button class="basin-btn" data-basin="south_indian">🌊 South Indian Ocean</button>
+      <button class="basin-btn" data-basin="south_pacific">🌊 South Pacific</button>
+      <button class="basin-btn" data-basin="australia">🦘 Australia</button>
     </div>
-    <button class="ctrl-btn" id="btn-reset-view" title="ビューをリセット"><span aria-hidden="true">⟲</span> Reset</button>
+    <button class="ctrl-btn" id="btn-reset-view" title="Reset view"><span aria-hidden="true">⟲</span> Reset</button>
   </div>
 
   <div class="map-layout" id="map-layout">
@@ -35,7 +35,7 @@ const lang = 'ja';
       <div class="detail-panel-header" id="detail-panel-header">
         <div class="detail-panel-placeholder">
           <span class="detail-icon" aria-hidden="true">🌀</span>
-          <p>マップ上の风暴マーカーをクリックして詳細を見る</p>
+          <p>Click a storm marker on the map for details</p>
         </div>
       </div>
       <div class="detail-panel-body" id="detail-panel-body" style="display:none;"></div>
@@ -43,27 +43,27 @@ const lang = 'ja';
   </div>
 
   <div class="map-legend">
-    <div class="legend-title"><span aria-hidden="true">🌀</span> 凡例</div>
+    <div class="legend-title"><span aria-hidden="true">🌀</span> Legend</div>
     <div class="legend-items">
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-TD);"></span> 热带低気圧</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-TS);"></span> 热带低気圧（弱い）</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-1);"></span> カテゴリ1</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-2);"></span> カテゴリ2</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-3);"></span> カテゴリ3</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-4);"></span> カテゴリ4</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-5);"></span> カテゴリ5</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-TD);"></span> Tropical Depression</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-TS);"></span> Tropical Storm</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-1);"></span> Cat 1</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-2);"></span> Cat 2</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-3);"></span> Cat 3</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-4);"></span> Cat 4</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--cat-5);"></span> Cat 5</span>
       <span class="legend-sep">|</span>
-      <span class="legend-item"><span class="legend-line" style="background:#3b82f6;"></span> 予報トラック</span>
-      <span class="legend-item"><span class="legend-line legend-line-dashed" style="background:#94a3b8;"></span> 経歴轨道</span>
-      <span class="legend-item"><span class="legend-cone"></span> 不確定領域</span>
+      <span class="legend-item"><span class="legend-line" style="background:#3b82f6;"></span> Forecast</span>
+      <span class="legend-item"><span class="legend-line legend-line-dashed" style="background:#94a3b8;"></span> History</span>
+      <span class="legend-item"><span class="legend-cone"></span> Uncertainty Cone</span>
     </div>
   </div>
 
   <div class="map-footer">
     <p>
-      <span aria-hidden="true">🟢</span> <strong id="fetch-status">リアルタイム</strong>
-      · 最終更新：<span id="last-updated">—</span>
-      · データソース：<a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> · <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
+      <span aria-hidden="true">🟢</span> <strong id="fetch-status">Live</strong>
+      · Last Updated: <span id="last-updated">—</span>
+      · Data Source: <a href="https://www.nhc.noaa.gov" target="_blank" rel="noopener">NOAA NHC</a> · <a href="https://www.metoc.navy.mil/jtwc/jtwc.html" target="_blank" rel="noopener">JTWC</a>
     </p>
   </div>
 
@@ -74,24 +74,24 @@ const lang = 'ja';
     var activeStormId = null;
 
     var TYPE_NAMES = {
-      'Tropical Depression': '热带低気圧',
-      'Tropical Storm': '热带低気圧（弱い）',
-      'Hurricane': 'ハリウッド（米語）',
-      'Typhoon': '台風',
-      'Super Typhoon': '超强台風',
-      'Subtropical Storm': '亜熱帯低気圧',
-      'Post-Tropical': '温帯低気圧',
-      'Remnant Low': '残余低気圧'
+      'Tropical Depression': 'Tropical Depression',
+      'Tropical Storm': 'Tropical Storm',
+      'Hurricane': 'Hurricane',
+      'Typhoon': 'Typhoon',
+      'Super Typhoon': 'Super Typhoon',
+      'Subtropical Storm': 'Subtropical Storm',
+      'Post-Tropical': 'Post-Tropical',
+      'Remnant Low': 'Remnant Low'
     };
-    function getTypeName(t) { return TYPE_NAMES[t] || t || '热带低気圧'; }
+    function getTypeName(t) { return TYPE_NAMES[t] || t || 'Tropical Cyclone'; }
 
     var WIND_DESCS = [
-      '風速が弱く、大きな脅威なし',
-      '停电や局所的な浸水の恐れあり',
-      '建造物損傷、木の倒伏の恐れ',
-      '極めて危険、広域で停电の恐れ',
-      '壊滅的被害、灾区数週間居住不可',
-      '壊滅的災害，恢复に数ヶ月'
+      'Weak winds, no major threat',
+      'Possible power outages and localized flooding',
+      'Structural damage, downed trees',
+      'Extremely dangerous, widespread outages',
+      'Catastrophic damage, areas uninhabitable for weeks',
+      'Total destruction, months of recovery'
     ];
     function getWindDesc(wind) {
       if (wind < 39) return WIND_DESCS[0];
@@ -112,20 +112,20 @@ const lang = 'ja';
       return '#845ef7';
     }
     function getIntensityCat(wind) {
-      if (wind < 39) return '热带低気圧';
-      if (wind < 74) return '热带低気圧（弱い）';
-      if (wind < 96) return 'カテゴリ1';
-      if (wind < 111) return 'カテゴリ2';
-      if (wind < 130) return 'カテゴリ3';
-      if (wind < 157) return 'カテゴリ4';
-      return 'カテゴリ5';
+      if (wind < 39) return 'TD';
+      if (wind < 74) return 'TS';
+      if (wind < 96) return 'Cat 1';
+      if (wind < 111) return 'Cat 2';
+      if (wind < 130) return 'Cat 3';
+      if (wind < 157) return 'Cat 4';
+      return 'Cat 5';
     }
     function getDangerLevel(wind) {
-      if (wind < 39) return { cls: 'danger-low', text: '低' };
-      if (wind < 74) return { cls: 'danger-moderate', text: '中' };
-      if (wind < 96) return { cls: 'danger-high', text: '高' };
-      if (wind < 130) return { cls: 'danger-severe', text: '甚大' };
-      return { cls: 'danger-extreme', text: '極大' };
+      if (wind < 39) return { cls: 'danger-low', text: 'Low' };
+      if (wind < 74) return { cls: 'danger-moderate', text: 'Moderate' };
+      if (wind < 96) return { cls: 'danger-high', text: 'High' };
+      if (wind < 130) return { cls: 'danger-severe', text: 'Severe' };
+      return { cls: 'danger-extreme', text: 'Extreme' };
     }
 
     function formatWind(windMph) {
@@ -205,41 +205,41 @@ const lang = 'ja';
       var danger = getDangerLevel(storm.windMph);
       var fc = generateForecast(storm);
 
-      var basinName = (storm.basinNames && storm.basinNames.ja) || storm.basinName || '';
+      var basinName = (storm.basinNames && storm.basinNames.en) || storm.basinName || '';
       var regionTags = '';
-      if (storm.affectedRegions && storm.affectedRegions.ja && storm.affectedRegions.ja.length) {
-        regionTags = storm.affectedRegions.ja.map(function(r) {
+      if (storm.affectedRegions && storm.affectedRegions.en && storm.affectedRegions.en.length) {
+        regionTags = storm.affectedRegions.en.map(function(r) {
           return '<span class="affected-tag">' + r + '</span>';
         }).join('');
       } else if (storm.distanceToLand) {
-        regionTags = '<span class="affected-tag">' + storm.distanceToLand + ' (' + storm.distanceMiles + ' マイル先)</span>';
+        regionTags = '<span class="affected-tag">' + storm.distanceToLand + ' (' + storm.distanceMiles + ' miles away)</span>';
       }
 
       var fcRows = fc.map(function(p) {
-        return '<tr><td>第' + p.forecastDay + '日目</td><td>' + formatCoord(p.lat, p.lon) + '</td><td><strong style="color:' + getIntensityColor(p.windMph) + ';">' + p.windMph + ' mph</strong></td></tr>';
+        return '<tr><td>Day ' + p.forecastDay + '</td><td>' + formatCoord(p.lat, p.lon) + '</td><td><strong style="color:' + getIntensityColor(p.windMph) + ';">' + p.windMph + ' mph</strong></td></tr>';
       }).join('');
 
       header.innerHTML = '<div class="detail-storm-header">' +
         '<div class="detail-storm-title"><h2>' + (storm.localizedName || storm.name) + '</h2>' +
         '<span class="detail-storm-type">' + getTypeName(storm.type) + (basinName ? ' \u00b7 ' + basinName : '') + '</span></div>' +
         '<span class="badge danger-badge ' + danger.cls + '">' + danger.text + '</span>' +
-        '<button class="panel-close-btn" id="panel-close" aria-label="パネルを閉じる">\u00d7</button></div>' +
+        '<button class="panel-close-btn" id="panel-close" aria-label="Close">\u00d7</button></div>' +
         '<p class="detail-impact-desc">' + getWindDesc(storm.windMph) + '</p>';
 
       body.style.display = 'block';
       body.innerHTML =
-        '<div class="detail-section"><h3>\ud83d\udccd 現在の状態</h3>' +
+        '<div class="detail-section"><h3>\ud83d\udccd Current Status</h3>' +
         '<div class="detail-stats-grid">' +
-          '<div class="detail-stat"><span class="detail-stat-label">風速</span><span class="detail-stat-value">' + formatWind(storm.windMph) + '</span></div>' +
-          '<div class="detail-stat"><span class="detail-stat-label">気圧</span><span class="detail-stat-value">' + formatPressure(storm.pressureMb) + '</span></div>' +
-          '<div class="detail-stat"><span class="detail-stat-label">移動方向</span><span class="detail-stat-value">' + (storm.movement || '—') + '</span></div>' +
-          '<div class="detail-stat"><span class="detail-stat-label">位置</span><span class="detail-stat-value">' + formatCoord(storm.lat, storm.lon) + '</span></div>' +
-          '<div class="detail-stat"><span class="detail-stat-label">カテゴリ</span><span class="detail-stat-value"><strong style="color:' + col + ';">' + cat + '</strong></span></div>' +
-          (storm.distanceToLand ? '<div class="detail-stat"><span class="detail-stat-label">一番近い大陸</span><span class="detail-stat-value">' + storm.distanceToLand + ' <span class="wind-sub">(' + storm.distanceMiles + ' マイル先)</span></span></div>' : '') +
+          '<div class="detail-stat"><span class="detail-stat-label">Wind</span><span class="detail-stat-value">' + formatWind(storm.windMph) + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Pressure</span><span class="detail-stat-value">' + formatPressure(storm.pressureMb) + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Movement</span><span class="detail-stat-value">' + (storm.movement || '—') + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Position</span><span class="detail-stat-value">' + formatCoord(storm.lat, storm.lon) + '</span></div>' +
+          '<div class="detail-stat"><span class="detail-stat-label">Category</span><span class="detail-stat-value"><strong style="color:' + col + ';">' + cat + '</strong></span></div>' +
+          (storm.distanceToLand ? '<div class="detail-stat"><span class="detail-stat-label">Nearest Land</span><span class="detail-stat-value">' + storm.distanceToLand + ' <span class="wind-sub">(' + storm.distanceMiles + ' miles away)</span></span></div>' : '') +
         '</div></div>' +
-        (regionTags ? '<div class="detail-section"><h3>\ud83c\udf0a 影響が予想される地域</h3><div class="affected-regions-list">' + regionTags + '</div></div>' : '') +
-        '<div class="detail-section"><h3>\ud83d\udcae 5日間予報トラック</h3><div class="forecast-table-wrap"><table class="forecast-table"><thead><tr><th>日時</th><th>位置</th><th>風速</th></tr></thead><tbody>' + fcRows + '</tbody></table></div></div>' +
-        (storm.warningUrl ? '<div class="detail-cta-section"><a href="' + storm.warningUrl + '" class="btn btn-primary btn-full" target="_blank" rel="noopener">\ud83d\udce2 官方発表を見る</a></div>' : '');
+        (regionTags ? '<div class="detail-section"><h3>\ud83c\udf0a Areas at Risk</h3><div class="affected-regions-list">' + regionTags + '</div></div>' : '') +
+        '<div class="detail-section"><h3>\ud83d\udcae 5-Day Forecast Track</h3><div class="forecast-table-wrap"><table class="forecast-table"><thead><tr><th>Day</th><th>Position</th><th>Wind</th></tr></thead><tbody>' + fcRows + '</tbody></table></div></div>' +
+        (storm.warningUrl ? '<div class="detail-cta-section"><a href="' + storm.warningUrl + '" class="btn btn-primary btn-full" target="_blank" rel="noopener">\ud83d\udce2 View Official Advisory</a></div>' : '');
 
       document.getElementById('panel-close').addEventListener('click', closeDetailPanel);
       if (map) map.setView([storm.lat, storm.lon], 7, { animate: true });
@@ -278,7 +278,7 @@ const lang = 'ja';
       });
 
       if (typeof trackEvent !== 'undefined') {
-        trackEvent('map_loaded', { page_language: 'ja' });
+        trackEvent('map_loaded', { page_language: 'en' });
       }
     }
 
@@ -291,10 +291,10 @@ const lang = 'ja';
       var se = document.querySelector('#map-status .status-indicator');
 
       if (shown.length === 0) {
-        if (se) { se.className = 'status-indicator no-active'; se.innerHTML = currentBasin === 'all' ? '有効な风暴なし' : 'この海域には有効な风暴がありません'; }
+        if (se) { se.className = 'status-indicator no-active'; se.innerHTML = currentBasin === 'all' ? 'No Active Storms' : 'No active storms in this basin'; }
         return;
       }
-      if (se) { se.className = 'status-indicator live'; se.innerHTML = '🟢 リアルタイム — ' + shown.length + ' 個の有効な风'; }
+      if (se) { se.className = 'status-indicator live'; se.innerHTML = '🟢 Live — ' + shown.length + ' active storms'; }
 
       var bounds = [];
       shown.forEach(function(storm) {
@@ -307,7 +307,7 @@ const lang = 'ja';
           hist.forEach(function(p, i) {
             if (i < hist.length - 1) {
               var dot = L.circleMarker([p.lat, p.lon], { radius: 4, fillColor: '#94a3b8', color: '#fff', weight: 1.5, fillOpacity: 0.7 });
-              dot.bindTooltip(p.hoursAgo + '時間前 \u00b7 ' + p.windMph + ' mph', { permanent: false });
+              dot.bindTooltip(p.hoursAgo + 'h ago \u00b7 ' + p.windMph + ' mph', { permanent: false });
               window._histLayer.addLayer(dot);
             }
           });
@@ -320,7 +320,7 @@ const lang = 'ja';
           window._fcLayer.addLayer(L.polyline(fcPts, { color: col, weight: 3, opacity: 0.9, dashArray: '10, 5' }));
           fc.forEach(function(p) {
             var fp = L.circleMarker([p.lat, p.lon], { radius: 5, fillColor: getIntensityColor(p.windMph), color: '#fff', weight: 2, fillOpacity: 0.9 });
-            fp.bindTooltip('第' + p.forecastDay + '日目: ' + p.windMph + ' mph', { permanent: false, direction: 'top' });
+            fp.bindTooltip('Day ' + p.forecastDay + ': ' + p.windMph + ' mph', { permanent: false, direction: 'top' });
             window._fcLayer.addLayer(fp);
           });
         }
@@ -333,12 +333,12 @@ const lang = 'ja';
           '<p class="popup-type">' + getTypeName(storm.type) + '</p>' +
           '<p class="popup-wind">\ud83d\udca8 ' + storm.windMph + ' mph</p>' +
           '<p class="popup-move">' + (storm.movement || '—') + '</p>' +
-          '<button class="btn btn-sm btn-primary popup-detail-btn">詳細を見る \u2192</button></div>';
+          '<button class="btn btn-sm btn-primary popup-detail-btn">View Details \u2192</button></div>';
         marker.bindPopup(popupHtml, { maxWidth: 280, className: 'storm-popup' });
         marker.on('click', function() {
           showStormDetail(storm);
           if (typeof trackEvent !== 'undefined') {
-            trackEvent('storm_detail_open', { storm_name: storm.name, wind_mph: storm.windMph, basin: storm.basin, page_language: 'ja' });
+            trackEvent('storm_detail_open', { storm_name: storm.name, wind_mph: storm.windMph, basin: storm.basin, page_language: 'en' });
           }
         });
         window._fcLayer.addLayer(marker);
@@ -359,20 +359,20 @@ const lang = 'ja';
         if (se) { se.className = 'status-indicator ' + type; se.innerHTML = text; }
         if (fse) fse.innerHTML = type === 'error' ? '\u26a0\ufe0f' : type === 'loading' ? '...' : '\ud83d\udfe2';
       }
-      setStatus('loading', 'データを取得中...');
+      setStatus('loading', 'Fetching live data...');
       try {
         var resp = await fetch('/api/global-storms', { cache: 'no-store' });
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         var data = await resp.json();
         allStorms = data.storms || [];
-        setStatus(allStorms.length ? 'live' : 'no-active', allStorms.length ? '\ud83d\udfe2 リアルタイム — ' + allStorms.length + ' 個の有効な风' : '有効な风暴なし');
+        setStatus(allStorms.length ? 'live' : 'no-active', allStorms.length ? '\ud83d\udfe2 Live — ' + allStorms.length + ' active storms' : 'No Active Storms');
         renderMarkers();
         if (data.fetchedAt && lue) {
           var dt = new Date(data.fetchedAt);
-          lue.textContent = dt.toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', timeZoneName: 'short' });
+          lue.textContent = dt.toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', timeZoneName: 'short' });
         }
       } catch(err) {
-        setStatus('error', 'データソースに接続できません');
+        setStatus('error', 'Unable to connect to live data');
       }
     }
 
