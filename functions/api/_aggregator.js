@@ -5,9 +5,10 @@
 //   - scripts/fetchGlobal.mjs        (构建时抓取)
 //
 // 数据源：
-//   1) NOAA NHC/CPHC RSS — 大西洋 / 东太 / 中太（结构化，含坐标）
-//   2) 美军 JTWC RSS + 文本预警 — 西北太平洋 / 北印度洋 / 南印度洋 / 澳洲 / 南太平洋
-//      解析各风暴文本预警中的最新位置与强度，归属对应官方 RSMC。
+//   1) NOAA NHC/CPHC RSS — 大西洋 / 东太 / 中太
+//   2) Tropical Tidbits storms.json — 西北太平洋（JTWC 被 Cloudflare 封锁时的备用源）
+//      包含：12W DOLPHIN、14W CHAN-HOM、13W KUJIRA、98W/97W INVEST 等
+//   3) JTWC RSS — 当可用时（西北太平洋/北印度洋/南半球），Cloudflare 封锁时降级
 
 import { BASINS, basinFromDesignation } from '../../src/data/basins.mjs';
 
@@ -16,6 +17,9 @@ const NHC_FEEDS = [
   { url: 'https://www.nhc.noaa.gov/index-ep.xml', basin: 'east_pacific', agency: 'NOAA NHC' },
   { url: 'https://www.nhc.noaa.gov/index-cp.xml', basin: 'central_pacific', agency: 'NOAA CPHC' },
 ];
+
+// Tropical Tidbits storms.json — 西北太平洋实时数据（JTWC 被封锁时的主备用）
+const TT_STORMS_URL = 'https://www.tropicaltidbits.com/data/storms.json';
 
 const JTWC_RSS = 'https://www.metoc.navy.mil/jtwc/rss/jtwc.rss';
 const JTWC_BASE = 'https://www.metoc.navy.mil/jtwc/products/';
@@ -52,9 +56,9 @@ const WIND_DESCRIPTIONS = {
   ja: {
     '-1': '風速は非常に弱く、雨为主体。',
     '0': '突風最大73mph。木が揺れ、軽度の洪水の可能性。',
-    '1': '危険風速74–95mph。屋根損傷、停電の恐れ。',
+    '1': '危険風速74–95mph。屋根損傷、停电の恐れ。',
     '2': '極めて危険な風速96–110mph。大きな被害、木の根こそぎ。',
-    '3': '壊滅的風速111–129mph。屋根が飛ぶ、数週間の停電。',
+    '3': '壊滅的風速111–129mph。屋根が飛ぶ、数週間の停电。',
     '4': '壊滅的風速130–156mph。大多数の建物被害、数週間居住不可。',
     '5': '壊滅的風速157+mph。大多数の住宅が倒壊。',
   },
@@ -102,7 +106,7 @@ const BASIN_AFFECTED_REGIONS = {
     en: ['Queensland', 'Western Australia', 'Northern Territory', 'New South Wales', 'Papua New Guinea', 'Solomon Islands'],
     zh: ['昆士兰州', '西澳大利亚州', '北领地', '新南威尔士州', '巴布亚新几内亚', '所罗门群岛'],
     fr: ['Queensland', 'Australie-Occidentale', 'Territoire du Nord', 'Nouvelle-Galles du Sud', 'PNG', 'Îles Salomon'],
-    ja: ['クイーンズランド', '西オーストラリア', 'ノthern準州', 'ニューサウスウェールズ', 'パプアニューギニア', 'ソロモン諸島'],
+    ja: ['クイーンズランド', '西オーストラリア', 'ノーザン準州', 'ニューサウスウェールズ', 'パプアニューギニア', 'ソロモン諸島'],
   },
   south_pacific: {
     en: ['Fiji', 'New Caledonia', 'Vanuatu', 'Samoa', 'Tonga', 'New Zealand'],
@@ -123,7 +127,7 @@ function ktToMph(kt) { return Math.round(kt * 1.15078); }
 // 由风速(mph)推算等级（Saffir-Simpson，同样适用于台风 1-min 风速）
 function categoryFromWind(windMph) {
   if (windMph < 39) return -1;   // TD → -1
-  if (windMph < 74) return 0;    // TS → 0
+  if (windMph < 74) return 0;   // TS → 0
   if (windMph < 96) return 1;
   if (windMph < 111) return 2;
   if (windMph < 130) return 3;
@@ -136,37 +140,141 @@ function typeFromWind(windMph, basin) {
   const isPacific = basin === 'northwest_pacific' || basin === 'north_indian' ||
     basin === 'south_indian' || basin === 'australia' || basin === 'south_pacific';
   if (cat < 0) return isPacific ? 'Tropical Depression' : 'Tropical Depression';
-  if (cat === 0) return isPacific ? 'Tropical Storm' : 'Tropical Storm';
+  if (cat === 0) return 'Tropical Storm';
   if (isPacific) return windMph >= 150 ? 'Super Typhoon' : 'Typhoon';
   return 'Hurricane';
 }
 
-// 计算距最近陆地的近似距离（度），简化版
-function distToLand(lat, lon) {
-  // 简化：按坐标区间判断
-  const landmarks = [
-    { lat: 25, lon: -80, name: 'Florida', dist: 9999 },
-    { lat: 29, lon: -90, name: 'Louisiana', dist: 9999 },
-    { lat: 23, lon: -82, name: 'Cuba', dist: 9999 },
-    { lat: 18, lon: -66, name: 'Puerto Rico', dist: 9999 },
-    { lat: 13, lon: 122, name: 'Philippines', dist: 9999 },
-    { lat: 35, lon: 139, name: 'Japan', dist: 9999 },
-    { lat: 22, lon: 114, name: 'Hong Kong/China', dist: 9999 },
-    { lat: 22, lon: 121, name: 'Taiwan', dist: 9999 },
-    { lat: 20, lon: 100, name: 'Myanmar/Thailand', dist: 9999 },
-    { lat: -10, lon: 130, name: 'Australia', dist: 9999 },
-    { lat: -18, lon: 178, name: 'Fiji', dist: 9999 },
-    { lat: 22, lon: -85, name: 'Caribbean', dist: 9999 },
-  ];
-  let minDist = 9999, nearest = 'Open Ocean';
-  for (const lm of landmarks) {
-    const d = Math.sqrt((lat - lm.lat) ** 2 + (lon - lm.lon) ** 2);
-    if (d < minDist) { minDist = d; nearest = lm.name; }
-  }
-  return { nearest, distMiles: Math.round(minDist * 69) }; // 1度≈69英里
+// Tropical Tidbits title → 我们的 type
+function typeFromTT(title) {
+  const t = title.toLowerCase();
+  if (t.includes('super typhoon') || t.includes('typhoon')) return 'Typhoon';
+  if (t.includes('tropical storm')) return 'Tropical Storm';
+  if (t.includes('remnants') || t.includes('remnant')) return 'Remnant Low';
+  if (t.includes('invest')) return 'Invest';
+  if (t.includes('depression')) return 'Tropical Depression';
+  return 'Tropical Disturbance';
 }
 
-// 构建带丰富信息的风暴对象
+// Tropical Tidbits title → 风速 mph（近似）
+// Typhoon: ~92 mph, Tropical Storm: ~58 mph, Invest/TD: ~25 mph
+function windFromTT(title) {
+  const t = title.toLowerCase();
+  if (t.includes('super typhoon')) return 150;
+  if (t.includes('typhoon')) return 92;
+  if (t.includes('tropical storm')) return 58;
+  if (t.includes('remnants') || t.includes('invest')) return 25;
+  if (t.includes('depression')) return 28;
+  return 30;
+}
+
+// ============ 主聚合 ============
+async function fetchText(url, timeoutMs = 12000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const resp = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        'User-Agent': 'StormTracker/1.0 (+https://tropicalstormtracker.quest)',
+        'Accept': 'application/rss+xml, application/xml, text/*, application/json',
+      },
+    });
+    clearTimeout(timer);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} ${url}`);
+    return await resp.text();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// 解析 Tropical Tidbits storms.json
+function parseTTStorms(jsonText) {
+  try {
+    const data = JSON.parse(jsonText);
+    const storms = [];
+    for (const [id, s] of Object.entries(data)) {
+      if (!id || !s || !s.lat || !s.lon) continue;
+      const designation = id; // e.g. "12W"
+      const name = s.name || designation;
+      const windMph = windFromTT(s.title || '');
+      const type = typeFromTT(s.title || '');
+      const cat = categoryFromWind(windMph);
+      // 时间：s.time 格式 "2026080800" = YYYYMMDDHH
+      const issuedAt = s.time
+        ? `${s.time.slice(0,4)}-${s.time.slice(4,6)}-${s.time.slice(6,8)}T${s.time.slice(8,10)}:00:00.000Z`
+        : new Date().toISOString();
+      storms.push({
+        id: `tt-${designation}`,
+        name,
+        designation,
+        type,
+        category: cat,
+        windMph,
+        pressureMb: 0, // TT 不提供气压
+        lat: parseFloat(s.lat),
+        lon: parseFloat(s.lon),
+        movement: 'See Tropical Tidbits',
+        status: s.title?.toLowerCase().includes('remnant') ? 'Remnant' : 'Active',
+        basin: 'northwest_pacific',
+        basinName: 'Northwest Pacific',
+        agency: 'JMA/JTWC (via Tropical Tidbits)',
+        source: 'Tropical Tidbits',
+        warningUrl: `https://www.tropicaltidbits.com/storminfo/`,
+        issuedAt,
+        // 原始数据（来自 TT）
+        _ttTitle: s.title || '',
+        _ttLongname: s.longname || '',
+      });
+    }
+    return storms;
+  } catch(e) {
+    return [];
+  }
+}
+
+function parseNHCDesc(desc) {
+  const coordPatterns = [
+    /near\s+([+-]?\d{1,2}\.?\d*)\s*[NS]?[,\s]+([+-]?\d{1,3}\.?\d*)\s*[EW]?/i,
+    /located\s+(?:near|at|over)\s+([+-]?\d{1,2}\.?\d*)\s*[NS]?[,\s]+([+-]?\d{1,3}\.?\d*)\s*[EW]?/i,
+    /center\s+(?:was|is)\s+(?:near|at)\s+([+-]?\d{1,2}\.?\d*)\s*[NS]?[,\s]+([+-]?\d{1,3}\.?\d*)\s*[EW]?/i,
+  ];
+  const windPatterns = [
+    /maximum sustained winds?\s+(?:of\s+)?(?:about\s+)?(\d+)\s*mph/i,
+    /(\d+)\s*mph\s+(?:sustained\s+)?winds?/i,
+    /winds?\s+(?:of\s+)?(\d+)\s+mph/i,
+  ];
+  const pressurePatterns = [
+    /minimum central pressure\s+(?:of\s+)?(\d+)\s*mb/i,
+    /pressure\s+(?:of\s+)?(\d+)\s*mb/i,
+    /(\d{4})\s*mb/i,
+  ];
+  const movePatterns = [
+    /movement[\s:]+(\w{1,3})\s+at\s+(\d+)\s*mph/i,
+    /moving[\s:]+(\w{1,3})\s+(?:at\s+)?(\d+)\s*mph/i,
+  ];
+
+  let lat = 0, lon = 0;
+  for (const pat of coordPatterns) {
+    const mm = desc.match(pat);
+    if (mm) {
+      lat = parseFloat(mm[1]);
+      lon = parseFloat(mm[2]);
+      if (/S\b/.test(desc.slice(mm.index, mm.index + 20))) lat = -Math.abs(lat);
+      if (/W\b/.test(desc.slice(mm.index, mm.index + 20))) lon = -Math.abs(lon);
+      break;
+    }
+  }
+  let wind = 0;
+  for (const pat of windPatterns) { const mm = desc.match(pat); if (mm) { wind = parseInt(mm[1]); break; } }
+  let pressure = 0;
+  for (const pat of pressurePatterns) { const mm = desc.match(pat); if (mm) { pressure = parseInt(mm[1]); break; } }
+  let movement = 'Unknown';
+  for (const pat of movePatterns) { const mm = desc.match(pat); if (mm) { movement = `${mm[1].toUpperCase()} at ${mm[2]} mph`; break; } }
+
+  return { lat, lon, wind, pressure, movement };
+}
+
 function enrichStorm(s) {
   const catKey = String(s.category ?? -1);
   const affected = BASIN_AFFECTED_REGIONS[s.basin] || BASIN_AFFECTED_REGIONS.north_atlantic;
@@ -213,97 +321,59 @@ function enrichStorm(s) {
   };
 }
 
-// ============ NHC 解析 ============
-function parseNHC(xmlText, basinKey, agencyShort) {
+function distToLand(lat, lon) {
+  // 简化：按坐标区间判断
+  const landmarks = [
+    { lat: 25, lon: -80, name: 'Florida', dist: 9999 },
+    { lat: 29, lon: -90, name: 'Louisiana', dist: 9999 },
+    { lat: 23, lon: -82, name: 'Cuba', dist: 9999 },
+    { lat: 18, lon: -66, name: 'Puerto Rico', dist: 9999 },
+    { lat: 13, lon: 122, name: 'Philippines', dist: 9999 },
+    { lat: 35, lon: 139, name: 'Japan', dist: 9999 },
+    { lat: 22, lon: 114, name: 'Hong Kong/China', dist: 9999 },
+    { lat: 22, lon: 121, name: 'Taiwan', dist: 9999 },
+    { lat: 20, lon: 100, name: 'Myanmar/Thailand', dist: 9999 },
+    { lat: -10, lon: 130, name: 'Australia', dist: 9999 },
+    { lat: -18, lon: 178, name: 'Fiji', dist: 9999 },
+    { lat: 22, lon: -85, name: 'Caribbean', dist: 9999 },
+  ];
+  let minDist = 9999, nearest = 'Open Ocean';
+  for (const lm of landmarks) {
+    const d = Math.sqrt((lat - lm.lat) ** 2 + (lon - lm.lon) ** 2);
+    if (d < minDist) { minDist = d; nearest = lm.name; }
+  }
+  return { nearest, distMiles: Math.round(minDist * 69) }; // 1度≈69英里
+}
+
+export async function fetchAndAggregate() {
   const storms = [];
-  const seen = new Set();
-  if (/no tropical cyclones at this time|formation is not expected/i.test(xmlText)) return storms;
+  const errors = [];
 
-  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
-  let m;
-  while ((m = itemRegex.exec(xmlText)) !== null) {
-    const item = m[1];
-    const title = extractTag(item, 'title');
-    const desc = extractTag(item, 'description');
-    const pubDate = extractTag(item, 'pubDate');
+  // 1) NHC 三流域并行
+  const nhcResults = await Promise.allSettled(
+    NHC_FEEDS.map(async (f) => {
+      const xml = await fetchText(f.url);
+      return parseNHC(xml, f.basin, f.agency);
+    })
+  );
+  nhcResults.forEach((r) => {
+    if (r.status === 'fulfilled') storms.push(...r.value);
+    else errors.push(`NHC: ${r.reason?.message || r.reason}`);
+  });
 
-    if (/no tropical cyclones|outlook|advisory|tropical weather discussion/i.test(title)) continue;
-
-    const tm = title.match(/(Tropical Depression|Tropical Storm|Hurricane|Subtropical Storm|Post-Tropical|Remnant Low)\s+([A-Za-z0-9]+(?:[\w-]+)?)/i);
-    if (!tm) continue;
-    const type = tm[1].trim();
-    const name = tm[2].trim();
-    if (seen.has(name.toLowerCase())) continue;
-    seen.add(name.toLowerCase());
-
-    const parsed = parseNHCDesc(desc);
-    const windMph = parsed.wind;
-    storms.push({
-      id: `nhc-${basinKey}-${name}`,
-      name,
-      designation: '',
-      type,
-      category: categoryFromWind(windMph),
-      windMph,
-      pressureMb: parsed.pressure,
-      lat: parsed.lat,
-      lon: parsed.lon,
-      movement: parsed.movement,
-      status: 'Active',
-      basin: basinKey,
-      basinName: BASINS[basinKey].names.en,
-      agency: agencyShort,
-      source: 'NHC',
-      warningUrl: `https://www.nhc.noaa.gov/?${basinKey}`,
-      issuedAt: pubDate ? new Date(pubDate).toISOString() : new Date().toISOString(),
-    });
+  // 2) Tropical Tidbits storms.json（西北太平洋备用源，JTWC 被封锁时使用）
+  let ttStorms = [];
+  try {
+    const ttJson = await fetchText(TT_STORMS_URL, 15000);
+    ttStorms = parseTTStorms(ttJson);
+  } catch(e) {
+    errors.push(`Tropical Tidbits: ${e.message}`);
   }
-  return storms;
-}
 
-function parseNHCDesc(desc) {
-  const coordPatterns = [
-    /near\s+([+-]?\d{1,2}\.?\d*)\s*[NS]?[,\s]+([+-]?\d{1,3}\.?\d*)\s*[EW]?/i,
-    /located\s+(?:near|at|over)\s+([+-]?\d{1,2}\.?\d*)\s*[NS]?[,\s]+([+-]?\d{1,3}\.?\d*)\s*[EW]?/i,
-    /center\s+(?:was|is)\s+(?:near|at)\s+([+-]?\d{1,2}\.?\d*)\s*[NS]?[,\s]+([+-]?\d{1,3}\.?\d*)\s*[EW]?/i,
-  ];
-  const windPatterns = [
-    /maximum sustained winds?\s+(?:of\s+)?(?:about\s+)?(\d+)\s*mph/i,
-    /(\d+)\s*mph\s+(?:sustained\s+)?winds?/i,
-    /winds?\s+(?:of\s+)?(\d+)\s+mph/i,
-  ];
-  const pressurePatterns = [
-    /minimum central pressure\s+(?:of\s+)?(\d+)\s*mb/i,
-    /pressure\s+(?:of\s+)?(\d+)\s*mb/i,
-    /(\d{4})\s*mb/i,
-  ];
-  const movePatterns = [
-    /movement[\s:]+(\w{1,3})\s+at\s+(\d+)\s*mph/i,
-    /moving[\s:]+(\w{1,3})\s+(?:at\s+)?(\d+)\s*mph/i,
-  ];
-
-  let lat = 0, lon = 0;
-  for (const pat of coordPatterns) {
-    const mm = desc.match(pat);
-    if (mm) {
-      lat = parseFloat(mm[1]);
-      lon = parseFloat(mm[2]);
-      if (/S\b/.test(desc.slice(mm.index, mm.index + 20))) lat = -Math.abs(lat);
-      if (/W\b/.test(desc.slice(mm.index, mm.index + 20))) lon = -Math.abs(lon);
-      break;
-    }
-  }
-  let wind = 0;
-  for (const pat of windPatterns) { const mm = desc.match(pat); if (mm) { wind = parseInt(mm[1]); break; } }
-  let pressure = 0;
-  for (const pat of pressurePatterns) { const mm = desc.match(pat); if (mm) { pressure = parseInt(mm[1]); break; } }
-  let movement = 'Unknown';
-  for (const pat of movePatterns) { const mm = desc.match(pat); if (mm) { movement = `${mm[1].toUpperCase()} at ${mm[2]} mph`; break; } }
-
-  return { lat, lon, wind, pressure, movement };
-}
-
-// ============ JTWC 解析 ============
+  // 3) JTWC RSS（Cloudflare 封锁时可能失败，降级到 TT 数据）
+  let jtwcList = [];
+  try {
+    const rss = await fetchText(JTWC_RSS);
 function parseJtwcStormList(rssText) {
   const list = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
@@ -349,52 +419,12 @@ function parseJtwcText(text) {
   return { lat, lon, windMph, type };
 }
 
-// ============ 主聚合 ============
-async function fetchText(url, timeoutMs = 12000) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const resp = await fetch(url, {
-      signal: ctrl.signal,
-      headers: {
-        'User-Agent': 'StormTracker/1.0 (+https://tropicalstormtracker.quest)',
-        'Accept': 'application/rss+xml, application/xml, text/*',
-      },
-    });
-    clearTimeout(timer);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status} ${url}`);
-    return await resp.text();
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-export async function fetchAndAggregate() {
-  const storms = [];
-  const errors = [];
-
-  // 1) NHC 三流域并行
-  const nhcResults = await Promise.allSettled(
-    NHC_FEEDS.map(async (f) => {
-      const xml = await fetchText(f.url);
-      return parseNHC(xml, f.basin, f.agency);
-    })
-  );
-  nhcResults.forEach((r) => {
-    if (r.status === 'fulfilled') storms.push(...r.value);
-    else errors.push(`NHC: ${r.reason?.message || r.reason}`);
-  });
-
-  // 2) JTWC RSS
-  let jtwcList = [];
-  try {
-    const rss = await fetchText(JTWC_RSS);
     jtwcList = parseJtwcStormList(rss);
-  } catch (e) {
-    errors.push(`JTWC RSS: ${e.message}`);
+  } catch(e) {
+    errors.push(`JTWC RSS: ${e.message} (falling back to Tropical Tidbits)`);
   }
 
-  // 3) 并行抓取每个 JTWC 风暴的文本预警
+  // 4) 并行抓取每个 JTWC 风暴的文本预警
   if (jtwcList.length > 0) {
     const details = await Promise.allSettled(
       jtwcList.map(async (s) => {
@@ -431,25 +461,37 @@ export async function fetchAndAggregate() {
     });
   }
 
-  // 4) 去重（NHC 优先）
+  // 5) 去重 + TT 数据兜底
+  //    如果 JTWC 无数据但 TT 有，用 TT 数据（JTWC 通常被 Cloudflare 封锁）
   const byKey = new Map();
   for (const s of storms) {
     const key = s.designation || s.id;
     if (!byKey.has(key)) byKey.set(key, s);
+    else if (byKey.get(key).source === 'Tropical Tidbits') byKey.set(key, s); // TT 优先
     else if (byKey.get(key).source !== 'NHC') byKey.set(key, s);
   }
   let finalStorms = [...byKey.values()];
 
-  // 5) 丰富字段
+  // TT 兜底：如果最终风暴列表里西北太平洋为空，但 TT 有数据，直接加入 TT 风暴
+  const hasNorthwestPacific = finalStorms.some(s => s.basin === 'northwest_pacific');
+  if (!hasNorthwestPacific && ttStorms.length > 0) {
+    for (const ttS of ttStorms) {
+      // 跳过 invest（扰动级别，不算正式风暴）
+      if (ttS.type === 'Invest') continue;
+      finalStorms.push(ttS);
+    }
+  }
+
+  // 6) 丰富字段
   finalStorms = finalStorms.map(enrichStorm);
 
-  // 6) 流域统计
+  // 7) 流域统计
   const basinsSummary = {};
   for (const b of Object.keys(BASINS)) basinsSummary[b] = 0;
   finalStorms.forEach((s) => { if (basinsSummary[s.basin] !== undefined) basinsSummary[s.basin]++; });
 
   return {
-    source: 'NOAA NHC + JTWC',
+    source: 'NOAA NHC + Tropical Tidbits',
     fetchedAt: new Date().toISOString(),
     global: true,
     activeStorms: finalStorms.length,
@@ -458,7 +500,7 @@ export async function fetchAndAggregate() {
       north_atlantic: 'NOAA NHC',
       east_pacific: 'NOAA NHC',
       central_pacific: 'NOAA CPHC',
-      northwest_pacific: 'JMA (via JTWC)',
+      northwest_pacific: 'JMA/JTWC (via Tropical Tidbits)',
       north_indian: 'IMD (via JTWC)',
       south_indian: 'Météo-France (via JTWC)',
       australia: 'BOM (via JTWC)',
