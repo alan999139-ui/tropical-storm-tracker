@@ -332,7 +332,56 @@ const lang = 'zh';
         // Current marker
         var cat = getIntensityCat(storm.windMph);
         var marker = L.circleMarker([storm.lat, storm.lon], { radius: 14, fillColor: col, color: '#ffffff', weight: 3, fillOpacity: 0.9 });
+        // Current marker - 亲民版弹窗
+        var cat = getIntensityCat(storm.windMph);
+        var danger = getDangerLevel(storm.windMph);
+        var riskColor = danger === 'danger' ? '#dc2626' : danger === 'warning' ? '#f59e0b' : '#3b82f6';
+        var riskText = danger === 'danger' ? '🔴 高风险' : danger === 'warning' ? '🟡 警戒中' : '🔵 需关注';
+        
+        // 距离最近陆地
+        var nearestLand = storm.distanceToLand || '太平洋中部';
+        var distText = storm.distanceMiles ? '距' + nearestLand + '约' + storm.distanceMiles + '英里' : '';
+        
+        // 受影响区域（只显示前2个）
+        var affectedText = '';
+        if (storm.affectedRegions && storm.affectedRegions.zh && storm.affectedRegions.zh.length > 0) {
+          var regions = storm.affectedRegions.zh.slice(0, 2).join('、');
+          affectedText = '<p class="popup-regions">📍 可能影响：<strong>' + regions + '</strong>';
+          if (storm.affectedRegions.zh.length > 2) affectedText += ' 等';
+          affectedText += '</p>';
+        }
+        
+        // 通俗易懂的风速描述
+        var windDesc = storm.windDescription && storm.windDescription.zh ? storm.windDescription.zh : '';
+        var shortDesc = windDesc.split('。')[0] + '。'; // 只取第一句
+        
+        // 给普通人的建议
+        var advice = '';
+        if (danger === 'danger') {
+          advice = '⚠️ 建议立即关注官方预警，做好防台准备';
+        } else if (danger === 'warning') {
+          advice = '⚡ 建议密切关注天气变化，减少外出';
+        } else {
+          advice = '👁️ 持续关注，暂无明显威胁';
+        }
+        
+        var marker = L.circleMarker([storm.lat, storm.lon], { radius: 16, fillColor: col, color: '#ffffff', weight: 3, fillOpacity: 0.95 });
         var popupHtml = '<div class="storm-popup-mini">' +
+          '<div class="popup-header">' +
+            '<strong class="popup-name">' + (storm.localizedName || storm.name) + '</strong>' +
+            ' <span class="badge" style="background:' + col + '22;color:' + col + ';">' + cat + '</span>' +
+          '</div>' +
+          '<div class="popup-risk" style="background:' + riskColor + '15;color:' + riskColor + ';padding:0.4rem 0.6rem;border-radius:6px;margin:0.3rem 0;font-size:0.85rem;font-weight:600;">' +
+            riskText +
+          '</div>' +
+          '<p class="popup-type">' + getTypeName(storm.type) + '</p>' +
+          '<p class="popup-wind">💨 ' + formatWind(storm.windMph) + '</p>' +
+          (distText ? '<p class="popup-distance">🎯 ' + distText + '</p>' : '') +
+          affectedText +
+          '<p class="popup-desc" style="font-size:0.8rem;color:#64748b;margin-top:0.3rem;">' + shortDesc + '</p>' +
+          '<p class="popup-advice" style="font-size:0.85rem;color:#0369a1;margin-top:0.4rem;padding-top:0.4rem;border-top:1px dashed #cbd5e1;">' + advice + '</p>' +
+          '<button class="btn btn-sm btn-primary popup-detail-btn" style="margin-top:0.5rem;width:100%;">查看完整详情 →</button>' +
+        '</div>';
           '<div class="popup-header"><strong>' + (storm.localizedName || storm.name) + '</strong>' +
           ' <span class="badge" style="background:' + col + '22;color:' + col + ';">' + cat + '</span></div>' +
           '<p class="popup-type">' + getTypeName(storm.type) + '</p>' +

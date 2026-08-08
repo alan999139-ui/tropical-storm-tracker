@@ -1,7 +1,7 @@
 {
   "source": "NOAA NHC + Tropical Tidbits",
   "global": true,
-  "fetchedAt": "2026-08-08T02:31:10.977Z",
+  "fetchedAt": "2026-08-08T06:38:35.419Z",
   "activeStorms": 3,
   "basins": {
     "north_atlantic": 0,
@@ -225,8 +225,8 @@
       "category": -1,
       "windMph": 25,
       "pressureMb": 0,
-      "lat": 22.1,
-      "lon": 138.3,
+      "lat": 21.9,
+      "lon": 137.9,
       "movement": "See Tropical Tidbits",
       "status": "Remnant",
       "basin": "northwest_pacific",
@@ -296,12 +296,12 @@
         ]
       },
       "distanceToLand": "Japan",
-      "distanceMiles": 891,
+      "distanceMiles": 907,
       "locationText": {
-        "en": "22.1°N, 138.3°E",
-        "zh": "22.1°北纬 138.3°东经",
-        "fr": "22.1°N, 138.3°E",
-        "ja": "22.1°N 138.3°E"
+        "en": "21.9°N, 137.9°E",
+        "zh": "21.9°北纬 137.9°东经",
+        "fr": "21.9°N, 137.9°E",
+        "ja": "21.9°N 137.9°E"
       },
       "dataSource": {
         "en": "Joint Typhoon Warning Center (JTWC)",
@@ -311,5 +311,5 @@
       }
     }
   ],
-  "_buildTime": "2026-08-08T02:31:10.993Z"
+  "_buildTime": "2026-08-08T06:38:35.427Z"
 }
